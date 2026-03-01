@@ -18,9 +18,13 @@
         "esbenp.prettier-vscode",
         "github.com.github-vscode-theme",
         "bpruitt-goddard.mermaid-markdown-syntax-highlighting"
-      ]
+      ],
+      "settings": {
+        "workbench.startupEditor": "none"
+      }
     }
   },
+  "postAttachCommand": "code README.md AGENTS.md",
   "mounts": [
     "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly"
   ],

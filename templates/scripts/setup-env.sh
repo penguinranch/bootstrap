@@ -14,8 +14,19 @@ echo "Setting up environment variables..."
 read -p "Enter your Git Name: " GIT_NAME
 read -p "Enter your Git Email: " GIT_EMAIL
 
-# Update or append
-sed -i "s/^GIT_NAME=.*/GIT_NAME=$GIT_NAME/" .env || echo "GIT_NAME=$GIT_NAME" >> .env
-sed -i "s/^GIT_EMAIL=.*/GIT_EMAIL=$GIT_EMAIL/" .env || echo "GIT_EMAIL=$GIT_EMAIL" >> .env
+# Function to securely update or append inside .env
+update_env() {
+    local key=$1
+    local value=$2
+    if grep -q "^${key}=" .env; then
+        # Replace existing key ensuring value is quoted safely if necessary, though basic alphanumeric is fine here
+        sed -i '' "s|^${key}=.*|${key}=${value}|" .env 2>/dev/null || sed -i "s|^${key}=.*|${key}=${value}|" .env
+    else
+        echo "${key}=${value}" >> .env
+    fi
+}
+
+update_env "GIT_NAME" "$GIT_NAME"
+update_env "GIT_EMAIL" "$GIT_EMAIL"
 
 echo "Configuration complete. Restart your terminal or source the .env file."
