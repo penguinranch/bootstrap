@@ -17,6 +17,7 @@ Before implementing any significant change:
 1. **ADR First:** Propose a new Architecture Decision Record in `docs/decisions/ADR-XXX-description.md`.
 2. **Review Goals:** Compare the proposal against the project's long-term goals in `README.md`.
 3. **Changelog:** After a feature or fix is completed, update `CHANGELOG.md` with a summary of the _decisions_ made, not just the code changed.
+4. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks via ADRs, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
 
 ## 🧠 Engineering Philosophy
 
@@ -40,6 +41,12 @@ Before implementing any significant change:
 
 - Port **9222** is reserved for browser-based automation and debugging.
 - When attempting to verify UI changes or run browser-based tasks, ensure you are utilizing the mapped ports defined in `devcontainer.json`.
+
+## 🤖 Token Optimization & CLI Usage
+
+- **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the `geminicli` installed in this container for well-structured tasks.
+- **Available CLI Extensions:** The CLI is pre-installed with plugins like `gemini-cli-security`, `code-review`, `github`, `Endor-Labs-Code-Security`, and `Snyk`.
+- **Examples:** Ask the CLI to run a security audit using Snyk, or to perform a code review on a differential. Use the CLI by executing `geminicli <command>` in the terminal instead of processing the task entirely inside this chat window.
 
 ## 📂 Directory Structure Reference
 

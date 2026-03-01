@@ -20,6 +20,6 @@ curl -sL "$REPO_TAR_URL" | tar -xz --strip-components=2 "*/templates/"
 mkdir -p docs/decisions
 
 # Make scripts executable
-chmod +x .devcontainer/boot-check.sh scripts/setup-env.sh
+chmod +x .devcontainer/boot-check.sh scripts/setup-env.sh scripts/setup-gemini.sh
 
 echo "✅ Bootstrap complete. Open in VS Code to start the Devcontainer."

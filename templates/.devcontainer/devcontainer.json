@@ -10,14 +10,17 @@
     "ghcr.io/devcontainers/features/common-utils:2": {
       "configureZshAsDefaultShell": true
     },
-    "ghcr.io/devcontainers/features/git:1": {}
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/node:1": {}
   },
+  "postCreateCommand": "bash ./scripts/setup-gemini.sh",
   "customizations": {
     "vscode": {
       "extensions": [
         "esbenp.prettier-vscode",
         "github.com.github-vscode-theme",
-        "bpruitt-goddard.mermaid-markdown-syntax-highlighting"
+        "bierner.markdown-mermaid",
+        "mechatroner.rainbow-csv"
       ],
       "settings": {
         "workbench.startupEditor": "none"

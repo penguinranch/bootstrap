@@ -33,3 +33,4 @@ We need to determine the base technologies for this new project.
 
 - Requires X to be installed (which should be added to the devcontainer).
 - Dependency management will be handled via Y.
+- [ ] `.github/dependabot.yml` has been updated with the chosen package ecosystems.
