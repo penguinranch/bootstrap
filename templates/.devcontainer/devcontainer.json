@@ -20,7 +20,8 @@
         "esbenp.prettier-vscode",
         "github.com.github-vscode-theme",
         "bierner.markdown-mermaid",
-        "mechatroner.rainbow-csv"
+        "mechatroner.rainbow-csv",
+        "ms-vscode.makefile-tools"
       ],
       "settings": {
         "workbench.startupEditor": "none"

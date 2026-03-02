@@ -1,39 +1,100 @@
-# Bootstrap
+# 🐧 Penguin Ranch Bootstrap
 
-This repository contains the Gold Standard for spinning up new projects. It enforces containerization, signed commits, automated documentation, and LLM-friendly workflows.
+> **The "Gold Standard" repository template for launching new projects.**
 
-## Features
+This repository is designed to instantly bootstrap a fully configured project environment characterized by zero-host dependencies, secure-by-default workflows, and structural guardrails that enforce elite engineering practices. It is explicitly designed to be heavily supported by IDE-based AI Agents.
 
-Zero-Host Dependency: Everything runs in a Devcontainer.
+---
 
-Security First: Pre-configured for SSH commit signing and .env protection.
+## 🌟 The Philosophy & Features (The "Why")
 
-AI-Ready: Includes AGENTS.md to guide LLMs through ADRs and branch management.
+When you bootstrap a project using this template, you are receiving an environment intentionally restricted to prevent common developer mistakes. Here is why we made these decisions:
 
-Standardized Ports: Pre-mapped for Antigravity (9222) and web frameworks.
+### 1. Devcontainer Only (Zero-Host Dependency)
 
-## How to Use
+**The Problem:** "It works on my machine!"
+**The Solution:** All work happens strictly inside a VS Code Devcontainer. Whether you are on macOS, Linux, or Windows (WSL), the moment you open this project, Docker spins up an identical, pre-configured Linux container. You never need to install Node, Python, or Go on your host computer again.
 
-To start a brand-new project with these standards:
+### 2. Secure by Default
 
-Create your new project directory and move into it:
+**The Problem:** Accidentally committing API keys or unverified code.
+**The Solution:** The `.env` file is heavily `.gitignore`d. Additionally, the Devcontainer is mapped to your host's `~/.ssh` directory, and Git is pre-configured to strictly require **SSH Commit Signing**.
 
-Bash
+### 3. AI-Optimized Workflows
+
+**The Problem:** Generative AI tools (like GitHub Copilot or Gemini) get confused easily and burn through their context "tokens" doing repetitive tasks.
+**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** is installed globally inside the container, providing the AI with native tooling for security scanning (Snyk) and code reviews—saving precious IDE tokens.
+
+### 4. Structural Guardrails
+
+We have implemented physical files that prevent bad habits:
+
+- **`.editorconfig`**: Forces every IDE (even Vim) to use the exact same tab sizes, line endings, and whitespace rules.
+- **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make run`.
+- **`CODEOWNERS`**: Automatically requires Tech Lead PR reviews for architecture decisions (ADRs) and DevOps reviews for CI/CD changes.
+- **`dependabot.yml`**: Automatically configured to continuously scan dependencies for vulnerabilities.
+
+---
+
+## 🚀 How to Use (Step-by-Step)
+
+### Prerequisites (On your Host Machine)
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+2. Install [Antigravity](https://antigravity.google/).
+
+### Step 1: Scaffold the Project
+
+Open a standard terminal on your host machine (**Mac/Linux**) or **Git Bash / WSL** (**Windows**) and run:
+
+```bash
+# Create and move into your new project folder
 mkdir my-new-idea && cd my-new-idea
+
+# Initialize git
 git init
-Run the bootstrap installer:
 
-Bash
+# Run the bootstrap installer
 curl -sSL https://raw.githubusercontent.com/penguinranch/bootstrap/main/install.sh | bash
-Open in VS Code: When prompted, click "Reopen in Container."
+```
 
-Run Setup: Inside the container terminal, run:
+> **Note for Windows Users:** Command Prompt and PowerShell do not natively support running `.sh` bash scripts. You must execute the above `curl` command using [Git Bash](https://gitforwindows.org/) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-Bash
+### Step 2: Open the Devcontainer
+
+1. Open the folder in **Antigravity**.
+2. An alert will appear prompting you to reopen the project in a Dev Container.
+3. Click to **Reopen in Container**.
+
+_Wait a few minutes while Docker builds the Linux environment._
+
+### Step 3: Initial Setup Scripts
+
+Once Antigravity reloads inside the container, open a new **Terminal** and run:
+
+```bash
 ./scripts/setup-env.sh
+```
 
-"I am starting a new project. Please read AGENTS.md for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea."
+_This will prompt you for your Git credentials and your Gemini API Key so the CLI tooling works._
 
-## Developing the Bootstrap Template
+### Step 4: The AI Architecture Kickoff
+
+This project requires Architecture Decision Records (ADRs) before writing code. Open your AI IDE Assistant chat panel and prompt it with exactly this text:
+
+> _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, be sure to fill out the `001-initial-tech-stack.md` ADR, configure the universal `Makefile`, and setup the `dependabot.yml`."_
+
+---
+
+## 🚑 Troubleshooting
+
+- **The IDE Window is hung / The Gemini CLI didn't install:**
+  Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside the container and manually run `bash ./scripts/setup-gemini.sh` to finish the installation.
+- **Windows / WSL line-ending errors (bash scripts crashing):**
+  Windows uses `CRLF` format for new lines, which crashes Linux bash scripts. We have a `.gitattributes` file to prevent this, but if you still see `\r` errors, ensure your global git config is set: `git config --global core.autocrlf false`.
+
+---
+
+## 🛠 Developing the Bootstrap Template
 
 If you are looking to contribute to or modify the `bootstrap` repository itself, please consult the root **`AGENTS.md`** file for architectural constraints, goals, and modification rules.

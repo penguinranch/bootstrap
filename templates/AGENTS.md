@@ -18,6 +18,7 @@ Before implementing any significant change:
 2. **Review Goals:** Compare the proposal against the project's long-term goals in `README.md`.
 3. **Changelog:** After a feature or fix is completed, update `CHANGELOG.md` with a summary of the _decisions_ made, not just the code changed.
 4. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks via ADRs, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
+5. **Universal Task Interface:** When the tech stack is decided, you must map the stack-specific commands (e.g., `npm test` or `go build`) to the universal standard targets in the `Makefile` (`make test`, `make build`, `make dev`).
 
 ## 🧠 Engineering Philosophy
 

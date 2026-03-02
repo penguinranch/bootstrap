@@ -1,0 +1,9 @@
+# Default owners for everything
+*       @core-maintainers
+
+# Architecture decisions require Tech Lead review
+docs/decisions/    @tech-leads
+
+# CI/CD and Infrastructure require DevOps review
+.github/workflows/ @devops
+.devcontainer/     @devops
