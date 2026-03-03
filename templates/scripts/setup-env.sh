@@ -38,4 +38,12 @@ if [ -n "$GEMINI_API_KEY" ]; then
     update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
 fi
 
+# Update the LICENSE file if it exists
+if [ -f "LICENSE" ] && [ -n "$GIT_NAME" ]; then
+    CURRENT_YEAR=$(date +"%Y")
+    # Use cross-platform sed (Mac vs Linux syntax differences)
+    sed -i '' "s/\[Year\]/$CURRENT_YEAR/g" LICENSE 2>/dev/null || sed -i "s/\[Year\]/$CURRENT_YEAR/g" LICENSE
+    sed -i '' "s/\[Full Name\]/$GIT_NAME/g" LICENSE 2>/dev/null || sed -i "s/\[Full Name\]/$GIT_NAME/g" LICENSE
+fi
+
 echo "Configuration complete. Restart your terminal or source the .env file."
