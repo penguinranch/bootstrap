@@ -60,15 +60,21 @@ curl -sSL https://raw.githubusercontent.com/penguinranch/bootstrap/main/install.
 
 > **Note for Windows Users:** Command Prompt and PowerShell do not natively support running `.sh` bash scripts. You must execute the above `curl` command using [Git Bash](https://gitforwindows.org/) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-### Step 2: Open the Devcontainer
+### Step 2: The AI Architecture Kickoff
+
+Before opening the Devcontainer, decide on your tech stack. The language and framework you choose will determine how the container is configured. Open your AI IDE Assistant chat panel and prompt it with exactly this text:
+
+> _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, fill out the `001-initial-tech-stack.md` ADR, configure the universal `Makefile`, setup the `dependabot.yml`, and update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) to install the correct runtime and tooling for our chosen stack."_
+
+### Step 3: Open the Devcontainer
 
 1. Open the folder in **Antigravity**.
 2. An alert will appear prompting you to reopen the project in a Dev Container.
 3. Click to **Reopen in Container**.
 
-_Wait a few minutes while Docker builds the Linux environment._
+_Wait a few minutes while Docker builds the Linux environment for your chosen stack._
 
-### Step 3: Initial Setup Scripts
+### Step 4: Initial Setup Scripts
 
 Once Antigravity reloads inside the container, open a new **Terminal** and run:
 
@@ -77,12 +83,6 @@ Once Antigravity reloads inside the container, open a new **Terminal** and run:
 ```
 
 _This will prompt you for your Git credentials and your Gemini API Key so the CLI tooling works._
-
-### Step 4: The AI Architecture Kickoff
-
-This project requires Architecture Decision Records (ADRs) before writing code. Open your AI IDE Assistant chat panel and prompt it with exactly this text:
-
-> _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, be sure to fill out the `001-initial-tech-stack.md` ADR, configure the universal `Makefile`, and setup the `dependabot.yml`."_
 
 ---
 

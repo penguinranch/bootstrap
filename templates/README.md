@@ -1,0 +1,101 @@
+# 🐧 Your New Project
+
+> **Bootstrapped with [Penguin Ranch Bootstrap](https://github.com/penguinranch/bootstrap).**
+
+Welcome to your new project! This repository has been scaffolded with a "Gold Standard" developer environment. Everything you need to get started is already here — just open it in a Devcontainer and go.
+
+---
+
+## 📂 Project Structure
+
+Here's what was installed and why:
+
+```
+.
+├── .devcontainer/            # 🐳 Containerized dev environment
+│   ├── Dockerfile            #    Base image & system dependencies
+│   ├── devcontainer.json     #    VS Code / IDE container config
+│   └── boot-check.sh         #    Post-create health check script
+│
+├── .github/                  # 🤖 GitHub automation
+│   ├── CODEOWNERS            #    Auto-assigns reviewers for critical paths
+│   ├── PULL_REQUEST_TEMPLATE.md  # Standardized PR checklist
+│   ├── dependabot.yml        #    Automated dependency vulnerability scanning
+│   └── workflows/
+│       └── ci.yml            #    CI pipeline (runs on every PR)
+│
+├── scripts/                  # ⚙️  Setup & automation scripts
+│   ├── setup-env.sh          #    Interactive setup for Git credentials & API keys
+│   └── setup-gemini.sh       #    Installs Gemini CLI & extensions
+│
+├── docs/
+│   └── decisions/            # 📝 Architecture Decision Records (ADRs)
+│       └── 001-initial-tech-stack.md  # Your first ADR — fill this out!
+│
+├── .editorconfig             # Consistent formatting across all editors
+├── .env.example              # Template for required environment variables
+├── .gitattributes            # Line-ending normalization (LF for scripts)
+├── .gitignore                # Sensible defaults (node_modules, .env, etc.)
+├── .prettierrc               # Code formatter configuration
+├── AGENTS.md                 # AI agent instructions & project context
+├── CODE_OF_CONDUCT.md        # Contributor code of conduct
+├── LICENSE                   # Project license (MIT)
+└── Makefile                  # Universal task runner (make dev, make test, etc.)
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Define Your Architecture
+
+Before opening the Devcontainer, define your tech stack. The language and framework you choose will determine how the container is configured. Open your AI assistant and prompt it with:
+
+> _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, fill out the `001-initial-tech-stack.md` ADR, configure the universal `Makefile`, setup the `dependabot.yml`, and update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) to install the correct runtime and tooling for our chosen stack."_
+
+### 2. Open in a Devcontainer
+
+Once the Devcontainer has been configured for your stack, open this folder in **VS Code** or **Antigravity** and accept the prompt to **Reopen in Container**. Docker will build your isolated development environment automatically.
+
+### 3. Run the Setup Script
+
+Once the container is ready, open a terminal and run:
+
+```bash
+./scripts/setup-env.sh
+```
+
+This will configure your Git identity, SSH signing, and any required API keys.
+
+### 4. Build Something Great
+
+Start developing! Use the universal `Makefile` targets:
+
+| Command      | Purpose                       |
+| ------------ | ----------------------------- |
+| `make setup` | Install project dependencies  |
+| `make dev`   | Start the development server  |
+| `make test`  | Run the test suite            |
+| `make build` | Create a production build     |
+| `make lint`  | Run code formatting & linting |
+| `make clean` | Remove build artifacts        |
+
+---
+
+## 📚 Key Files to Know
+
+| File               | What It Does                                                                                                                                            |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`AGENTS.md`**    | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy. Read this first if you're using an AI pair programmer. |
+| **`Makefile`**     | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack.                                                    |
+| **`.env.example`** | Lists all required environment variables. Copy to `.env` and fill in your values.                                                                       |
+| **`CODEOWNERS`**   | Defines who must approve PRs for critical paths (CI, ADRs, Devcontainer).                                                                               |
+
+---
+
+## 🛟 Need Help?
+
+- **Container not building?** Check that Docker Desktop is running and you have enough disk space.
+- **Gemini CLI missing?** Run `bash ./scripts/setup-gemini.sh` manually inside the container.
+- **Line-ending errors on Windows?** Run `git config --global core.autocrlf false` and re-clone.
+- **Something else?** Check the [bootstrap repo](https://github.com/penguinranch/bootstrap) for the latest docs and troubleshooting tips.
