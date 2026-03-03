@@ -94,6 +94,8 @@ _This will prompt you for your Git credentials and your Gemini API Key so the CL
 
 - **The IDE Window is hung / The Gemini CLI didn't install:**
   Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside the container and manually run `bash ./scripts/setup-gemini.sh` to finish the installation.
+- **Git complains about missing user name and email:**
+  If the Devcontainer hangs after building, the `boot-check.sh` script might not have run to configure your Git profile from `.env`. You can fix this by explicitly running `./.devcontainer/boot-check.sh` or by running `./scripts/setup-env.sh` again.
 - **Windows / WSL line-ending errors (bash scripts crashing):**
   Windows uses `CRLF` format for new lines, which crashes Linux bash scripts. We have a `.gitattributes` file to prevent this, but if you still see `\r` errors, ensure your global git config is set: `git config --global core.autocrlf false`.
 

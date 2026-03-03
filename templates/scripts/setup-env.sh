@@ -34,6 +34,10 @@ update_env() {
 update_env "GIT_NAME" "$GIT_NAME"
 update_env "GIT_EMAIL" "$GIT_EMAIL"
 
+# Also configure git locally for the current environment
+git config --global user.name "$GIT_NAME"
+git config --global user.email "$GIT_EMAIL"
+
 if [ -n "$GEMINI_API_KEY" ]; then
     update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
 fi

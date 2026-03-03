@@ -71,6 +71,8 @@ Once the container is ready, open a terminal and run:
 
 This will configure your Git identity, SSH signing, and any required API keys.
 
+> **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, you can manually run `./.devcontainer/boot-check.sh` to apply `.env` variables to your environment.
+
 ### 4. Build Something Great
 
 Start developing! Use the universal `Makefile` targets:
