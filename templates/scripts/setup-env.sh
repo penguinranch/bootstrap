@@ -13,7 +13,11 @@ fi
 echo "Setting up environment variables..."
 read -p "Enter your Git Name: " GIT_NAME
 read -p "Enter your Git Email: " GIT_EMAIL
-read -p "Enter your Gemini API Key: " GEMINI_API_KEY
+
+echo ""
+echo "Optional: The Gemini API Key is used by the CLI tools inside this Devcontainer."
+echo "You can get an API key from: https://aistudio.google.com/app/apikey"
+read -p "Enter your Gemini API Key (press Enter to skip): " GEMINI_API_KEY
 
 # Function to securely update or append inside .env
 update_env() {
@@ -29,6 +33,9 @@ update_env() {
 
 update_env "GIT_NAME" "$GIT_NAME"
 update_env "GIT_EMAIL" "$GIT_EMAIL"
-update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
+
+if [ -n "$GEMINI_API_KEY" ]; then
+    update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
+fi
 
 echo "Configuration complete. Restart your terminal or source the .env file."

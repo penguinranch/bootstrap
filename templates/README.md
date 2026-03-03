@@ -51,7 +51,11 @@ Here's what was installed and why:
 
 Before opening the Devcontainer, define your tech stack. The language and framework you choose will determine how the container is configured. Open your AI assistant and prompt it with:
 
-> _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, fill out the `001-initial-tech-stack.md` ADR, configure the universal `Makefile`, setup the `dependabot.yml`, and update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) to install the correct runtime and tooling for our chosen stack, and rename the devcontainer to match the project name."_
+> _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
+> _1. Fill out the `001-initial-tech-stack.md` ADR._
+> _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and rename the devcontainer to match the project name._
+> _3. Configure the universal `Makefile` and setup `dependabot.yml`._
+> _4. Rewrite `README.md` to describe this new project and how to run it."_
 
 ### 2. Open in a Devcontainer
 
