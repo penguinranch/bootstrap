@@ -47,7 +47,9 @@ Here's what was installed and why:
 ├── AGENTS.md                 # AI agent instructions & project context
 ├── CHANGELOG.md              # Project changelog (Keep a Changelog format)
 ├── CODE_OF_CONDUCT.md        # Contributor code of conduct
+├── CONTRIBUTING.md           # How to contribute to this project
 ├── LICENSE                   # Project license (MIT)
+├── SECURITY.md               # Vulnerability disclosure policy
 └── Makefile                  # Universal task runner (make dev, make test, etc.)
 ```
 
@@ -107,10 +109,12 @@ Start developing! Use the universal `Makefile` targets:
 
 | File               | What It Does                                                                                                                                            |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`AGENTS.md`**    | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy. Read this first if you're using an AI pair programmer. |
-| **`Makefile`**     | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack.                                                    |
-| **`.env.example`** | Lists all required environment variables. Copy to `.env` and fill in your values.                                                                       |
-| **`CODEOWNERS`**   | Defines who must approve PRs for critical paths (CI, ADRs, Devcontainer).                                                                               |
+| **`AGENTS.md`**        | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy.                   |
+| **`Makefile`**         | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack.                |
+| **`.env.example`**     | Lists all required environment variables. Copy to `.env` and fill in your values.                                   |
+| **`CODEOWNERS`**       | Defines who must approve PRs for critical paths (CI, ADRs, Devcontainer).                                           |
+| **`CONTRIBUTING.md`**  | How to contribute: branch naming, conventional commits, ADR workflow, and PR process.                               |
+| **`SECURITY.md`**      | How to report vulnerabilities. Replace `[SECURITY_EMAIL]` with your contact.                                        |
 
 ---
 
