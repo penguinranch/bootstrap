@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+
 # Re-runnable script to initialize or update .env
 if [ ! -f .env.example ]; then
     echo "Error: .env.example not found. Please create it first."
@@ -15,17 +17,25 @@ read -p "Enter your Git Name: " GIT_NAME
 read -p "Enter your Git Email: " GIT_EMAIL
 
 echo ""
-echo "Optional: The Gemini API Key is used by the CLI tools inside this Devcontainer."
+echo "Optional: The Gemini API Key is used by the Gemini CLI inside this Devcontainer."
 echo "You can get an API key from: https://aistudio.google.com/app/apikey"
 read -p "Enter your Gemini API Key (press Enter to skip): " GEMINI_API_KEY
+
+# Portable sed: works on both macOS (BSD sed) and Linux (GNU sed)
+portable_sed() {
+    if sed --version 2>/dev/null | grep -q GNU; then
+        sed -i "$@"
+    else
+        sed -i '' "$@"
+    fi
+}
 
 # Function to securely update or append inside .env
 update_env() {
     local key=$1
     local value=$2
     if grep -q "^${key}=" .env; then
-        # Replace existing key ensuring value is quoted safely if necessary, though basic alphanumeric is fine here
-        sed -i '' "s|^${key}=.*|${key}=${value}|" .env 2>/dev/null || sed -i "s|^${key}=.*|${key}=${value}|" .env
+        portable_sed "s|^${key}=.*|${key}=${value}|" .env
     else
         echo "${key}=${value}" >> .env
     fi
@@ -45,9 +55,8 @@ fi
 # Update the LICENSE file if it exists
 if [ -f "LICENSE" ] && [ -n "$GIT_NAME" ]; then
     CURRENT_YEAR=$(date +"%Y")
-    # Use cross-platform sed (Mac vs Linux syntax differences)
-    sed -i '' "s/\[Year\]/$CURRENT_YEAR/g" LICENSE 2>/dev/null || sed -i "s/\[Year\]/$CURRENT_YEAR/g" LICENSE
-    sed -i '' "s/\[Full Name\]/$GIT_NAME/g" LICENSE 2>/dev/null || sed -i "s/\[Full Name\]/$GIT_NAME/g" LICENSE
+    portable_sed "s|\[Year\]|${CURRENT_YEAR}|g" LICENSE
+    portable_sed "s|\[Full Name\]|${GIT_NAME}|g" LICENSE
 fi
 
-echo "Configuration complete. Restart your terminal or source the .env file."
+echo "✅ Configuration complete. Restart your terminal or source the .env file."

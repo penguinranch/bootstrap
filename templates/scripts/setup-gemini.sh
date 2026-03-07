@@ -1,10 +1,8 @@
 #!/bin/bash
-# Install Gemini CLI and useful extensions globally
+set -euo pipefail
 
+# Install Gemini CLI globally
 echo "Installing Gemini CLI..."
-npm install -g geminicli
+npm install -g @google/gemini-cli
 
-echo "Installing Gemini CLI Extensions..."
-geminicli extension install gemini-cli-security code-review github Endor-Labs-Code-Security Snyk
-
-echo "Gemini CLI setup complete!"
+echo "✅ Gemini CLI setup complete! Run 'gemini' to start."
