@@ -23,7 +23,7 @@ When you bootstrap a project using this template, you are receiving an environme
 ### 3. AI-Optimized Workflows
 
 **The Problem:** Generative AI tools (like GitHub Copilot or Gemini) get confused easily and burn through their context "tokens" doing repetitive tasks.
-**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** is installed globally inside the container, providing the AI with native tooling for security scanning (Snyk) and code reviews—saving precious IDE tokens.
+**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** (`@google/gemini-cli`) is installed globally inside the container, providing the AI with native tooling for code review and analysis—saving precious IDE tokens.
 
 ### 4. Structural Guardrails
 
@@ -66,7 +66,7 @@ Before opening the Devcontainer, decide on your tech stack. The language and fra
 
 > _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
 > _1. Fill out the `001-initial-tech-stack.md` ADR._
-> _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and rename the devcontainer to match the project name._
+> _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json` with the project name._
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
 > _4. Rewrite `README.md` to describe this new project and how to run it."_
 

@@ -38,6 +38,7 @@ Here's what was installed and why:
 ├── .gitignore                # Sensible defaults (node_modules, .env, etc.)
 ├── .prettierrc               # Code formatter configuration
 ├── AGENTS.md                 # AI agent instructions & project context
+├── CHANGELOG.md              # Project changelog (Keep a Changelog format)
 ├── CODE_OF_CONDUCT.md        # Contributor code of conduct
 ├── LICENSE                   # Project license (MIT)
 └── Makefile                  # Universal task runner (make dev, make test, etc.)
@@ -53,7 +54,7 @@ Before opening the Devcontainer, define your tech stack. The language and framew
 
 > _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
 > _1. Fill out the `001-initial-tech-stack.md` ADR._
-> _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and rename the devcontainer to match the project name._
+> _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json` with the project name._
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
 > _4. Rewrite `README.md` to describe this new project and how to run it."_
 
