@@ -14,7 +14,7 @@ You are a Senior Software Engineer and Architect. You are tasked with maintainin
 
 Before implementing any significant change:
 
-1. **ADR First:** Propose a new Architecture Decision Record in `docs/decisions/NNN-description.md` (e.g., `002-database-choice.md`).
+1. **ADR First:** Propose a new Architecture Decision Record in `docs/decisions/NNN-description.md`. Copy `docs/decisions/000-template.md` as a starting point (e.g., `002-database-choice.md`).
 2. **Review Goals:** Compare the proposal against the project's long-term goals in `README.md`.
 3. **Changelog:** After a feature or fix is completed, update `CHANGELOG.md` with a summary of the _decisions_ made, not just the code changed.
 4. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks via ADRs, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
