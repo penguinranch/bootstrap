@@ -18,6 +18,9 @@ Here's what was installed and why:
 │   └── boot-check.sh         #    Post-create health check script
 │
 ├── .github/                  # 🤖 GitHub automation
+│   ├── ISSUE_TEMPLATE/       #    Standardized issue forms
+│   │   ├── bug_report.md     #    Bug report template
+│   │   └── feature_request.md #   Feature request template
 │   ├── CODEOWNERS            #    Auto-assigns reviewers for critical paths
 │   ├── PULL_REQUEST_TEMPLATE.md  # Standardized PR checklist
 │   ├── dependabot.yml        #    Automated dependency vulnerability scanning
