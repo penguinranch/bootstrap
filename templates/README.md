@@ -25,7 +25,8 @@ Here's what was installed and why:
 │   ├── PULL_REQUEST_TEMPLATE.md  # Standardized PR checklist
 │   ├── dependabot.yml        #    Automated dependency vulnerability scanning
 │   └── workflows/
-│       └── ci.yml            #    CI pipeline (runs on every PR)
+│       ├── ci.yml            #    CI pipeline (runs on every PR)
+│       └── security.yml      #    Trivy security scanning
 │
 ├── .githooks/                # 🪝 Git hooks (installed via make setup)
 │   ├── pre-commit            #    Runs make lint before each commit
@@ -37,12 +38,14 @@ Here's what was installed and why:
 │
 ├── docs/
 │   └── decisions/            # 📝 Architecture Decision Records (ADRs)
+│       ├── 000-template.md           # ADR template — copy for new decisions
 │       └── 001-initial-tech-stack.md  # Your first ADR — fill this out!
 │
 ├── .editorconfig             # Consistent formatting across all editors
 ├── .env.example              # Template for required environment variables
 ├── .gitattributes            # Line-ending normalization (LF for scripts)
 ├── .gitignore                # Sensible defaults (node_modules, .env, etc.)
+├── .nvmrc                    # Pins Node.js version (matches CI)
 ├── .prettierrc               # Code formatter configuration
 ├── AGENTS.md                 # AI agent instructions & project context
 ├── CHANGELOG.md              # Project changelog (Keep a Changelog format)
