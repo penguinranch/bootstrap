@@ -31,7 +31,8 @@ Before implementing any significant change:
 
 ## 🏗 Coding Standards
 
-- **Linting:** Run Prettier before every commit.
+- **Linting:** Run Prettier before every commit. The pre-commit hook (`.githooks/pre-commit`) runs `make lint` automatically.
+- **Conventional Commits:** All commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/) format: `<type>[scope]: <description>`. The commit-msg hook enforces this. Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
 - **Testing:** Always use the language-appropriate testing framework. Do not consider a task "Done" until tests pass.
 - **Git Branching:** Work in scoped branches:
   - `feat/...` for new features.
@@ -52,6 +53,8 @@ Before implementing any significant change:
 
 ## 📂 Directory Structure Reference
 
+- `/.devcontainer`: Environment definition and boot logic.
+- `/.githooks`: Git hooks for pre-commit linting and commit message validation.
+- `/.github`: CI workflows, issue templates, CODEOWNERS, and dependabot config.
 - `/docs/decisions`: ADRs and major architectural choices.
 - `/scripts`: Automation and setup scripts (e.g., `setup-env.sh`).
-- `/.devcontainer`: Environment definition and boot logic.

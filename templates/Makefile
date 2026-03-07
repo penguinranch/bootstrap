@@ -1,22 +1,29 @@
-.PHONY: setup dev test build lint clean
+.PHONY: help setup dev test build lint clean
 
 # Default variables
-APP_NAME := antigravity-app
+APP_NAME := {{PROJECT_NAME}}
 
-setup:
-	@echo "Setup target not implemented yet"
+help: ## Show available make targets
+	@echo "Available targets:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-dev:
-	@echo "Dev target not implemented yet"
+setup: ## Install dependencies and configure git hooks
+	@git config core.hooksPath .githooks
+	@chmod +x .githooks/*
+	@echo "✅ Git hooks configured."
+	@echo "⚠️  Run your package manager's install command to finish setup."
 
-test:
-	@echo "Test target not implemented yet"
+dev: ## Start the development server
+	@echo "Dev target not implemented yet — update after choosing your tech stack"
 
-build:
-	@echo "Build target not implemented yet"
+test: ## Run the test suite
+	@echo "Test target not implemented yet — update after choosing your tech stack"
 
-lint:
-	@echo "Lint target not implemented yet"
+build: ## Create a production build
+	@echo "Build target not implemented yet — update after choosing your tech stack"
 
-clean:
-	@echo "Clean target not implemented yet"
+lint: ## Run code formatting & linting
+	@echo "Lint target not implemented yet — update after choosing your tech stack"
+
+clean: ## Remove build artifacts
+	@echo "Clean target not implemented yet — update after choosing your tech stack"

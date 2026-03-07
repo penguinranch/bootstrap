@@ -24,9 +24,13 @@ Here's what was installed and why:
 │   └── workflows/
 │       └── ci.yml            #    CI pipeline (runs on every PR)
 │
+├── .githooks/                # 🪝 Git hooks (installed via make setup)
+│   ├── pre-commit            #    Runs make lint before each commit
+│   └── commit-msg            #    Enforces Conventional Commits format
+│
 ├── scripts/                  # ⚙️  Setup & automation scripts
 │   ├── setup-env.sh          #    Interactive setup for Git credentials & API keys
-│   └── setup-gemini.sh       #    Installs Gemini CLI & extensions
+│   └── setup-gemini.sh       #    Installs Gemini CLI
 │
 ├── docs/
 │   └── decisions/            # 📝 Architecture Decision Records (ADRs)
@@ -72,6 +76,12 @@ Once the container is ready, open a terminal and run:
 
 This will configure your Git identity, SSH signing, and any required API keys.
 
+Then activate the git hooks and project setup:
+
+```bash
+make setup
+```
+
 > **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, you can manually run `./.devcontainer/boot-check.sh` to apply `.env` variables to your environment.
 
 ### 4. Build Something Great
@@ -80,7 +90,8 @@ Start developing! Use the universal `Makefile` targets:
 
 | Command      | Purpose                       |
 | ------------ | ----------------------------- |
-| `make setup` | Install project dependencies  |
+| `make help`  | Show all available targets    |
+| `make setup` | Install deps & configure hooks|
 | `make dev`   | Start the development server  |
 | `make test`  | Run the test suite            |
 | `make build` | Create a production build     |
