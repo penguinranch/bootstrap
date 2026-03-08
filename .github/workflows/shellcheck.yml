@@ -1,0 +1,18 @@
+name: Shell Script Linting
+
+on:
+  push:
+    branches: [ main, booting ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run shellcheck
+        run: |
+          shellcheck install.sh .devcontainer/*.sh scripts/*.sh templates/scripts/*.sh

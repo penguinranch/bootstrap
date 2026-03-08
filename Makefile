@@ -23,7 +23,9 @@ build: ## Create a production build
 	@echo "Build target not implemented yet — update after choosing your tech stack"
 
 lint: ## Run code formatting & linting
-	@echo "Lint target not implemented yet — update after choosing your tech stack"
+	@echo "🔍 Linting shell scripts..."
+	@shellcheck install.sh .devcontainer/*.sh scripts/*.sh templates/scripts/*.sh || (echo "❌ Shellcheck failed. Fix errors above." && exit 1)
+	@echo "✅ Shell scripts linted."
 
 clean: ## Remove build artifacts
 	@echo "Clean target not implemented yet — update after choosing your tech stack"

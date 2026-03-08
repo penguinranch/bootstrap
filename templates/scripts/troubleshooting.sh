@@ -5,7 +5,7 @@ echo "🔍 Starting Devcontainer Troubleshooting..."
 echo "----------------------------------------"
 
 # Change to the repository root relative to the script's location
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit
 
 ISSUE_FOUND=0
 

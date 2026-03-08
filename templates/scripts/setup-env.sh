@@ -13,19 +13,19 @@ if [ ! -f .env ]; then
 fi
 
 echo "Setting up environment variables..."
-read -p "Enter your Git Name: " GIT_NAME
-read -p "Enter your Git Email: " GIT_EMAIL
+read -rp "Enter your Git Name: " GIT_NAME
+read -rp "Enter your Git Email: " GIT_EMAIL
 
 echo ""
 echo "Optional: SSH Public Key for commit signing."
 echo "If you use 1Password as your SSH agent, you can copy the public key string directly."
 echo "(e.g., ssh-ed25519 AAAAC3Nz...)"
-read -p "Enter your SSH Public Key (press Enter to skip): " SSH_PUBLIC_KEY
+read -rp "Enter your SSH Public Key (press Enter to skip): " SSH_PUBLIC_KEY
 
 echo ""
 echo "Optional: The Gemini API Key is used by the Gemini CLI inside this Devcontainer."
 echo "You can get an API key from: https://aistudio.google.com/app/apikey"
-read -p "Enter your Gemini API Key (press Enter to skip): " GEMINI_API_KEY
+read -rp "Enter your Gemini API Key (press Enter to skip): " GEMINI_API_KEY
 
 echo ""
 echo "Optional: Authenticate with GitHub CLI for automations inside the Devcontainer."
