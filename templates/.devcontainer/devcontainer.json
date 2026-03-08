@@ -30,7 +30,8 @@
   },
   "postAttachCommand": "code README.md AGENTS.md",
   "containerEnv": {
-    "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}"
+    "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
   },
   "postStartCommand": "/bin/bash ./.devcontainer/boot-check.sh"
 }

@@ -33,6 +33,10 @@ echo "You can get a Fine-grained PAT from: https://github.com/settings/tokens?ty
 echo "It needs 'Pull Requests: Read-only' and 'Contents: Read-only' access to relevant repositories."
 read -p "Enter your GitHub Token (press Enter to skip): " GITHUB_TOKEN
 
+if [ -n "$GITHUB_TOKEN" ]; then
+    echo "To authenticate the GitHub CLI, run: echo \$GITHUB_TOKEN | gh auth login --with-token"
+fi
+
 # Portable sed: works on both macOS (BSD sed) and Linux (GNU sed)
 portable_sed() {
     if sed --version 2>/dev/null | grep -q GNU; then
@@ -76,6 +80,11 @@ fi
 
 if [ -n "$GITHUB_TOKEN" ]; then
     update_env "GITHUB_TOKEN" "$GITHUB_TOKEN"
+    # Authenticate GitHub CLI if we are in an environment where gh is available
+    if command -v gh &> /dev/null; then
+        echo "$GITHUB_TOKEN" | gh auth login --with-token
+        echo "GitHub CLI authenticated."
+    fi
 fi
 
 # Update the LICENSE file if it exists
