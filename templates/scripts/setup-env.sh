@@ -17,6 +17,12 @@ read -p "Enter your Git Name: " GIT_NAME
 read -p "Enter your Git Email: " GIT_EMAIL
 
 echo ""
+echo "Optional: SSH Public Key for commit signing."
+echo "If you use 1Password as your SSH agent, you can copy the public key string directly."
+echo "(e.g., ssh-ed25519 AAAAC3Nz...)"
+read -p "Enter your SSH Public Key (press Enter to skip): " SSH_PUBLIC_KEY
+
+echo ""
 echo "Optional: The Gemini API Key is used by the Gemini CLI inside this Devcontainer."
 echo "You can get an API key from: https://aistudio.google.com/app/apikey"
 read -p "Enter your Gemini API Key (press Enter to skip): " GEMINI_API_KEY
@@ -50,9 +56,19 @@ update_env() {
 update_env "GIT_NAME" "$GIT_NAME"
 update_env "GIT_EMAIL" "$GIT_EMAIL"
 
+if [ -n "$SSH_PUBLIC_KEY" ]; then
+    update_env "SSH_PUBLIC_KEY" "$SSH_PUBLIC_KEY"
+fi
+
 # Also configure git locally for the current environment
 git config --global user.name "$GIT_NAME"
 git config --global user.email "$GIT_EMAIL"
+
+if [ -n "$SSH_PUBLIC_KEY" ]; then
+    git config --global gpg.format ssh
+    git config --global user.signingkey "key::${SSH_PUBLIC_KEY}"
+    git config --global commit.gpgsign true
+fi
 
 if [ -n "$GEMINI_API_KEY" ]; then
     update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"

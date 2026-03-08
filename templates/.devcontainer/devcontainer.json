@@ -29,14 +29,8 @@
     }
   },
   "postAttachCommand": "code README.md AGENTS.md",
-  "mounts": [
-    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly"
-  ],
   "containerEnv": {
     "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}"
-  },
-  "remoteEnv": {
-    "GIT_CONFIG_PARAMETERS": "'commit.gpgsign=true' 'gpg.format=ssh' 'user.signingkey=~/.ssh/id_ed25519.pub'"
   },
   "postStartCommand": "/bin/bash ./.devcontainer/boot-check.sh"
 }
