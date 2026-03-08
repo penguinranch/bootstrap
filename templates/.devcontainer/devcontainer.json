@@ -33,5 +33,5 @@
     "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
     "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
   },
-  "postStartCommand": "/bin/bash ./.devcontainer/boot-check.sh"
+  "postStartCommand": "/bin/bash ./scripts/start-container.sh"
 }

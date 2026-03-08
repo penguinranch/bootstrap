@@ -28,4 +28,9 @@ else
         git config --global user.signingkey "key::${SSH_PUBLIC_KEY}"
         git config --global commit.gpgsign true
     fi
+
+    # Configure GitHub CLI as credential helper if token is present
+    if [ -n "${GITHUB_TOKEN:-}" ] && command -v gh &> /dev/null; then
+        gh auth setup-git
+    fi
 fi

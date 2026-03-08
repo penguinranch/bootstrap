@@ -25,7 +25,7 @@ fi
 mkdir -p docs/decisions
 
 # Make scripts executable
-chmod +x .devcontainer/boot-check.sh scripts/setup-env.sh scripts/setup-gemini.sh
+chmod +x .devcontainer/boot-check.sh scripts/setup-env.sh scripts/setup-gemini.sh scripts/start-container.sh
 chmod +x .githooks/*
 
 echo "✅ Bootstrap complete. Open in VS Code or Antigravity to start the Devcontainer."

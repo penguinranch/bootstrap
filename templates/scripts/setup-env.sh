@@ -83,7 +83,8 @@ if [ -n "$GITHUB_TOKEN" ]; then
     # Authenticate GitHub CLI if we are in an environment where gh is available
     if command -v gh &> /dev/null; then
         echo "$GITHUB_TOKEN" | gh auth login --with-token
-        echo "GitHub CLI authenticated."
+        gh auth setup-git
+        echo "GitHub CLI authenticated and configured as Git credential helper."
     fi
 fi
 

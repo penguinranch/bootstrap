@@ -33,8 +33,9 @@ Here's what was installed and why:
 │   └── commit-msg            #    Enforces Conventional Commits format
 │
 ├── scripts/                  # ⚙️  Setup & automation scripts
-│   ├── setup-env.sh          #    Interactive setup for Git credentials & API keys
-│   └── setup-gemini.sh       #    Installs Gemini CLI
+│   ├── start-container.sh    #    [postStartCommand] Fast, idempotent environment checks (runs every boot)
+│   ├── setup-env.sh          #    [Manual] Interactive setup for Git credentials & API keys (prompts user)
+│   └── setup-gemini.sh       #    [postCreateCommand] Heavy, one-time global installations (runs once on build)
 │
 ├── docs/
 │   └── decisions/            # 📝 Architecture Decision Records (ADRs)
@@ -82,7 +83,7 @@ Once the container is ready, open a terminal and run:
 ./scripts/setup-env.sh
 ```
 
-This will configure your Git identity, SSH signing, and prompt for any required API keys (Gemini, GitHub).
+This will configure your Git identity, SSH signing, and prompt for any required API keys (Gemini, GitHub). Providing a GitHub Token locally inside this environment will automatically authenticate the `gh` CLI and set it up as your Git credential helper for seamless HTTPS operations.
 
 Then activate the git hooks and project setup:
 
@@ -90,7 +91,7 @@ Then activate the git hooks and project setup:
 make setup
 ```
 
-> **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, you can manually run `./.devcontainer/boot-check.sh` to apply `.env` variables to your environment.
+> **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, you can manually run `./scripts/start-container.sh` to apply `.env` variables and verify hooks.
 
 ### 4. Build Something Great
 
