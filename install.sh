@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Usage: curl -sSL https://raw.githubusercontent.com/penguinranch/bootstrap/main/install.sh | bash
 
-REPO_TAR_URL="https://github.com/penguinranch/bootstrap/tarball/main"
+REPO_TAR_URL="${REPO_TAR_URL:-https://github.com/penguinranch/bootstrap/tarball/main}"
 
 echo "🚀 Initializing Gold Standard Environment..."
 
@@ -16,7 +16,7 @@ fi
 
 # Download and extract the templates directory
 echo "Downloading the latest templates..."
-if ! curl -sL "$REPO_TAR_URL" | tar -xz --strip-components=2 "*/templates/"; then
+if ! curl -sL "$REPO_TAR_URL" | tar -xz --wildcards --strip-components=2 "*/templates/"; then
   echo "❌ Failed to download or extract templates. Check your network connection."
   exit 1
 fi
