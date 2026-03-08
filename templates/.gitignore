@@ -58,3 +58,6 @@ obj/
 !.vscode/launch.json
 !.vscode/extensions.json
 *.swp
+
+# Testing
+.tmp-test/
