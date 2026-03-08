@@ -28,8 +28,9 @@ The repository is divided into two distinct parts:
 ### Devcontainer Boundaries
 
 It is critical to distinguish between the two development environments in this repository:
-- **Root Devcontainer (`/.devcontainer`)**: This environment is used *only* for developing the `bootstrap` repository itself (e.g., testing `install.sh`, committing updates to the payload).
-- **Template Devcontainer (`/templates/.devcontainer`)**: This is the payload that gets extracted to user machines. Editing files here modifies the *future* environment of generated projects. **Changes to the root devcontainer are not inherited by downstream templates automatically.**
+
+- **Root Devcontainer (`/.devcontainer`)**: This environment is used _only_ for developing the `bootstrap` repository itself (e.g., testing `install.sh`, committing updates to the payload).
+- **Template Devcontainer (`/templates/.devcontainer`)**: This is the payload that gets extracted to user machines. Editing files here modifies the _future_ environment of generated projects. **Changes to the root devcontainer are not inherited by downstream templates automatically.**
 
 ### Modifying the Payload (`/templates/`)
 

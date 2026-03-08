@@ -23,9 +23,9 @@ Include as much of the following information as possible:
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | ✅ Yes             |
+| Version | Supported |
+| ------- | --------- |
+| Latest  | ✅ Yes    |
 
 ## Security Measures in This Project
 

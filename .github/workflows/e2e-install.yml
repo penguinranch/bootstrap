@@ -2,9 +2,9 @@ name: E2E Install Verification
 
 on:
   push:
-    branches: [ main, booting ]
+    branches: [main, booting]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test-install:
@@ -37,16 +37,16 @@ jobs:
           test -d scripts
           test -f scripts/setup-env.sh
           test -f scripts/troubleshooting.sh
-          
+
           echo "Verifying execute permissions..."
           test -x scripts/setup-env.sh
           test -x scripts/start-container.sh
           test -x scripts/troubleshooting.sh
-          
+
           echo "Verifying no root-only files leaked..."
           if [ -f "install.sh" ]; then
             echo "Error: install.sh should not be in the project root."
             exit 1
           fi
-          
+
           echo "✅ E2E Verification Passed!"

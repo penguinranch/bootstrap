@@ -97,28 +97,28 @@ make setup
 
 Start developing! Use the universal `Makefile` targets:
 
-| Command      | Purpose                       |
-| ------------ | ----------------------------- |
-| `make help`  | Show all available targets    |
-| `make setup` | Install deps & configure hooks|
-| `make dev`   | Start the development server  |
-| `make test`  | Run the test suite            |
-| `make build` | Create a production build     |
-| `make lint`  | Run code formatting & linting |
-| `make clean` | Remove build artifacts        |
+| Command      | Purpose                        |
+| ------------ | ------------------------------ |
+| `make help`  | Show all available targets     |
+| `make setup` | Install deps & configure hooks |
+| `make dev`   | Start the development server   |
+| `make test`  | Run the test suite             |
+| `make build` | Create a production build      |
+| `make lint`  | Run code formatting & linting  |
+| `make clean` | Remove build artifacts         |
 
 ---
 
 ## 📚 Key Files to Know
 
-| File               | What It Does                                                                                                                                            |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`AGENTS.md`**        | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy.                   |
-| **`Makefile`**         | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack.                |
-| **`.env.example`**     | Lists all required environment variables. Copy to `.env` and fill in your values.                                   |
-| **`CODEOWNERS`**       | Defines who must approve PRs for critical paths (CI, ADRs, Devcontainer).                                           |
-| **`CONTRIBUTING.md`**  | How to contribute: branch naming, conventional commits, ADR workflow, and PR process.                               |
-| **`SECURITY.md`**      | How to report vulnerabilities. Replace `[SECURITY_EMAIL]` with your contact.                                        |
+| File                  | What It Does                                                                                         |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| **`AGENTS.md`**       | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy.     |
+| **`Makefile`**        | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack. |
+| **`.env.example`**    | Lists all required environment variables. Copy to `.env` and fill in your values.                    |
+| **`CODEOWNERS`**      | Defines who must approve PRs for critical paths (CI, ADRs, Devcontainer).                            |
+| **`CONTRIBUTING.md`** | How to contribute: branch naming, conventional commits, ADR workflow, and PR process.                |
+| **`SECURITY.md`**     | How to report vulnerabilities. Replace `[SECURITY_EMAIL]` with your contact.                         |
 
 ---
 
