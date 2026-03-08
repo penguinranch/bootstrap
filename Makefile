@@ -25,7 +25,14 @@ build: ## Create a production build
 lint: ## Run code formatting & linting
 	@echo "🔍 Linting shell scripts..."
 	@shellcheck install.sh .devcontainer/*.sh scripts/*.sh templates/scripts/*.sh || (echo "❌ Shellcheck failed. Fix errors above." && exit 1)
-	@echo "✅ Shell scripts linted."
+	@echo "🔍 Checking file formatting..."
+	@npx -y prettier --check "**/*.{md,json,yml}" || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1)
+	@echo "✅ All lint checks passed."
+
+format: ## Format all files
+	@echo "🧹 Formatting files..."
+	@npx -y prettier --write "**/*.{md,json,yml}"
+	@echo "✅ Formatting complete."
 
 clean: ## Remove build artifacts
 	@echo "Clean target not implemented yet — update after choosing your tech stack"
