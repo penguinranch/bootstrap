@@ -1,13 +1,12 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
-    schedule:
-      interval: 'weekly'
+  # Maintain GitHub Actions used in this repo
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'weekly'
+
+  # Maintain Docker base images in the root devcontainer
   - package-ecosystem: 'docker'
     directory: '/.devcontainer'
     schedule:
