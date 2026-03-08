@@ -82,7 +82,7 @@ Once the container is ready, open a terminal and run:
 ./scripts/setup-env.sh
 ```
 
-This will configure your Git identity, SSH signing, and any required API keys.
+This will configure your Git identity, SSH signing, and prompt for any required API keys (Gemini, GitHub).
 
 Then activate the git hooks and project setup:
 
