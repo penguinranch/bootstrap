@@ -1,0 +1,52 @@
+name: E2E Install Verification
+
+on:
+  push:
+    branches: [main, booting]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run installer
+        run: |
+          mkdir test-project
+          cd test-project
+          # We point to the local install.sh but it will still try to download a tarball.
+          # To test the logic of the script using the CURRENT branch changes,
+          # we override REPO_TAR_URL to point to this repository's current commit.
+          export REPO_TAR_URL="https://github.com/${{ github.repository }}/tarball/${{ github.sha }}"
+          bash ../install.sh
+        env:
+          BOOTSTRAP_DEV: 1
+
+      - name: Verify files
+        run: |
+          cd test-project
+          echo "Verifying critical files exist..."
+          test -d .devcontainer
+          test -f .gitignore
+          test -f Makefile
+          test -f README.md
+          test -f AGENTS.md
+          test -d scripts
+          test -f scripts/setup-env.sh
+          test -f scripts/troubleshooting.sh
+
+          echo "Verifying execute permissions..."
+          test -x scripts/setup-env.sh
+          test -x scripts/start-container.sh
+          test -x scripts/troubleshooting.sh
+
+          echo "Verifying no root-only files leaked..."
+          if [ -f "install.sh" ]; then
+            echo "Error: install.sh should not be in the project root."
+            exit 1
+          fi
+
+          echo "✅ E2E Verification Passed!"

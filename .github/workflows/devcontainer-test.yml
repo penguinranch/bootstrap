@@ -1,0 +1,32 @@
+name: Devcontainer Build Validation
+
+on:
+  push:
+    branches: [main, booting]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-root:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build root devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          subFolder: .
+          push: never
+
+  build-template:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build template devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          subFolder: templates
+          push: never

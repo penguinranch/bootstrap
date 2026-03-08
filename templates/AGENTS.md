@@ -29,6 +29,14 @@ Before implementing any significant change:
 - **Pragmatism (YAGNI & KISS):** Build for current requirements. Avoid premature abstraction (Rule of Three) and over-engineering.
 - **Observability:** Code is not complete until it emits the necessary telemetry (logs/traces).
 
+## 🔄 Devcontainer Lifecycle Scripts
+
+When adding or modifying automation scripts for the devcontainer, you must adhere to the following execution contexts defined in `devcontainer.json`:
+
+1. **`postCreateCommand`**: Use for heavy, one-time global installations (e.g., global `npm` packages, binaries) that should be baked into the image after the `Dockerfile` completes. Examples: `setup-gemini.sh`. This runs _only once_ when the container is built.
+2. **`postStartCommand`**: Use for fast, idempotent environment checks and initializations that must be present every time the developer connects. Examples: `start-container.sh` (which configures git hooks and reads `.env`). This runs _every time_ the container starts or wakes up.
+3. **Manual Interactive Scripts**: Any script that requires user interaction (e.g., using `read -p`) must **never** be added to an automated lifecycle hook. If added to `postStartCommand`, the container boot process will hang indefinitely waiting for input on a detached TTY. Examples: `setup-env.sh`. Instead, ensure the idempotent `start-container.sh` script checks for the required state and warns the user to run the interactive script manually.
+
 ## 🏗 Coding Standards
 
 - **Linting:** Run Prettier before every commit. The pre-commit hook (`.githooks/pre-commit`) runs `make lint` automatically.
@@ -47,7 +55,7 @@ Before implementing any significant change:
 
 ## 🤖 Token Optimization & CLI Usage
 
-- **GitHub CLI:** The `gh` command is available in this container and authenticated if you need to create/review PRs, manage issues, or check GitHub Actions status. See [.env.example](.env.example) for required `GITHUB_TOKEN` scopes.
+- **GitHub CLI:** The `gh` command is available in this container. Use `gh auth login` to authenticate. This enables seamless GitHub operations and can configure Git as your credential helper.
 - **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) installed in this container for well-structured tasks.
 - **Usage:** Run `gemini` in the terminal to start an interactive session, or `gemini -p "<prompt>"` for one-shot tasks.
 - **Examples:** Ask the CLI to review code, analyze architecture, or investigate issues—this keeps your IDE context window focused on the primary task.

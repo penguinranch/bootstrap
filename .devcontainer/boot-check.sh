@@ -9,9 +9,11 @@ else
     while IFS='=' read -r key value; do
         # Skip empty lines and comments
         if [[ -n "$key" && ! "$key" =~ ^# ]]; then
-            # Trim leading/trailing whitespace from key and value
-            key=$(echo "$key" | xargs)
-            value=$(echo "$value" | xargs)
+            # Trim leading/trailing whitespace
+            key="${key#"${key%%[![:space:]]*}"}"
+            key="${key%"${key##*[![:space:]]}"}"
+            value="${value#"${value%%[![:space:]]*}"}"
+            value="${value%"${value##*[![:space:]]}"}"
             export "$key=$value"
         fi
     done < ".env"

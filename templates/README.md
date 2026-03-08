@@ -33,8 +33,10 @@ Here's what was installed and why:
 │   └── commit-msg            #    Enforces Conventional Commits format
 │
 ├── scripts/                  # ⚙️  Setup & automation scripts
-│   ├── setup-env.sh          #    Interactive setup for Git credentials & API keys
-│   └── setup-gemini.sh       #    Installs Gemini CLI
+│   ├── start-container.sh    #    [postStartCommand] Fast, idempotent checks
+│   ├── setup-env.sh          #    [Manual] Interactive setup for credentials
+│   ├── troubleshooting.sh    #    [Manual] Diagnose common environment issues
+│   └── setup-gemini.sh       #    [postCreateCommand] Global tool installations
 │
 ├── docs/
 │   └── decisions/            # 📝 Architecture Decision Records (ADRs)
@@ -68,7 +70,8 @@ Before opening the Devcontainer, define your tech stack. The language and framew
 > _1. Fill out the `001-initial-tech-stack.md` ADR._
 > _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json` with the project name._
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
-> _4. Rewrite `README.md` to describe this new project and how to run it."_
+> _4. Update `SECURITY.md` with your contact details._
+> _5. Rewrite `README.md` to describe this new project and how to run it."_
 
 ### 2. Open in a Devcontainer
 
@@ -82,7 +85,7 @@ Once the container is ready, open a terminal and run:
 ./scripts/setup-env.sh
 ```
 
-This will configure your Git identity, SSH signing, and prompt for any required API keys (Gemini, GitHub).
+This will configure your Git identity and prompt for any required API keys (Gemini). For GitHub operations, run `gh auth login` inside the container for seamless HTTPS authentication.
 
 Then activate the git hooks and project setup:
 
@@ -90,34 +93,34 @@ Then activate the git hooks and project setup:
 make setup
 ```
 
-> **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, you can manually run `./.devcontainer/boot-check.sh` to apply `.env` variables to your environment.
+> **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, you can manually run `./scripts/start-container.sh` to apply `.env` variables and verify hooks.
 
 ### 4. Build Something Great
 
 Start developing! Use the universal `Makefile` targets:
 
-| Command      | Purpose                       |
-| ------------ | ----------------------------- |
-| `make help`  | Show all available targets    |
-| `make setup` | Install deps & configure hooks|
-| `make dev`   | Start the development server  |
-| `make test`  | Run the test suite            |
-| `make build` | Create a production build     |
-| `make lint`  | Run code formatting & linting |
-| `make clean` | Remove build artifacts        |
+| Command      | Purpose                        |
+| ------------ | ------------------------------ |
+| `make help`  | Show all available targets     |
+| `make setup` | Install deps & configure hooks |
+| `make dev`   | Start the development server   |
+| `make test`  | Run the test suite             |
+| `make build` | Create a production build      |
+| `make lint`  | Run code formatting & linting  |
+| `make clean` | Remove build artifacts         |
 
 ---
 
 ## 📚 Key Files to Know
 
-| File               | What It Does                                                                                                                                            |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`AGENTS.md`**        | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy.                   |
-| **`Makefile`**         | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack.                |
-| **`.env.example`**     | Lists all required environment variables. Copy to `.env` and fill in your values.                                   |
-| **`CODEOWNERS`**       | Defines who must approve PRs for critical paths (CI, ADRs, Devcontainer).                                           |
-| **`CONTRIBUTING.md`**  | How to contribute: branch naming, conventional commits, ADR workflow, and PR process.                               |
-| **`SECURITY.md`**      | How to report vulnerabilities. Replace `[SECURITY_EMAIL]` with your contact.                                        |
+| File                  | What It Does                                                                                         |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| **`AGENTS.md`**       | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy.     |
+| **`Makefile`**        | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack. |
+| **`.env.example`**    | Lists all required environment variables. Copy to `.env` and fill in your values.                    |
+| **`CODEOWNERS`**      | Defines who must approve PRs for critical paths (CI, ADRs, Devcontainer).                            |
+| **`CONTRIBUTING.md`** | How to contribute: branch naming, conventional commits, ADR workflow, and PR process.                |
+| **`SECURITY.md`**     | How to report vulnerabilities. Replace `[SECURITY_EMAIL]` with your contact.                         |
 
 ---
 

@@ -25,6 +25,13 @@ The repository is divided into two distinct parts:
 1. **The Generator (`install.sh`)**: The script users curl and pipe to bash. It acts as the mechanism for fetching the repository's tarball and extracting the inner `/templates` directory safely onto the user's host machine.
 2. **The Payload (`/templates/`)**: This directory contains the exact file structure, dotfiles, and scripts that will become the root directory of the _new downstream project_.
 
+### Devcontainer Boundaries
+
+It is critical to distinguish between the two development environments in this repository:
+
+- **Root Devcontainer (`/.devcontainer`)**: This environment is used _only_ for developing the `bootstrap` repository itself (e.g., testing `install.sh`, committing updates to the payload).
+- **Template Devcontainer (`/templates/.devcontainer`)**: This is the payload that gets extracted to user machines. Editing files here modifies the _future_ environment of generated projects. **Changes to the root devcontainer are not inherited by downstream templates automatically.**
+
 ### Modifying the Payload (`/templates/`)
 
 - Any file added or modified within `templates/` will automatically be downloaded by future users. There is no need to update `install.sh` when simply adding a new file to the template payload.
@@ -34,7 +41,7 @@ The repository is divided into two distinct parts:
 ### Modifying the Generator (`install.sh`)
 
 - Changes to `install.sh` should be extremely rare. It must remain lightweight.
-- Ensure that the tarball extraction logic (`tar -xz --strip-components=2 "*/templates/"`) remains robust. It relies on GitHub's tarball structure.
+- Ensure that the tarball extraction logic (utilizing `--wildcards` for the `/templates` directory) remains robust. It relies on GitHub's tarball structure.
 
 ## 📝 Contribution & Maintenance Rules
 

@@ -13,6 +13,7 @@ Thank you for considering contributing to this project! This guide will help you
 ### 1. Create an Issue
 
 Before starting work, create or find a GitHub issue describing the change. Use the provided issue templates:
+
 - **🐛 Bug Report** for bugs
 - **🚀 Feature Request** for new features
 
@@ -30,12 +31,12 @@ Use `docs/decisions/000-template.md` as a starting point.
 
 Use scoped branch naming:
 
-| Prefix       | Use Case                    |
-| ------------ | --------------------------- |
-| `feat/...`   | New features                |
-| `fix/...`    | Bug fixes                   |
-| `task/...`   | Chores, refactors, cleanup  |
-| `docs/...`   | Documentation-only changes  |
+| Prefix     | Use Case                   |
+| ---------- | -------------------------- |
+| `feat/...` | New features               |
+| `fix/...`  | Bug fixes                  |
+| `task/...` | Chores, refactors, cleanup |
+| `docs/...` | Documentation-only changes |
 
 ### 4. Write Code
 
@@ -64,12 +65,12 @@ The `commit-msg` hook enforces this automatically.
 
 ## Standards
 
-| Tool              | Purpose                          |
-| ----------------- | -------------------------------- |
-| **EditorConfig**  | Consistent whitespace & encoding |
-| **Prettier**      | Code formatting                  |
-| **Makefile**      | Universal task runner            |
-| **Git hooks**     | Automated quality gates          |
+| Tool             | Purpose                          |
+| ---------------- | -------------------------------- |
+| **EditorConfig** | Consistent whitespace & encoding |
+| **Prettier**     | Code formatting (`make format`)  |
+| **Makefile**     | Universal task runner            |
+| **Git hooks**    | Automated quality gates          |
 
 ## Need Help?
 
