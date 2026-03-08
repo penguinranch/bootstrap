@@ -1,0 +1,36 @@
+#!/bin/bash
+# Commit message hook: enforces Conventional Commits format.
+# Installed automatically by `make setup`.
+#
+# Valid prefixes: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+# Format: <type>[optional scope]: <description>
+# Examples:
+#   feat: add user authentication
+#   fix(api): handle null response from endpoint
+#   docs: update README with setup instructions
+
+commit_msg_file="$1"
+commit_msg=$(cat "$commit_msg_file")
+
+# Allow merge commits and fixup/squash commits
+if echo "$commit_msg" | grep -qE "^(Merge|fixup!|squash!)"; then
+  exit 0
+fi
+
+# Validate conventional commit format
+pattern="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .{1,}"
+
+if ! echo "$commit_msg" | head -1 | grep -qE "$pattern"; then
+  echo "❌ Commit message does not follow Conventional Commits format."
+  echo ""
+  echo "Expected: <type>[optional scope]: <description>"
+  echo "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+  echo ""
+  echo "Examples:"
+  echo "  feat: add user authentication"
+  echo "  fix(api): handle null response"
+  echo "  docs: update README with setup instructions"
+  echo ""
+  echo "Your message: $commit_msg"
+  exit 1
+fi

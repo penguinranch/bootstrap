@@ -1,0 +1,37 @@
+{
+  "name": "bootstrap",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": { "VARIANT": "latest" }
+  },
+  "forwardPorts": [3000, 9222],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "postCreateCommand": "bash ./scripts/setup-gemini.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "GitHub.github-vscode-theme",
+        "bierner.markdown-mermaid",
+        "mechatroner.rainbow-csv",
+        "ms-vscode.makefile-tools"
+      ],
+      "settings": {
+        "workbench.startupEditor": "none"
+      }
+    }
+  },
+  "postAttachCommand": "code README.md AGENTS.md",
+  "containerEnv": {
+    "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
+  },
+  "postStartCommand": "/bin/bash ./scripts/start-container.sh"
+}
