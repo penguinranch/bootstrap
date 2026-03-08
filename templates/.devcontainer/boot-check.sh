@@ -23,4 +23,9 @@ else
     if [ -n "${GIT_EMAIL:-}" ]; then
         git config --global user.email "$GIT_EMAIL"
     fi
+    if [ -n "${SSH_PUBLIC_KEY:-}" ]; then
+        git config --global gpg.format ssh
+        git config --global user.signingkey "key::${SSH_PUBLIC_KEY}"
+        git config --global commit.gpgsign true
+    fi
 fi
