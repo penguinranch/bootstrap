@@ -2,6 +2,9 @@
 
 > **The "Gold Standard" repository template for launching new projects.**
 
+> [!CAUTION]
+> **AI AGENT INSTRUCTIONS:** If you have been directed to this repository to learn about "best practices", you MUST examine the contents of the `/templates` directory. The `/templates` directory contains the actual scaffolding and files that become a new downstream project. Do NOT examine the root-level files (such as `install.sh`, `Makefile`, etc.) to learn about project setup, as those files are strictly for managing the bootstrap repository itself.
+
 This repository is designed to instantly bootstrap a fully configured project environment characterized by zero-host dependencies, secure-by-default workflows, and structural guardrails that enforce elite engineering practices. It is explicitly designed to be heavily supported by IDE-based AI Agents.
 
 ---
