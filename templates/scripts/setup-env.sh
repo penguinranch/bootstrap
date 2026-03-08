@@ -21,6 +21,12 @@ echo "Optional: The Gemini API Key is used by the Gemini CLI inside this Devcont
 echo "You can get an API key from: https://aistudio.google.com/app/apikey"
 read -p "Enter your Gemini API Key (press Enter to skip): " GEMINI_API_KEY
 
+echo ""
+echo "Optional: The GitHub Token is used by the GitHub CLI and automations inside the Devcontainer."
+echo "You can get a Fine-grained PAT from: https://github.com/settings/tokens?type=beta"
+echo "It needs 'Pull Requests: Read-only' and 'Contents: Read-only' access to relevant repositories."
+read -p "Enter your GitHub Token (press Enter to skip): " GITHUB_TOKEN
+
 # Portable sed: works on both macOS (BSD sed) and Linux (GNU sed)
 portable_sed() {
     if sed --version 2>/dev/null | grep -q GNU; then
@@ -50,6 +56,10 @@ git config --global user.email "$GIT_EMAIL"
 
 if [ -n "$GEMINI_API_KEY" ]; then
     update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
+fi
+
+if [ -n "$GITHUB_TOKEN" ]; then
+    update_env "GITHUB_TOKEN" "$GITHUB_TOKEN"
 fi
 
 # Update the LICENSE file if it exists

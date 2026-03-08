@@ -47,6 +47,7 @@ Before implementing any significant change:
 
 ## 🤖 Token Optimization & CLI Usage
 
+- **GitHub CLI:** The `gh` command is available in this container and authenticated if you need to create/review PRs, manage issues, or check GitHub Actions status. See [.env.example](.env.example) for required `GITHUB_TOKEN` scopes.
 - **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) installed in this container for well-structured tasks.
 - **Usage:** Run `gemini` in the terminal to start an interactive session, or `gemini -p "<prompt>"` for one-shot tasks.
 - **Examples:** Ask the CLI to review code, analyze architecture, or investigate issues—this keeps your IDE context window focused on the primary task.
