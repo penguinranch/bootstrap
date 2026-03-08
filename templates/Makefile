@@ -25,5 +25,8 @@ build: ## Create a production build
 lint: ## Run code formatting & linting
 	@echo "Lint target not implemented yet — update after choosing your tech stack"
 
+format: ## Format all files
+	@echo "Format target not implemented yet — update after choosing your tech stack"
+
 clean: ## Remove build artifacts
 	@echo "Clean target not implemented yet — update after choosing your tech stack"

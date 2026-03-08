@@ -72,8 +72,6 @@ if [ -n "$GEMINI_API_KEY" ]; then
     update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
 fi
 
-
-
 # Update the LICENSE file if it exists
 if [ -f "LICENSE" ] && [ -n "$GIT_NAME" ]; then
     CURRENT_YEAR=$(date +"%Y")

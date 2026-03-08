@@ -68,7 +68,7 @@ The `commit-msg` hook enforces this automatically.
 | Tool             | Purpose                          |
 | ---------------- | -------------------------------- |
 | **EditorConfig** | Consistent whitespace & encoding |
-| **Prettier**     | Code formatting                  |
+| **Prettier**     | Code formatting (`make format`)  |
 | **Makefile**     | Universal task runner            |
 | **Git hooks**    | Automated quality gates          |
 

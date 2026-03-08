@@ -55,7 +55,7 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 
 ## 🤖 Token Optimization & CLI Usage
 
-- **GitHub CLI:** The `gh` command is available in this container. If a `GITHUB_TOKEN` is provided in `.env`, the host's CLI will be authenticated and `gh auth setup-git` will automatically configure it as your Git credential helper. This enables seamless HTTPS Git operations in the environment. See [.env.example](.env.example) for required `GITHUB_TOKEN` scopes.
+- **GitHub CLI:** The `gh` command is available in this container. Use `gh auth login` to authenticate. This enables seamless GitHub operations and can configure Git as your credential helper.
 - **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) installed in this container for well-structured tasks.
 - **Usage:** Run `gemini` in the terminal to start an interactive session, or `gemini -p "<prompt>"` for one-shot tasks.
 - **Examples:** Ask the CLI to review code, analyze architecture, or investigate issues—this keeps your IDE context window focused on the primary task.

@@ -33,9 +33,10 @@ Here's what was installed and why:
 │   └── commit-msg            #    Enforces Conventional Commits format
 │
 ├── scripts/                  # ⚙️  Setup & automation scripts
-│   ├── start-container.sh    #    [postStartCommand] Fast, idempotent environment checks (runs every boot)
-│   ├── setup-env.sh          #    [Manual] Interactive setup for Git credentials & API keys (prompts user)
-│   └── setup-gemini.sh       #    [postCreateCommand] Heavy, one-time global installations (runs once on build)
+│   ├── start-container.sh    #    [postStartCommand] Fast, idempotent checks
+│   ├── setup-env.sh          #    [Manual] Interactive setup for credentials
+│   ├── troubleshooting.sh    #    [Manual] Diagnose common environment issues
+│   └── setup-gemini.sh       #    [postCreateCommand] Global tool installations
 │
 ├── docs/
 │   └── decisions/            # 📝 Architecture Decision Records (ADRs)
@@ -69,7 +70,8 @@ Before opening the Devcontainer, define your tech stack. The language and framew
 > _1. Fill out the `001-initial-tech-stack.md` ADR._
 > _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json` with the project name._
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
-> _4. Rewrite `README.md` to describe this new project and how to run it."_
+> _4. Update `SECURITY.md` with your contact details._
+> _5. Rewrite `README.md` to describe this new project and how to run it."_
 
 ### 2. Open in a Devcontainer
 
@@ -83,7 +85,7 @@ Once the container is ready, open a terminal and run:
 ./scripts/setup-env.sh
 ```
 
-This will configure your Git identity, SSH signing, and prompt for any required API keys (Gemini, GitHub). Providing a GitHub Token locally inside this environment will automatically authenticate the `gh` CLI and set it up as your Git credential helper for seamless HTTPS operations.
+This will configure your Git identity and prompt for any required API keys (Gemini). For GitHub operations, run `gh auth login` inside the container for seamless HTTPS authentication.
 
 Then activate the git hooks and project setup:
 
