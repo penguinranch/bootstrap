@@ -27,7 +27,15 @@
         "github.vscode-pull-request-github"
       ],
       "settings": {
-        "workbench.startupEditor": "none"
+        "workbench.startupEditor": "none",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.suggestSelection": "first",
+        "vsintellicode.modifyPhpArgHighlight": false,
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "markdown.preview.breaks": true,
+        "markdown.preview.doubleClickToSwitchToEditor": true
       }
     }
   },

@@ -7,7 +7,7 @@ ADR_DIR="docs/decisions"
 mkdir -p "$ADR_DIR"
 
 # Get current index
-LATEST_ADR=$(ls "$ADR_DIR"/[0-9]*-*.md 2>/dev/null | sort | tail -n 1)
+LATEST_ADR=$(find "$ADR_DIR" -maxdepth 1 -name "[0-9]*-*.md" | sort | tail -n 1)
 if [ -z "$LATEST_ADR" ]; then
     NEXT_NUM="0001"
 else
