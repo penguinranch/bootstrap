@@ -36,7 +36,9 @@ Here's what was installed and why:
 │   ├── start-container.sh    #    [postStartCommand] Fast, idempotent checks
 │   ├── setup-env.sh          #    [Manual] Interactive setup for credentials
 │   ├── troubleshooting.sh    #    [Manual] Diagnose common environment issues
-│   └── setup-gemini.sh       #    [postCreateCommand] Global tool installations
+│   ├── setup-gemini.sh       #    [postCreateCommand] Global tool installations
+│   ├── ai-context.sh         #    [Manual] Bundle metadata for AI assistants
+│   └── new-adr.sh            #    [Manual] Scaffold a new ADR file
 │
 ├── docs/
 │   └── decisions/            # 📝 Architecture Decision Records (ADRs)
@@ -99,15 +101,18 @@ make setup
 
 Start developing! Use the universal `Makefile` targets:
 
-| Command      | Purpose                        |
-| ------------ | ------------------------------ |
-| `make help`  | Show all available targets     |
-| `make setup` | Install deps & configure hooks |
-| `make dev`   | Start the development server   |
-| `make test`  | Run the test suite             |
-| `make build` | Create a production build      |
-| `make lint`  | Run code formatting & linting  |
-| `make clean` | Remove build artifacts         |
+| Command           | Purpose                          |
+| ----------------- | -------------------------------- |
+| `make help`       | Show all available targets       |
+| `make setup`      | Install deps & configure hooks    |
+| `make doctor`     | Check environment health         |
+| `make new-adr`    | Scaffold a new architecture record|
+| `make ai-context` | Bundle project context for AI    |
+| `make dev`        | Start the development server     |
+| `make test`       | Run the test suite               |
+| `make build`      | Create a production build        |
+| `make lint`       | Run code formatting & linting    |
+| `make clean`      | Remove build artifacts           |
 
 ---
 

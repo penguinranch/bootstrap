@@ -14,7 +14,7 @@ You are a Senior Software Engineer and Architect. You are tasked with maintainin
 
 Before implementing any significant change:
 
-1. **ADR First:** Propose a new Architecture Decision Record in `docs/decisions/NNN-description.md`. Copy `docs/decisions/000-template.md` as a starting point (e.g., `002-database-choice.md`).
+1. **ADR First:** Propose a new Architecture Decision Record in `docs/decisions/NNN-description.md`. Use `make new-adr` to scaffold a new record from the template.
 2. **Review Goals:** Compare the proposal against the project's long-term goals in `README.md`.
 3. **Changelog:** After a feature or fix is completed, update `CHANGELOG.md` with a summary of the _decisions_ made, not just the code changed.
 4. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks via ADRs, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
@@ -57,6 +57,7 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 
 - **GitHub CLI:** The `gh` command is available in this container. Use `gh auth login` to authenticate. This enables seamless GitHub operations and can configure Git as your credential helper.
 - **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) installed in this container for well-structured tasks.
+- **Context Refresh:** Use `make ai-context` to generate a single markdown file (`context-for-ai.md`) containing the project structure, READMEs, and ADRs. This is the fastest way to give a new AI session full project context.
 - **Usage:** Run `gemini` in the terminal to start an interactive session, or `gemini -p "<prompt>"` for one-shot tasks.
 - **Examples:** Ask the CLI to review code, analyze architecture, or investigate issues—this keeps your IDE context window focused on the primary task.
 

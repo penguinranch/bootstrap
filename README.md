@@ -26,14 +26,14 @@ When you bootstrap a project using this template, you are receiving an environme
 ### 3. AI-Optimized Workflows
 
 **The Problem:** Generative AI tools (like GitHub Copilot or Gemini) get confused easily and burn through their context "tokens" doing repetitive tasks.
-**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** (`@google/gemini-cli`) is installed globally inside the container, providing the AI with native tooling for code review and analysis—saving precious IDE tokens.
+**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** (`@google/gemini-cli`) is installed globally inside the container, and `make ai-context` is provided to instantly bundle project metadata for an AI assistant—saving precious IDE tokens.
 
 ### 4. Structural Guardrails
 
 We have implemented physical files that prevent bad habits:
 
 - **`.editorconfig`**: Forces every IDE (even Vim) to use the exact same tab sizes, line endings, and whitespace rules.
-- **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make run`.
+- **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make run`. Includes `make doctor` for instant environment health checks.
 - **`CODEOWNERS`**: Automatically requires Tech Lead PR reviews for architecture decisions (ADRs) and DevOps reviews for CI/CD changes.
 - **`dependabot.yml`**: Automatically configured to continuously scan dependencies for vulnerabilities.
 
