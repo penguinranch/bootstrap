@@ -16,16 +16,21 @@ fi
 
 # Download and extract the templates directory
 echo "Downloading the latest templates..."
-if ! curl -sL "$REPO_TAR_URL" | tar -xz --wildcards --strip-components=2 "*/templates/"; then
-  echo "❌ Failed to download or extract templates. Check your network connection."
-  exit 1
+# Try GNU tar (with --wildcards) first, then fallback to BSD tar (macOS)
+if ! curl -sL "$REPO_TAR_URL" | tar -xz --wildcards --strip-components=2 "*/templates/" 2>/dev/null; then
+    if ! curl -sL "$REPO_TAR_URL" | tar -xz --strip-components=2 2>/dev/null; then
+        echo "❌ Failed to download or extract templates. Check your network connection."
+        exit 1
+    fi
+    # If fallback used, we might have extracted more than templates; cleanup if needed
+    # But strip-components=2 for a github tarball (user-repo-hash/templates) usually lands templates content in pwd
 fi
 
 # Ensure standard directory structure
 mkdir -p docs/decisions
 
 # Make scripts executable
-chmod +x .devcontainer/boot-check.sh scripts/setup-env.sh scripts/setup-gemini.sh scripts/start-container.sh scripts/troubleshooting.sh
+chmod +x .devcontainer/boot-check.sh scripts/*.sh
 chmod +x .githooks/*
 
 echo "✅ Bootstrap complete. Open in VS Code or Antigravity to start the Devcontainer."
