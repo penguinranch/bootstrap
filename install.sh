@@ -22,13 +22,27 @@ check_environment() {
 
 extract_templates() {
     log_info "Downloading the latest templates..."
-    # Try GNU tar (with --wildcards) first, then fallback to BSD tar (macOS)
-    if ! curl -sL "$REPO_TAR_URL" | tar -xz --wildcards --strip-components=2 "*/templates/" 2>/dev/null; then
-        if ! curl -sL "$REPO_TAR_URL" | tar -xz --strip-components=2 2>/dev/null; then
-            log_error "Failed to download or extract templates. Check your network connection."
-            exit 1
-        fi
+    # Create a temporary directory for safe extraction
+    local temp_dir
+    temp_dir=$(mktemp -d)
+    
+    # Extract everything, but strip the root 'user-repo-hash' directory
+    if ! curl -sL "$REPO_TAR_URL" | tar -xz -C "$temp_dir" --strip-components=1 2>/dev/null; then
+        log_error "Failed to download or extract templates. Check your network connection."
+        rm -rf "$temp_dir"
+        exit 1
     fi
+
+    # Move content from the templates directory to the current directory
+    if [ -d "$temp_dir/templates" ]; then
+        cp -af "$temp_dir/templates/." .
+    else
+        log_error "Templates directory not found in the downloaded archive."
+        rm -rf "$temp_dir"
+        exit 1
+    fi
+
+    rm -rf "$temp_dir"
 }
 
 finalize_setup() {
@@ -46,8 +60,3 @@ finalize_setup() {
 check_environment
 extract_templates
 finalize_setup
-table
-chmod +x .devcontainer/boot-check.sh scripts/*.sh
-chmod +x .githooks/*
-
-echo "✅ Bootstrap complete. Open in VS Code or Antigravity to start the Devcontainer."
