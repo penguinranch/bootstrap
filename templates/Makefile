@@ -1,4 +1,16 @@
-.PHONY: help setup dev test build lint clean format doctor new-adr ai-context
+.PHONY: help setup doctor dev test build lint clean format new-adr ai-context
+
+# Container enforcement check
+ifndef REMOTE_CONTAINERS
+ifndef CODESPACES
+ifneq ($(wildcard /.dockerenv),/.dockerenv)
+$(warning ⚠️  WARNING: You are NOT running inside a devcontainer.)
+$(warning This project is designed to be developed in an isolated environment.)
+$(warning Future AI assistants may jump the gun and install tools on your host.)
+$(warning Please open in a container before proceeding with setup.)
+endif
+endif
+endif
 
 # Default variables
 APP_NAME := {{PROJECT_NAME}}
@@ -7,20 +19,27 @@ help: ## Show available make targets
 	@echo "Available targets:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-setup: ## Install dependencies and configure git hooks
-	@git config core.hooksPath .githooks
-	@chmod +x .githooks/* scripts/*.sh
-	@echo "✅ Git hooks and scripts configured."
-	@echo "⚠️  Run your package manager's install command to finish setup."
+setup: ## Interactive first-time setup wizard
+	@bash ./scripts/setup-env.sh
+	@bash ./scripts/setup-ai-tools.sh
+	@if [ -d .githooks ]; then \
+		git config core.hooksPath .githooks; \
+		chmod +x .githooks/*; \
+		echo "✅ Git hooks configured."; \
+	fi
+	@chmod +x scripts/*.sh 2>/dev/null || true
+	@echo ""
+	@echo "────────────────────────────────────────"
+	@echo "  Next steps:"
+	@echo "    gh auth login     — Authenticate GitHub CLI"
+	@echo "    claude            — Start Claude CLI"
+	@echo "    gemini            — Start Gemini CLI"
+	@echo "────────────────────────────────────────"
+	@echo ""
+	@echo "✅ Setup complete. Run 'make' to see all available commands."
 
-doctor: ## Check environment health
-	@echo "🔍 Checking environment..."
-	@command -v git >/dev/null 2>&1 && echo "✅ Git installed" || echo "❌ Git missing"
-	@command -v node >/dev/null 2>&1 && echo "✅ Node.js installed ($(shell node -v))" || echo "❌ Node.js missing"
-	@command -v npm >/dev/null 2>&1 && echo "✅ npm installed" || echo "❌ npm missing"
-	@command -v prettier >/dev/null 2>&1 && echo "✅ Prettier installed" || echo "⚠️  Prettier missing (run npm install -g prettier)"
-	@command -v gh >/dev/null 2>&1 && echo "✅ GitHub CLI installed" || echo "⚠️  GitHub CLI missing"
-	@echo "✅ Environment check complete."
+doctor: ## Check environment health and status
+	@bash ./scripts/doctor.sh
 
 dev: ## Start the development server
 	@echo "Dev target not implemented yet — update after choosing your tech stack"

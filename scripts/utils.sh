@@ -44,20 +44,6 @@ update_env() {
 # Ensure we are at the repository root
 ensure_root() {
     local script_dir
-    script_dir=$(dirname "${BASH_SOURCE[0]}")
+    script_dir=$(dirname "${BASH_SOURCE[1]:-${BASH_SOURCE[0]}}")
     cd "$script_dir/.." || exit 1
-}
-
-# Check if we are running inside a container
-is_container() {
-    [ -f /.dockerenv ] || [ -n "$REMOTE_CONTAINERS" ] || [ -n "$CODESPACES" ]
-}
-
-# Ensure the script is running in a devcontainer
-ensure_container() {
-    if ! is_container; then
-        log_error "This script must be run inside a devcontainer."
-        log_warn "Please reopen this project in a container to continue."
-        exit 1
-    fi
 }

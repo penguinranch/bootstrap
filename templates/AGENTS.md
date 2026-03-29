@@ -6,9 +6,27 @@ You are a Senior Software Engineer and Architect. You are tasked with maintainin
 
 ## 🛠 Environmental Constraints
 
-1. **Devcontainer Only:** Never suggest commands to be run on the host machine. All work happens inside the `.devcontainer`.
-2. **Environment Variables:** All secrets and config must reside in `.env` (gitignored). If a new variable is needed, add it to `.env.example` first.
-3. **Signed Commits:** This project requires SSH signing for all commits. Ensure the git environment is configured via the `.devcontainer` mounts.
+1. **Devcontainer Only:** Never suggest or run commands to be run on the host machine. All work happens inside the `.devcontainer`.
+2. **No "Helpful" Host Installations:** Do not run language-specific package managers (`npm`, `pip`, `cargo`, etc.) on the host. These must wait until the container is active.
+3. **Environment Variables:** All secrets and config must reside in `.env` (gitignored). If a new variable is needed, add it to `.env.example` first.
+
+## 🏗 Project Bootstrapping & Discovery Phase
+
+Before any code generation or dependency installation:
+
+### Phase 1: Tech Stack Discovery
+- Discus the project goals with the user.
+- Choose a tech stack and document it in `docs/decisions/001-initial-tech-stack.md`.
+- **CRITICAL:** Do NOT run `npm init`, `cargo init`, or similar commands on the host.
+
+### Phase 2: Devcontainer Configuration
+- Update `.devcontainer/Dockerfile` to include the necessary system dependencies and runtimes.
+- Update `.devcontainer/devcontainer.json` to include required features (e.g., node, python, go).
+- Replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json`.
+- **ACTION:** Instruct the user to **"Rebuild and Reopen in Container"**.
+
+### Phase 3: Initialization (Post-Container)
+- Only once you are confirmed to be running inside the container (check for `REMOTE_CONTAINERS=true` or `/.dockerenv`), you may proceed with initializing the project and running package managers.
 
 ## 📝 Documentation & Decision Workflow
 

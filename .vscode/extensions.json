@@ -1,12 +1,13 @@
 {
-    "recommendations": [
-        "esbenp.prettier-vscode",
-        "bierner.markdown-mermaid",
-        "mechatroner.rainbow-csv",
-        "ms-vscode.makefile-tools",
-        "ms-azuretools.vscode-containers",
-        "ms-azuretools.vscode-docker",
-        "github.vscode-github-actions",
-        "github.vscode-pull-request-github"
-    ]
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "bierner.markdown-mermaid",
+    "mechatroner.rainbow-csv",
+    "ms-vscode.makefile-tools",
+    "ms-azuretools.vscode-containers",
+    "ms-azuretools.vscode-docker",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github",
+    "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries"
+  ]
 }

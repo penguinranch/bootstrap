@@ -1,84 +1,108 @@
 #!/bin/bash
 set -u
 
-echo "🔍 Starting Devcontainer Troubleshooting..."
-echo "----------------------------------------"
+# Source shared utilities
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+# shellcheck source=scripts/utils.sh
+source "$SCRIPT_DIR/utils.sh"
 
-# Change to the repository root relative to the script's location
-cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit
+ensure_root
+
+log_info "Starting Devcontainer Troubleshooting..."
+echo "────────────────────────────────────────"
 
 ISSUE_FOUND=0
 
 # 1. Check for .env file
-echo "Checking for .env file..."
+log_info "Checking for .env file..."
 if [ ! -f .env ]; then
-    echo "❌ Error: .env file is missing."
+    log_error ".env file is missing."
     if [ -f .env.example ]; then
-        echo "   -> .env.example found. Creating .env from template..."
-        cp .env.example .env
-        echo "   ✅ .env created. Please run './scripts/setup-env.sh' to populate it."
+        log_info ".env.example found. Run 'make setup' to configure your environment."
     else
-        echo "   ❌ Error: .env.example is also missing. Cannot create .env block automatically."
+        log_error ".env.example is also missing. Cannot create .env automatically."
         ISSUE_FOUND=1
     fi
 else
-    # Basic check to see if .env has been filled out (checking for placeholder values or empty critical values)
     if grep -q "YOUR_GIT_NAME_HERE" .env || grep -q "YOUR_GIT_EMAIL_HERE" .env; then
-        echo "⚠️  Warning: .env file contains placeholder values."
-        echo "   -> Please run './scripts/setup-env.sh' to configure your environment variables."
+        log_warn ".env file contains placeholder values."
+        log_info "Run 'make setup' to configure your environment variables."
         ISSUE_FOUND=1
     else
-        echo "✅ .env file found and appears to be configured."
+        log_success ".env file found and appears to be configured."
     fi
 fi
-echo "----------------------------------------"
+echo "────────────────────────────────────────"
 
 # 2. Check script permissions
-echo "Checking script permissions..."
+log_info "Checking script permissions..."
 PERM_ISSUE=0
 for script in scripts/*.sh templates/scripts/*.sh; do
     if [ -f "$script" ]; then
         if [ ! -x "$script" ]; then
-            echo "❌ Error: $script is missing execute permissions."
+            log_error "$script is missing execute permissions."
             PERM_ISSUE=1
         fi
     fi
 done
 
 if [ $PERM_ISSUE -eq 1 ]; then
-    echo "   -> Attempting to fix permissions..."
+    log_info "Attempting to fix permissions..."
     chmod +x scripts/*.sh templates/scripts/*.sh 2>/dev/null || true
-    echo "   ✅ Added execute permissions to scripts."
+    log_success "Added execute permissions to scripts."
 else
-    echo "✅ All scripts have correct execute permissions."
+    log_success "All scripts have correct execute permissions."
 fi
-echo "----------------------------------------"
+echo "────────────────────────────────────────"
 
-# 3. Check for specific dependencies (e.g., Make, Git)
-echo "Checking dependencies..."
-if ! command -v make &> /dev/null; then
-    echo "❌ Error: 'make' is not installed."
-    echo "   -> Please ensure your Devcontainer has the necessary build tools."
-    ISSUE_FOUND=1
+# 3. Check for dependencies
+log_info "Checking dependencies..."
+for tool in make git node npm; do
+    if command -v "$tool" &> /dev/null; then
+        log_success "'$tool' is installed."
+    else
+        log_error "'$tool' is not installed."
+        ISSUE_FOUND=1
+    fi
+done
+
+# 4. Check AI CLIs
+log_info "Checking AI tools..."
+if command -v gemini &> /dev/null; then
+    log_success "Gemini CLI is installed."
 else
-    echo "✅ 'make' is installed."
+    log_warn "Gemini CLI is not installed. Run 'make setup' to install."
+    ISSUE_FOUND=1
 fi
 
-if ! command -v git &> /dev/null; then
-    echo "❌ Error: 'git' is not installed."
-    echo "   -> Git is required for this Devcontainer."
-    ISSUE_FOUND=1
+if command -v claude &> /dev/null; then
+    log_success "Claude CLI is installed."
 else
-    echo "✅ 'git' is installed."
+    log_warn "Claude CLI is not installed. Run 'make setup' to install."
+    ISSUE_FOUND=1
 fi
-echo "----------------------------------------"
+
+# 5. Check GitHub CLI auth
+log_info "Checking GitHub CLI..."
+if command -v gh &> /dev/null; then
+    if gh auth status &> /dev/null; then
+        log_success "GitHub CLI is authenticated."
+    else
+        log_warn "GitHub CLI is installed but not authenticated. Run 'gh auth login'."
+        ISSUE_FOUND=1
+    fi
+else
+    log_warn "GitHub CLI is not installed."
+    ISSUE_FOUND=1
+fi
+echo "────────────────────────────────────────"
 
 # Final summary
 if [ $ISSUE_FOUND -eq 1 ]; then
-    echo "⚠️  Troubleshooting complete, but some issues require your attention."
-    echo "   Please review the warnings and errors above."
+    log_warn "Troubleshooting complete, but some issues require your attention."
+    log_info "Run 'make setup' to resolve most issues, or 'make doctor' for a status check."
     exit 1
 else
-    echo "🚀 Troubleshooting complete. Everything looks good!"
+    log_success "Troubleshooting complete. Everything looks good!"
     exit 0
 fi

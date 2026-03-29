@@ -1,17 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-# Change to the repository root relative to the script's location
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
+# Source shared utilities
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+# shellcheck source=scripts/utils.sh
+source "$SCRIPT_DIR/utils.sh"
 
-echo "🚀 Starting Antigravity Devcontainer environment..."
+ensure_root
 
-# 1. Check existing environment variables and apply Git configuration
-echo "Checking environment variables..."
-bash ./.devcontainer/boot-check.sh
+log_info "Starting devcontainer environment..."
 
-# 2. Configure Git hooks via Makefile
-echo "Ensuring Git hooks are configured..."
-make setup
+# Run non-interactive health check and apply .env config
+bash ./scripts/doctor.sh
 
-echo "✅ Container startup complete."
+log_success "Container startup complete. Run 'make' for available commands."

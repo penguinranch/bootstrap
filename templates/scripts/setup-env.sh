@@ -1,11 +1,14 @@
 #!/bin/bash
 # shellcheck shell=bash
+set -euo pipefail
+
 # Source shared utilities
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck source=scripts/utils.sh
 source "$SCRIPT_DIR/utils.sh"
 
 ensure_root
+ensure_container
 
 # Re-runnable script to initialize or update .env
 if [ ! -f .env.example ]; then
@@ -34,8 +37,13 @@ echo "You can get an API key from: https://aistudio.google.com/app/apikey"
 read -rp "Enter your Gemini API Key (press Enter to skip): " GEMINI_API_KEY
 
 echo ""
+log_info "Optional: The Anthropic API Key is used by the Claude CLI inside this Devcontainer."
+echo "You can also authenticate interactively by running: claude"
+read -rp "Enter your Anthropic API Key (press Enter to skip): " ANTHROPIC_API_KEY
+
+echo ""
 log_info "Optional: Authenticate with GitHub CLI for automations inside the Devcontainer."
-echo "To authenticate, you can run: gh auth login"
+echo "To authenticate, run: gh auth login"
 
 update_env "GIT_NAME" "$GIT_NAME"
 update_env "GIT_EMAIL" "$GIT_EMAIL"
@@ -56,6 +64,10 @@ fi
 
 if [ -n "$GEMINI_API_KEY" ]; then
     update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
+fi
+
+if [ -n "$ANTHROPIC_API_KEY" ]; then
+    update_env "ANTHROPIC_API_KEY" "$ANTHROPIC_API_KEY"
 fi
 
 # Update the LICENSE file if it exists

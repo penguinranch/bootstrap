@@ -13,7 +13,7 @@
     "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "postCreateCommand": "bash ./scripts/setup-gemini.sh",
+  "postCreateCommand": "bash ./scripts/setup-ai-tools.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -25,16 +25,17 @@
         "ms-azuretools.vscode-containers",
         "ms-azuretools.vscode-docker",
         "github.vscode-github-actions",
-        "github.vscode-pull-request-github"
+        "github.vscode-pull-request-github",
+        "DavidAnson.vscode-markdownlint"
       ],
       "settings": {
         "workbench.startupEditor": "none"
       }
     }
   },
-  "postAttachCommand": "code README.md AGENTS.md",
   "containerEnv": {
     "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
     "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
   },
   "postStartCommand": "/bin/bash ./scripts/start-container.sh"

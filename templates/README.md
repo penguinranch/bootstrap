@@ -75,6 +75,9 @@ Before opening the Devcontainer, define your tech stack. The language and framew
 > _4. Update `SECURITY.md` with your contact details._
 > _5. Rewrite `README.md` to describe this new project and how to run it."_
 
+> [!CAUTION]
+> **Host Isolation:** Do NOT allow your AI assistant to run `npm install`, `pip install`, or any other tool installation commands until you have officially **Reopened in Container**. All project logic must stay isolated.
+
 ### 2. Open in a Devcontainer
 
 Once the Devcontainer has been configured for your stack, open this folder in **VS Code** or **Antigravity** and accept the prompt to **Reopen in Container**. Docker will build your isolated development environment automatically.

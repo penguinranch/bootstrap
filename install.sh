@@ -50,7 +50,7 @@ finalize_setup() {
     mkdir -p docs/decisions
 
     # Make scripts executable
-    chmod +x .devcontainer/boot-check.sh scripts/*.sh 2>/dev/null || true
+    chmod +x scripts/*.sh 2>/dev/null || true
     chmod +x .githooks/* 2>/dev/null || true
 
     log_success "Bootstrap complete. Open in VS Code or Antigravity to start the Devcontainer."
