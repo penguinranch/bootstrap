@@ -22,10 +22,11 @@ SLUG=$(echo "$ADR_TITLE" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed 's/[^a-
 FILENAME="${NEXT_NUM}-${SLUG}.md"
 TARGET_FILE="${ADR_DIR}/${FILENAME}"
 
-cat <<EOF > "$TARGET_FILE"
-# ADR ${NEXT_NUM}: ${ADR_TITLE}
+ADR_DATE=$(date +"%Y-%m-%d")
+cat <<'EOF' | sed "s|{{NUM}}|${NEXT_NUM}|g;s|{{TITLE}}|${ADR_TITLE//|/\\|}|g;s|{{DATE}}|${ADR_DATE}|g" > "$TARGET_FILE"
+# ADR {{NUM}}: {{TITLE}}
 
-- **Date:** $(date +"%Y-%m-%d")
+- **Date:** {{DATE}}
 - **Status:** Proposed
 
 ## Context
