@@ -110,8 +110,11 @@ fi
 # Update the LICENSE file if it exists
 if [ -f "LICENSE" ] && [ -n "$GIT_NAME" ]; then
     CURRENT_YEAR=$(date +"%Y")
-    portable_sed "s|\[Year\]|${CURRENT_YEAR}|g" LICENSE
-    portable_sed "s|\[Full Name\]|${GIT_NAME}|g" LICENSE
+    tmp_license=$(mktemp)
+    awk -v year="$CURRENT_YEAR" -v name="$GIT_NAME" '{
+        gsub(/\[Year\]/, year); gsub(/\[Full Name\]/, name); print
+    }' LICENSE > "$tmp_license"
+    mv "$tmp_license" LICENSE
 fi
 
 log_success "Configuration complete. Restart your terminal or source the .env file."
