@@ -24,7 +24,8 @@ portable_sed() {
     fi
 }
 
-# Function to securely update or append inside .env
+# Safely update or append a key=value pair inside an env file.
+# Uses awk instead of sed to avoid injection via special characters in values.
 update_env() {
     local key=$1
     local value=$2
@@ -35,9 +36,12 @@ update_env() {
     fi
 
     if grep -q "^${key}=" "$env_file"; then
-        portable_sed "s|^${key}=.*|${key}=${value}|" "$env_file"
+        local tmp_file
+        tmp_file=$(mktemp)
+        awk -v k="$key" -v v="$value" 'BEGIN{FS=OFS="="} $1==k{$0=k"="v} {print}' "$env_file" > "$tmp_file"
+        mv "$tmp_file" "$env_file"
     else
-        echo "${key}=${value}" >> "$env_file"
+        printf '%s=%s\n' "$key" "$value" >> "$env_file"
     fi
 }
 
