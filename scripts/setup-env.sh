@@ -111,9 +111,10 @@ fi
 if [ -f "LICENSE" ] && [ -n "$GIT_NAME" ]; then
     CURRENT_YEAR=$(date +"%Y")
     tmp_license=$(mktemp)
-    awk -v year="$CURRENT_YEAR" -v name="$GIT_NAME" '{
-        gsub(/\[Year\]/, year); gsub(/\[Full Name\]/, name); print
-    }' LICENSE > "$tmp_license"
+    awk -v year="$CURRENT_YEAR" -v name="$GIT_NAME" '
+        BEGIN { gsub(/&/, "\\\\&", name) }
+        { gsub(/\[Year\]/, year); gsub(/\[Full Name\]/, name); print }
+    ' LICENSE > "$tmp_license"
     mv "$tmp_license" LICENSE
 fi
 
