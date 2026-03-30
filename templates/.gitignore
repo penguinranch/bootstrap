@@ -59,5 +59,8 @@ obj/
 !.vscode/extensions.json
 *.swp
 
+# Bootstrap sentinel
+.devcontainer/.bootstrapped
+
 # Testing
 .tmp-test/

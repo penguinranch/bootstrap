@@ -41,6 +41,15 @@ update_env() {
     fi
 }
 
+# Read a value from .env by key (returns empty string if not found)
+read_env() {
+    local key=$1
+    local env_file=${2:-.env}
+    if [ -f "$env_file" ]; then
+        grep -m1 "^${key}=" "$env_file" 2>/dev/null | cut -d'=' -f2- || true
+    fi
+}
+
 # Ensure we are at the repository root
 ensure_root() {
     local script_dir
