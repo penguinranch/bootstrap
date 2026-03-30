@@ -9,6 +9,9 @@ source "$SCRIPT_DIR/utils.sh"
 ensure_root
 ensure_container
 
+# Export .env values so API keys are available for CLI tools
+safe_export_env
+
 SENTINEL=".devcontainer/.bootstrapped"
 FRESH=false
 
@@ -43,6 +46,21 @@ elif ! command -v claude &> /dev/null; then
     log_success "Claude CLI installed."
 else
     log_success "Claude CLI is already installed."
+fi
+
+# Install Gemini CLI extensions (security & code quality)
+if command -v gemini &> /dev/null; then
+    GEMINI_EXTENSIONS=(
+        "https://github.com/gemini-cli-extensions/security"
+        "https://github.com/gemini-cli-extensions/code-review"
+        "https://github.com/endorlabs/gemini-extension"
+    )
+    for ext in "${GEMINI_EXTENSIONS[@]}"; do
+        ext_name=$(basename "$ext")
+        log_info "Installing Gemini extension: $ext_name..."
+        echo "Y" | gemini extensions install "$ext" 2>/dev/null || log_warn "Failed to install $ext_name (non-critical)."
+    done
+    log_success "Gemini CLI extensions configured."
 fi
 
 # Upgrade npm itself on fresh bootstrap

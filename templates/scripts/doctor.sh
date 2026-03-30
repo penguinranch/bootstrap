@@ -19,15 +19,7 @@ echo "────────────────────────�
 # --- Load .env and apply git config ---
 if [ -f .env ]; then
     log_success ".env file found."
-    while IFS='=' read -r key value; do
-        if [[ -n "$key" && ! "$key" =~ ^# ]]; then
-            key="${key#"${key%%[![:space:]]*}"}"
-            key="${key%"${key##*[![:space:]]}"}"
-            value="${value#"${value%%[![:space:]]*}"}"
-            value="${value%"${value##*[![:space:]]}"}"
-            export "$key=$value"
-        fi
-    done < ".env"
+    safe_export_env
 
     # Apply git config from .env
     if [ -n "${GIT_NAME:-}" ]; then

@@ -45,6 +45,34 @@ update_env() {
     fi
 }
 
+# Safely export variables from .env, restricted to an allowlist of known keys.
+# Prevents hostile key names (e.g. LD_PRELOAD, PATH) from being injected.
+safe_export_env() {
+    local env_file=${1:-.env}
+    local -a ALLOWED_KEYS=(
+        GIT_NAME GIT_EMAIL SSH_PUBLIC_KEY
+        GEMINI_API_KEY ANTHROPIC_API_KEY GITHUB_TOKEN
+    )
+    if [ ! -f "$env_file" ]; then
+        return
+    fi
+    while IFS='=' read -r key value; do
+        if [[ -n "$key" && ! "$key" =~ ^# ]]; then
+            key="${key#"${key%%[![:space:]]*}"}"
+            key="${key%"${key##*[![:space:]]}"}"
+            value="${value#"${value%%[![:space:]]*}"}"
+            value="${value%"${value##*[![:space:]]}"}"
+            # Only export if key is in the allowlist
+            for allowed in "${ALLOWED_KEYS[@]}"; do
+                if [[ "$key" == "$allowed" ]]; then
+                    export "$key=$value"
+                    break
+                fi
+            done
+        fi
+    done < "$env_file"
+}
+
 # Read a value from .env by key (returns empty string if not found)
 read_env() {
     local key=$1
