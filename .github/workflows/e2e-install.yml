@@ -36,12 +36,12 @@ jobs:
           test -f AGENTS.md
           test -d scripts
           test -f scripts/setup-env.sh
-          test -f scripts/troubleshooting.sh
+          test -f scripts/doctor.sh
 
           echo "Verifying execute permissions..."
           test -x scripts/setup-env.sh
           test -x scripts/start-container.sh
-          test -x scripts/troubleshooting.sh
+          test -x scripts/doctor.sh
 
           echo "Verifying no root-only files leaked..."
           if [ -f "install.sh" ]; then

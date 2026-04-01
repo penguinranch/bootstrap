@@ -35,8 +35,8 @@ Here's what was installed and why:
 ├── scripts/                  # ⚙️  Setup & automation scripts
 │   ├── start-container.sh    #    [postStartCommand] Fast, idempotent checks
 │   ├── setup-env.sh          #    [Manual] Interactive setup for credentials
-│   ├── troubleshooting.sh    #    [Manual] Diagnose common environment issues
-│   ├── setup-gemini.sh       #    [postCreateCommand] Global tool installations
+│   ├── doctor.sh             #    [Manual/Auto] Environment health check & troubleshooting
+│   ├── setup-ai-tools.sh     #    [postCreateCommand] Global tool installations
 │   ├── ai-context.sh         #    [Manual] Bundle metadata for AI assistants
 │   └── new-adr.sh            #    [Manual] Scaffold a new ADR file
 │

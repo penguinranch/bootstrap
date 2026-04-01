@@ -13,7 +13,7 @@
     "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "postCreateCommand": "bash ./scripts/setup-ai-tools.sh",
+  "postCreateCommand": "bash ./scripts/create-container.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -24,7 +24,8 @@
         "ms-azuretools.vscode-containers",
         "ms-azuretools.vscode-docker",
         "github.vscode-github-actions",
-        "github.vscode-pull-request-github"
+        "github.vscode-pull-request-github",
+        "DavidAnson.vscode-markdownlint"
       ],
       "settings": {
         "workbench.startupEditor": "none",

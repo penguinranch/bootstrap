@@ -1,8 +1,10 @@
 #!/bin/bash
 set -uo pipefail
 
-# Non-interactive health check — runs on every container start.
-# Never prompts for input. Reports status and directs to 'make setup' if needed.
+# Unified environment health check and troubleshooting.
+# Runs non-interactively on every container start and can be invoked manually.
+# Never prompts for input. Reports status, auto-fixes what it can,
+# and directs to 'make setup' for the rest.
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck source=scripts/utils.sh
@@ -18,7 +20,12 @@ echo "────────────────────────�
 
 # --- Load .env and apply git config ---
 if [ -f .env ]; then
-    log_success ".env file found."
+    if grep -q "YOUR_GIT_NAME_HERE" .env || grep -q "YOUR_GIT_EMAIL_HERE" .env; then
+        log_warn ".env file contains placeholder values. Run 'make setup' to configure."
+        ISSUES=$((ISSUES + 1))
+    else
+        log_success ".env file found."
+    fi
     safe_export_env
 
     # Apply git config from .env
@@ -37,7 +44,7 @@ if [ -f .env ]; then
         gh auth setup-git 2>/dev/null || true
     fi
 else
-    log_warn ".env file not found."
+    log_warn ".env file not found. Run 'make setup' to configure."
     ISSUES=$((ISSUES + 1))
 fi
 
@@ -64,7 +71,7 @@ if command -v gh &> /dev/null; then
     if gh auth status &> /dev/null; then
         log_success "GitHub CLI authenticated."
     else
-        log_warn "GitHub CLI installed but not authenticated."
+        log_warn "GitHub CLI installed but not authenticated. Run 'gh auth login'."
         ISSUES=$((ISSUES + 1))
     fi
 else
@@ -99,6 +106,23 @@ for var in GEMINI_API_KEY ANTHROPIC_API_KEY GITHUB_TOKEN; do
         log_info "$var is not set (optional)."
     fi
 done
+
+# --- Script permissions ---
+echo ""
+echo "🔐 Script Permissions"
+echo "──────────────────────────────────────"
+PERM_ISSUE=0
+for script in scripts/*.sh; do
+    if [ -f "$script" ] && [ ! -x "$script" ]; then
+        PERM_ISSUE=1
+    fi
+done
+if [ $PERM_ISSUE -eq 1 ]; then
+    chmod +x scripts/*.sh 2>/dev/null || true
+    log_success "Fixed missing execute permissions on scripts."
+else
+    log_success "All scripts have correct permissions."
+fi
 
 # --- Git hooks ---
 echo ""

@@ -8,6 +8,9 @@
     "ms-azuretools.vscode-docker",
     "github.vscode-github-actions",
     "github.vscode-pull-request-github",
-    "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries"
+    "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries",
+    "streetsidesoftware.code-spell-checker",
+    "anthropic.claude-code",
+    "DavidAnson.vscode-markdownlint"
   ]
 }
