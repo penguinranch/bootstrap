@@ -82,6 +82,12 @@ read_env() {
     fi
 }
 
+# Check if the SSH agent is available for commit signing.
+# Returns 0 if SSH_AUTH_SOCK is set and the agent responds.
+ssh_signing_available() {
+    [ -n "${SSH_AUTH_SOCK:-}" ] && [ -S "${SSH_AUTH_SOCK}" ] && ssh-add -L &>/dev/null
+}
+
 # Ensure we are at the repository root
 ensure_root() {
     local script_dir

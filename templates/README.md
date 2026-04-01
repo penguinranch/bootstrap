@@ -104,18 +104,18 @@ make setup
 
 Start developing! Use the universal `Makefile` targets:
 
-| Command           | Purpose                          |
-| ----------------- | -------------------------------- |
-| `make help`       | Show all available targets       |
-| `make setup`      | Install deps & configure hooks    |
-| `make doctor`     | Check environment health         |
-| `make new-adr`    | Scaffold a new architecture record|
-| `make ai-context` | Bundle project context for AI    |
-| `make dev`        | Start the development server     |
-| `make test`       | Run the test suite               |
-| `make build`      | Create a production build        |
-| `make lint`       | Run code formatting & linting    |
-| `make clean`      | Remove build artifacts           |
+| Command           | Purpose                            |
+| ----------------- | ---------------------------------- |
+| `make help`       | Show all available targets         |
+| `make setup`      | Install deps & configure hooks     |
+| `make doctor`     | Check environment health           |
+| `make new-adr`    | Scaffold a new architecture record |
+| `make ai-context` | Bundle project context for AI      |
+| `make dev`        | Start the development server       |
+| `make test`       | Run the test suite                 |
+| `make build`      | Create a production build          |
+| `make lint`       | Run code formatting & linting      |
+| `make clean`      | Remove build artifacts             |
 
 ---
 

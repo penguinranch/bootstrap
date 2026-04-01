@@ -96,7 +96,13 @@ fi
 if [ -n "$SSH_PUBLIC_KEY" ]; then
     git config --global gpg.format ssh
     git config --global user.signingkey "key::${SSH_PUBLIC_KEY}"
-    git config --global commit.gpgsign true
+    if ssh_signing_available; then
+        git config --global commit.gpgsign true
+        log_success "SSH commit signing enabled (agent available)."
+    else
+        git config --global commit.gpgsign false
+        log_warn "SSH key saved but agent not available — signing disabled. Commits will proceed unsigned."
+    fi
 fi
 
 if [ -n "$GEMINI_API_KEY" ]; then

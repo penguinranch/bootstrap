@@ -38,7 +38,11 @@ if [ -f .env ]; then
     if [ -n "${SSH_PUBLIC_KEY:-}" ]; then
         git config --global gpg.format ssh
         git config --global user.signingkey "key::${SSH_PUBLIC_KEY}"
-        git config --global commit.gpgsign true
+        if ssh_signing_available; then
+            git config --global commit.gpgsign true
+        else
+            git config --global commit.gpgsign false
+        fi
     fi
     if [ -n "${GITHUB_TOKEN:-}" ] && command -v gh &> /dev/null; then
         gh auth setup-git 2>/dev/null || true
@@ -59,9 +63,13 @@ else
 fi
 
 # --- SSH commit signing ---
-SIGNING=$(git config --global commit.gpgsign 2>/dev/null || echo "")
-if [ "$SIGNING" = "true" ]; then
-    log_success "SSH commit signing enabled."
+SIGNING_KEY=$(git config --global user.signingkey 2>/dev/null || echo "")
+if [ -n "$SIGNING_KEY" ]; then
+    if ssh_signing_available; then
+        log_success "SSH commit signing enabled (1Password / SSH agent detected)."
+    else
+        log_info "SSH signing key configured but agent not available — signing disabled."
+    fi
 else
     log_info "SSH commit signing not configured (optional)."
 fi
