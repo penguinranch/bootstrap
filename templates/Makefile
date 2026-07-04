@@ -1,3 +1,7 @@
+# Universal task runner — the single entry point for every project command.
+# Wrap ALL runnable commands (npm, pip, cargo, scripts, ...) in a target here,
+# even one-line passthroughs, and give each a '## description' comment so it
+# appears in 'make help'. Developers only ever need to remember 'make help'.
 .PHONY: help setup doctor dev test build lint clean format new-adr ai-context
 
 # Container enforcement check

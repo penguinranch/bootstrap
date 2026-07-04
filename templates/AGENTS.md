@@ -39,8 +39,20 @@ Before implementing any significant change:
 2. **Review Goals:** Compare the proposal against the project's long-term goals in `README.md`.
 3. **Changelog:** After a feature or fix is completed, update `CHANGELOG.md` with a summary of the _decisions_ made, not just the code changed.
 4. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks via ADRs, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
-5. **Universal Task Interface:** When the tech stack is decided, you must map the stack-specific commands (e.g., `npm test` or `go build`) to the universal standard targets in the `Makefile` (`make test`, `make build`, `make dev`).
+5. **Universal Task Interface:** When the tech stack is decided, you must map the stack-specific commands (e.g., `npm test` or `go build`) to the universal standard targets in the `Makefile` (`make test`, `make build`, `make dev`). See the "Universal Make Interface" section below — this rule applies to _every_ command, not just the standard targets.
 6. **Devcontainer Naming:** When updating the `.devcontainer/` configuration for a new project, you must replace the `{{PROJECT_NAME}}` placeholder in the `"name"` property in `devcontainer.json` with the new project's name. This ensures it's easily identifiable in Docker Desktop.
+
+## 🎛 Universal Make Interface
+
+The `Makefile` is the single entry point for every command in this project. Developers should never have to remember whether something is an npm command, a python command, or a shell script — `make help` is the only command anyone needs to remember, in this project or any other.
+
+When you introduce **any** runnable command — a dev server, test runner, migration, code generator, seed script, deploy step, or one-off maintenance script — you must:
+
+1. **Wrap it in a Make target**, even if the target is a one-line passthrough (e.g., `migrate: ## Run database migrations` → `@npx prisma migrate dev`).
+2. **Add a `## description` comment** on the target line. The `help` target builds its output from these comments, so a target without one is invisible to `make help`.
+3. **Reference the `make` form in docs and instructions** (`README.md`, `CONTRIBUTING.md`, CI, and your own suggestions to the user) — never the underlying stack-specific command.
+
+If a command isn't worth a Make target, question whether it belongs in the project at all.
 
 ## 🧠 Engineering Philosophy
 
