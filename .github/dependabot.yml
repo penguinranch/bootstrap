@@ -1,19 +1,29 @@
 version: 2
 updates:
-  # Maintain GitHub Actions used in this repo
+  # Maintain GitHub Actions used in this repo AND shipped in the template
+  # payload. For the github-actions ecosystem, dependabot appends
+  # .github/workflows to each directory, so '/templates' covers
+  # templates/.github/workflows/.
   - package-ecosystem: 'github-actions'
-    directory: '/'
+    directories:
+      - '/'
+      - '/templates'
     schedule:
       interval: 'weekly'
 
-  # Maintain Docker base images in the root devcontainer
+  # Maintain Docker base images in the root devcontainer and the template
+  # payload's devcontainer
   - package-ecosystem: 'docker'
-    directory: '/.devcontainer'
+    directories:
+      - '/.devcontainer'
+      - '/templates/.devcontainer'
     schedule:
       interval: 'weekly'
 
-  # Maintain devcontainer features (devcontainer.json + lockfile)
+  # Maintain devcontainer features for this repo and the template payload
   - package-ecosystem: 'devcontainers'
-    directory: '/'
+    directories:
+      - '/'
+      - '/templates'
     schedule:
       interval: 'weekly'
