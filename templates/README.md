@@ -10,12 +10,11 @@ Welcome to your new project! This repository has been scaffolded with a "Gold St
 
 Here's what was installed and why:
 
-```
+```text
 .
 ├── .devcontainer/            # 🐳 Containerized dev environment
 │   ├── Dockerfile            #    Base image & system dependencies
-│   ├── devcontainer.json     #    VS Code / IDE container config
-│   └── boot-check.sh         #    Post-create health check script
+│   └── devcontainer.json     #    VS Code / IDE container config
 │
 ├── .github/                  # 🤖 GitHub automation
 │   ├── ISSUE_TEMPLATE/       #    Standardized issue forms
@@ -33,12 +32,14 @@ Here's what was installed and why:
 │   └── commit-msg            #    Enforces Conventional Commits format
 │
 ├── scripts/                  # ⚙️  Setup & automation scripts
+│   ├── create-container.sh   #    [postCreateCommand] One-time container setup
 │   ├── start-container.sh    #    [postStartCommand] Fast, idempotent checks
 │   ├── setup-env.sh          #    [Manual] Interactive setup for credentials
 │   ├── doctor.sh             #    [Manual/Auto] Environment health check & troubleshooting
-│   ├── setup-ai-tools.sh     #    [postCreateCommand] Global tool installations
+│   ├── setup-ai-tools.sh     #    [postCreateCommand] Global AI CLI installations
 │   ├── ai-context.sh         #    [Manual] Bundle metadata for AI assistants
-│   └── new-adr.sh            #    [Manual] Scaffold a new ADR file
+│   ├── new-adr.sh            #    [Manual] Scaffold a new ADR file
+│   └── utils.sh              #    Shared logging & env helpers (sourced by the others)
 │
 ├── docs/
 │   └── decisions/            # 📝 Architecture Decision Records (ADRs)
@@ -90,7 +91,7 @@ Once the container is ready, open a terminal and run:
 ./scripts/setup-env.sh
 ```
 
-This will configure your Git identity and prompt for any required API keys (Gemini). For GitHub operations, run `gh auth login` inside the container for seamless HTTPS authentication.
+This will configure your Git identity and prompt for optional API keys (Gemini, Anthropic). For GitHub operations, run `gh auth login` inside the container for seamless HTTPS authentication.
 
 Then activate the git hooks and project setup:
 
@@ -135,6 +136,6 @@ Start developing! Use the universal `Makefile` targets:
 ## 🛟 Need Help?
 
 - **Container not building?** Check that Docker Desktop is running and you have enough disk space.
-- **Gemini CLI missing?** Run `bash ./scripts/setup-gemini.sh` manually inside the container.
+- **AI CLIs (Gemini / Claude) missing?** Run `bash ./scripts/setup-ai-tools.sh` manually inside the container.
 - **Line-ending errors on Windows?** Run `git config --global core.autocrlf false` and re-clone.
 - **Something else?** Check the [bootstrap repo](https://github.com/penguinranch/bootstrap) for the latest docs and troubleshooting tips.

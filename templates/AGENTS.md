@@ -15,17 +15,20 @@ You are a Senior Software Engineer and Architect. You are tasked with maintainin
 Before any code generation or dependency installation:
 
 ### Phase 1: Tech Stack Discovery
-- Discus the project goals with the user.
+
+- Discuss the project goals with the user.
 - Choose a tech stack and document it in `docs/decisions/001-initial-tech-stack.md`.
 - **CRITICAL:** Do NOT run `npm init`, `cargo init`, or similar commands on the host.
 
 ### Phase 2: Devcontainer Configuration
+
 - Update `.devcontainer/Dockerfile` to include the necessary system dependencies and runtimes.
 - Update `.devcontainer/devcontainer.json` to include required features (e.g., node, python, go).
 - Replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json`.
 - **ACTION:** Instruct the user to **"Rebuild and Reopen in Container"**.
 
 ### Phase 3: Initialization (Post-Container)
+
 - Only once you are confirmed to be running inside the container (check for `REMOTE_CONTAINERS=true` or `/.dockerenv`), you may proceed with initializing the project and running package managers.
 
 ## 📝 Documentation & Decision Workflow
@@ -51,7 +54,7 @@ Before implementing any significant change:
 
 When adding or modifying automation scripts for the devcontainer, you must adhere to the following execution contexts defined in `devcontainer.json`:
 
-1. **`postCreateCommand`**: Use for heavy, one-time global installations (e.g., global `npm` packages, binaries) that should be baked into the image after the `Dockerfile` completes. Examples: `setup-gemini.sh`. This runs _only once_ when the container is built.
+1. **`postCreateCommand`**: Use for heavy, one-time global installations (e.g., global `npm` packages, binaries) that should be baked into the image after the `Dockerfile` completes. Examples: `create-container.sh` (which runs `setup-ai-tools.sh`). This runs _only once_ when the container is built.
 2. **`postStartCommand`**: Use for fast, idempotent environment checks and initializations that must be present every time the developer connects. Examples: `start-container.sh` (which configures git hooks and reads `.env`). This runs _every time_ the container starts or wakes up.
 3. **Manual Interactive Scripts**: Any script that requires user interaction (e.g., using `read -p`) must **never** be added to an automated lifecycle hook. If added to `postStartCommand`, the container boot process will hang indefinitely waiting for input on a detached TTY. Examples: `setup-env.sh`. Instead, ensure the idempotent `start-container.sh` script checks for the required state and warns the user to run the interactive script manually.
 
@@ -74,7 +77,7 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 ## 🤖 Token Optimization & CLI Usage
 
 - **GitHub CLI:** The `gh` command is available in this container. Use `gh auth login` to authenticate. This enables seamless GitHub operations and can configure Git as your credential helper.
-- **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) installed in this container for well-structured tasks.
+- **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) or Claude Code CLI (`@anthropic-ai/claude-code`) installed in this container for well-structured tasks.
 - **Context Refresh:** Use `make ai-context` to generate a single markdown file (`context-for-ai.md`) containing the project structure, READMEs, and ADRs. This is the fastest way to give a new AI session full project context.
 - **Usage:** Run `gemini` in the terminal to start an interactive session, or `gemini -p "<prompt>"` for one-shot tasks.
 - **Examples:** Ask the CLI to review code, analyze architecture, or investigate issues—this keeps your IDE context window focused on the primary task.

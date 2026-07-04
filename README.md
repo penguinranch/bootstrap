@@ -26,7 +26,7 @@ When you bootstrap a project using this template, you are receiving an environme
 ### 3. AI-Optimized Workflows
 
 **The Problem:** Generative AI tools (like GitHub Copilot or Gemini) get confused easily and burn through their context "tokens" doing repetitive tasks.
-**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** (`@google/gemini-cli`) is installed globally inside the container, and `make ai-context` is provided to instantly bundle project metadata for an AI assistant—saving precious IDE tokens.
+**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** (`@google/gemini-cli`) and **Claude Code CLI** (`@anthropic-ai/claude-code`) are installed globally inside the container, and `make ai-context` is provided to instantly bundle project metadata for an AI assistant—saving precious IDE tokens.
 
 ### 4. Structural Guardrails
 
@@ -86,19 +86,19 @@ _Wait a few minutes while Docker builds the Linux environment for your chosen st
 Once Antigravity reloads inside the container, open a new **Terminal** and run:
 
 ```bash
-./scripts/setup-env.sh
+make setup
 ```
 
-_This will prompt you for your Git credentials and your Gemini API Key so the CLI tooling works._
+_This will prompt you for your Git credentials and (optionally) your Gemini and Anthropic API keys so the CLI tooling works, then install the git hooks._
 
 ---
 
 ## 🚑 Troubleshooting
 
-- **The IDE Window is hung / The Gemini CLI didn't install:**
-  Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside the container and manually run `bash ./scripts/setup-gemini.sh` to finish the installation.
+- **The IDE Window is hung / The AI CLIs didn't install:**
+  Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside the container and manually run `bash ./scripts/setup-ai-tools.sh` to finish the installation.
 - **Git complains about missing user name and email:**
-  If the Devcontainer hangs after building, the `boot-check.sh` script might not have run to configure your Git profile from `.env`. You can fix this by explicitly running `./.devcontainer/boot-check.sh` or by running `./scripts/setup-env.sh` again.
+  If the Devcontainer hangs after building, the startup health check might not have run to configure your Git profile from `.env`. You can fix this by running `make doctor` (which re-applies `.env` settings) or by running `./scripts/setup-env.sh` again.
 - **Windows / WSL line-ending errors (bash scripts crashing):**
   Windows uses `CRLF` format for new lines, which crashes Linux bash scripts. We have a `.gitattributes` file to prevent this, but if you still see `\r` errors, ensure your global git config is set: `git config --global core.autocrlf false`.
 

@@ -1,8 +1,7 @@
 {
   "name": "{{PROJECT_NAME}}",
   "build": {
-    "dockerfile": "Dockerfile",
-    "args": { "VARIANT": "latest" }
+    "dockerfile": "Dockerfile"
   },
   "forwardPorts": [3000, 9222],
   "features": {
@@ -25,6 +24,7 @@
         "ms-azuretools.vscode-docker",
         "github.vscode-github-actions",
         "github.vscode-pull-request-github",
+        "anthropic.claude-code",
         "DavidAnson.vscode-markdownlint"
       ],
       "settings": {
@@ -32,7 +32,6 @@
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.suggestSelection": "first",
-        "vsintellicode.modifyPhpArgHighlight": false,
         "files.trimTrailingWhitespace": true,
         "files.insertFinalNewline": true,
         "markdown.preview.breaks": true,

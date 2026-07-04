@@ -32,7 +32,7 @@ Include as much of the following information as possible:
 This project includes several security-by-default features:
 
 - **No secrets in code** — All sensitive values are managed via `.env` (gitignored)
-- **SSH commit signing** — All commits must be cryptographically signed
+- **SSH commit signing** — Commits are cryptographically signed whenever an SSH agent is available
 - **Dependency scanning** — Dependabot monitors dependencies for known vulnerabilities
 - **SAST scanning** — Trivy scans code and containers for security issues on every PR
 - **Pre-commit hooks** — Automated checks run before every commit

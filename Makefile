@@ -40,7 +40,7 @@ build: ## Create a production build
 
 lint: ## Run code formatting & linting
 	@echo "🔍 Linting shell scripts..."
-	@shellcheck scripts/*.sh templates/scripts/*.sh || (echo "❌ Shellcheck failed. Fix errors above." && exit 1)
+	@shellcheck install.sh scripts/*.sh templates/scripts/*.sh .githooks/* templates/.githooks/* || (echo "❌ Shellcheck failed. Fix errors above." && exit 1)
 	@echo "🔍 Checking file formatting..."
 	@npx -y prettier --check "**/*.{md,json,yml}" || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1)
 	@echo "✅ All lint checks passed."

@@ -1,8 +1,7 @@
 {
   "name": "bootstrap",
   "build": {
-    "dockerfile": "Dockerfile",
-    "args": { "VARIANT": "latest" }
+    "dockerfile": "Dockerfile"
   },
   "forwardPorts": [3000, 9222],
   "features": {
@@ -17,9 +16,6 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "esbenp.prettier-vscode",
-        "bierner.markdown-mermaid",
-        "mechatroner.rainbow-csv",
         "esbenp.prettier-vscode",
         "bierner.markdown-mermaid",
         "mechatroner.rainbow-csv",

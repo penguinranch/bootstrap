@@ -11,8 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Run shellcheck
         run: |
-          shellcheck install.sh .devcontainer/*.sh scripts/*.sh templates/scripts/*.sh
+          shellcheck install.sh scripts/*.sh templates/scripts/*.sh .githooks/* templates/.githooks/*
+
+      - name: Verify shared utils stay in sync
+        run: |
+          diff -u scripts/utils.sh templates/scripts/utils.sh

@@ -2,11 +2,16 @@
 # Pre-commit hook: runs lint checks before allowing a commit.
 # Installed automatically by `make setup`.
 
-# Only lint staged files if make lint is available
-if make lint 2>/dev/null; then
+# Skip quietly if make or the lint target is unavailable (stack not configured yet)
+if ! command -v make >/dev/null 2>&1 || ! make -n lint >/dev/null 2>&1; then
+  echo "⚠️  'make lint' not available yet. Skipping pre-commit lint."
+  exit 0
+fi
+
+if make lint; then
   echo "✅ Lint checks passed."
 else
-  echo "⚠️  Lint check failed or not configured. Skipping pre-commit lint."
-  # Exit 0 so commits aren't blocked before the stack is configured
-  exit 0
+  echo "❌ Lint failed. Fix the errors above (or run 'make format')."
+  echo "   To bypass in an emergency: git commit --no-verify"
+  exit 1
 fi

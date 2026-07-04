@@ -20,8 +20,8 @@ echo "────────────────────────�
 
 # --- Load .env and apply git config ---
 if [ -f .env ]; then
-    if grep -q "YOUR_GIT_NAME_HERE" .env || grep -q "YOUR_GIT_EMAIL_HERE" .env; then
-        log_warn ".env file contains placeholder values. Run 'make setup' to configure."
+    if [ -z "$(read_env GIT_NAME)" ] || [ -z "$(read_env GIT_EMAIL)" ]; then
+        log_warn ".env file is missing values. Run 'make setup' to configure."
         ISSUES=$((ISSUES + 1))
     else
         log_success ".env file found."

@@ -11,3 +11,9 @@ updates:
     directory: '/.devcontainer'
     schedule:
       interval: 'weekly'
+
+  # Maintain devcontainer features (devcontainer.json + lockfile)
+  - package-ecosystem: 'devcontainers'
+    directory: '/'
+    schedule:
+      interval: 'weekly'

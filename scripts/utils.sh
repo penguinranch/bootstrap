@@ -1,6 +1,8 @@
 #!/bin/bash
 # shellcheck shell=bash
 # utils.sh: Shared utility functions for Penguin Ranch scripts.
+# NOTE: This file must stay identical to its counterpart in the bootstrap
+# repository (scripts/utils.sh <-> templates/scripts/utils.sh) — CI enforces this.
 
 # Colors for logging
 RED='\033[0;31m'
@@ -14,15 +16,6 @@ log_info() { echo -e "${BLUE}ℹ️  [INFO]${NC} $1"; }
 log_success() { echo -e "${GREEN}✅ [SUCCESS]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}⚠️  [WARN]${NC} $1"; }
 log_error() { echo -e "${RED}❌ [ERROR]${NC} $1"; }
-
-# Portable sed: works on both macOS (BSD sed) and Linux (GNU sed)
-portable_sed() {
-    if sed --version 2>/dev/null | grep -q GNU; then
-        sed -i "$@"
-    else
-        sed -i '' "$@"
-    fi
-}
 
 # Safely update or append a key=value pair inside an env file.
 # Uses awk instead of sed to avoid injection via special characters in values.
@@ -48,7 +41,7 @@ update_env() {
 # Safely export variables from .env, restricted to an allowlist of known keys.
 # Prevents hostile key names (e.g. LD_PRELOAD, PATH) from being injected.
 safe_export_env() {
-    local env_file=${1:-.env}
+    local env_file=.env
     local -a ALLOWED_KEYS=(
         GIT_NAME GIT_EMAIL SSH_PUBLIC_KEY
         GEMINI_API_KEY ANTHROPIC_API_KEY GITHUB_TOKEN
@@ -91,6 +84,20 @@ ssh_signing_available() {
 # Ensure we are at the repository root
 ensure_root() {
     local script_dir
-    script_dir=$(dirname "${BASH_SOURCE[1]:-${BASH_SOURCE[0]}}")
+    script_dir=$(dirname "${BASH_SOURCE[0]}")
     cd "$script_dir/.." || exit 1
+}
+
+# Check if we are running inside a container
+is_container() {
+    [ -f /.dockerenv ] || [ -n "${REMOTE_CONTAINERS:-}" ] || [ -n "${CODESPACES:-}" ]
+}
+
+# Ensure the script is running in a devcontainer
+ensure_container() {
+    if ! is_container; then
+        log_error "This script must be run inside a devcontainer."
+        log_warn "Please reopen this project in a container to continue."
+        exit 1
+    fi
 }
