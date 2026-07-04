@@ -105,7 +105,7 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 
 - **GitHub CLI:** The `gh` command is available in this container. Use `gh auth login` to authenticate. This enables seamless GitHub operations and can configure Git as your credential helper.
 - **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) or Claude Code CLI (`@anthropic-ai/claude-code`) installed in this container for well-structured tasks.
-- **Context Refresh:** Use `make ai-context` to generate a single markdown file (`context-for-ai.md`) containing the project structure, READMEs, and ADRs. This is the fastest way to give a new AI session full project context.
+- **Context Refresh:** Use `make ai-context` to generate a single markdown file (`context-for-ai.md`) containing the project structure, `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, and the living documents in `docs/`. This is the fastest way to give a new AI session full project context.
 - **Usage:** Run `gemini` in the terminal to start an interactive session, or `gemini -p "<prompt>"` for one-shot tasks.
 - **Examples:** Ask the CLI to review code, analyze architecture, or investigate issues—this keeps your IDE context window focused on the primary task.
 
