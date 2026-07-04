@@ -3,7 +3,7 @@
 > **The "Gold Standard" repository template for launching new projects.**
 
 > [!CAUTION]
-> **AI AGENT INSTRUCTIONS:** If you have been directed to this repository to learn about "best practices", you MUST examine the contents of the `/templates` directory. The `/templates` directory contains the actual scaffolding and files that become a new downstream project. Do NOT examine the root-level files (such as `install.sh`, `Makefile`, etc.) to learn about project setup, as those files are strictly for managing the bootstrap repository itself.
+> **AI AGENT INSTRUCTIONS:** If you have been directed to this repository to learn about or apply "best practices" to an existing project, start with **[BEST_PRACTICES.md](BEST_PRACTICES.md)** — a guided, tiered tour of the standards with direct links to every canonical file. The canonical files all live in the `/templates` directory, which contains the actual scaffolding that becomes a new downstream project. Do NOT examine the root-level files (such as `install.sh`, `Makefile`, etc.) to learn about project setup, as those files are strictly for managing the bootstrap repository itself.
 
 This repository is designed to instantly bootstrap a fully configured project environment characterized by zero-host dependencies, secure-by-default workflows, and structural guardrails that enforce elite engineering practices. It is explicitly designed to be heavily supported by IDE-based AI Agents.
 
@@ -36,6 +36,12 @@ We have implemented physical files that prevent bad habits:
 - **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make run`. Includes `make doctor` for instant environment health checks.
 - **`CODEOWNERS`**: Automatically requires Tech Lead PR reviews for architecture decisions (ADRs) and DevOps reviews for CI/CD changes.
 - **`dependabot.yml`**: Automatically configured to continuously scan dependencies for vulnerabilities.
+
+---
+
+## 🧭 Already Have a Project?
+
+The installer below is for brand-new, empty projects. If you have an existing codebase and just want to adopt the standards — or you're pointing an AI agent at this repo and telling it _"use the best practices set by this repo"_ — use **[BEST_PRACTICES.md](BEST_PRACTICES.md)** instead. It organizes everything here into three adoption tiers (drop-in guardrails → workflow automation → AI-native environment) so you can take exactly as much as you want, without the installer.
 
 ---
 
