@@ -41,7 +41,7 @@ It is critical to distinguish between the two development environments in this r
 ### Modifying the Generator (`install.sh`)
 
 - Changes to `install.sh` should be extremely rare. It must remain lightweight.
-- Ensure that the tarball extraction logic remains robust: the script extracts the GitHub tarball into a temporary directory (stripping the top-level `user-repo-hash` folder) and then copies only the `templates/` contents into the target directory. It relies on GitHub's tarball structure.
+- Ensure that the tarball extraction logic remains robust: the script extracts the GitHub tarball into a temporary directory, reads the source commit from the top-level `user-repo-hash` folder name (stamped into the new project's `.bootstrap-version` for upstream diffing), and then copies only the `templates/` contents into the target directory. It relies on GitHub's tarball structure.
 
 ## 📝 Contribution & Maintenance Rules
 

@@ -46,6 +46,10 @@ jobs:
           test -x scripts/start-container.sh
           test -x scripts/doctor.sh
 
+          echo "Verifying version stamp..."
+          test -f .bootstrap-version
+          grep -q '^commit=..*' .bootstrap-version
+
           echo "Verifying no root-only files leaked..."
           if [ -f "install.sh" ]; then
             echo "Error: install.sh should not be in the project root."

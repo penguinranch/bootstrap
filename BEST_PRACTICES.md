@@ -16,6 +16,7 @@ If you are starting a brand-new project, stop here and follow the [README](READM
 
 4. **Adopt in tier order.** Tier 1 fits any project with zero restructuring. Stop at whatever tier matches the project's appetite.
 5. **Replace placeholders** as you copy: `{{PROJECT_NAME}}` (devcontainer), `[SECURITY_EMAIL]` (SECURITY.md), `[Year]` / `[Full Name]` ([LICENSE](templates/LICENSE)), and the `@core-maintainers` / `@tech-leads` / `@devops` team slugs (CODEOWNERS).
+6. **Record the source commit.** Note the bootstrap commit you adopted from — in the adoption PR body, or in a `.bootstrap-version` file like the installer writes — so a future standards sync can diff upstream from that point instead of re-auditing everything.
 
 ---
 

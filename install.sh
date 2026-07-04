@@ -25,17 +25,22 @@ extract_templates() {
     # Create a temporary directory for safe extraction
     local temp_dir
     temp_dir=$(mktemp -d)
-    
-    # Extract everything, but strip the root 'user-repo-hash' directory
-    if ! curl -sL "$REPO_TAR_URL" | tar -xz -C "$temp_dir" --strip-components=1 2>/dev/null; then
+
+    if ! curl -sL "$REPO_TAR_URL" | tar -xz -C "$temp_dir" 2>/dev/null; then
         log_error "Failed to download or extract templates. Check your network connection."
         rm -rf "$temp_dir"
         exit 1
     fi
 
+    # The tarball unpacks to a single 'user-repo-hash' directory; its name
+    # carries the source commit, which we stamp for later upstream diffing
+    local extracted_dir
+    extracted_dir=$(find "$temp_dir" -mindepth 1 -maxdepth 1 -type d | head -n 1)
+
     # Move content from the templates directory to the current directory
-    if [ -d "$temp_dir/templates" ]; then
-        cp -af "$temp_dir/templates/." .
+    if [ -n "$extracted_dir" ] && [ -d "$extracted_dir/templates" ]; then
+        cp -af "$extracted_dir/templates/." .
+        BOOTSTRAP_COMMIT="${extracted_dir##*-}"
     else
         log_error "Templates directory not found in the downloaded archive."
         rm -rf "$temp_dir"
@@ -43,6 +48,17 @@ extract_templates() {
     fi
 
     rm -rf "$temp_dir"
+}
+
+write_version_stamp() {
+    {
+        echo "# Written by the penguinranch/bootstrap installer."
+        echo "# Records which template version this project was scaffolded from,"
+        echo "# so agents can diff against upstream and propose updates."
+        echo "commit=${BOOTSTRAP_COMMIT}"
+        echo "installed=$(date +%Y-%m-%d)"
+        echo "source=https://github.com/penguinranch/bootstrap"
+    } > .bootstrap-version
 }
 
 finalize_setup() {
@@ -59,4 +75,5 @@ finalize_setup() {
 # Main execution
 check_environment
 extract_templates
+write_version_stamp
 finalize_setup

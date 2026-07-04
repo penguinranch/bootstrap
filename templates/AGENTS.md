@@ -69,6 +69,17 @@ When you introduce **any** runnable command — a dev server, test runner, migra
 
 If a command isn't worth a Make target, question whether it belongs in the project at all.
 
+## ⬆️ Staying Current with Upstream Standards
+
+This project was scaffolded from [penguinranch/bootstrap](https://github.com/penguinranch/bootstrap). The `.bootstrap-version` file in the project root records which template commit it came from — keep it committed, and update it only as part of a sync.
+
+When the developer asks for a standards refresh (or you are doing broader repo maintenance and the stamp is old):
+
+1. Read the `commit=` value from `.bootstrap-version`.
+2. Review what changed upstream since then: `https://github.com/penguinranch/bootstrap/compare/<commit>...main`, or fetch the latest `BEST_PRACTICES.md` from the repo and compare it against this project's adopted files.
+3. Propose the relevant updates to the developer. Templates are a starting point — apply upstream changes with judgment, never by overwriting local adaptations wholesale.
+4. After syncing, update `commit=` and `installed=` in `.bootstrap-version` to the upstream commit you synced to, and record the sync in the `docs/ARCHITECTURE.md` Decision Log.
+
 ## 🧠 Engineering Philosophy
 
 - **Single Responsibility:** Modules and functions must do one thing well.
