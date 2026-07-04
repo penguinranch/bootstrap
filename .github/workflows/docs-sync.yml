@@ -1,0 +1,17 @@
+name: Docs Sync
+
+on:
+  push:
+    branches: [main, booting]
+  pull_request:
+    branches: [main]
+
+jobs:
+  best-practices-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Verify BEST_PRACTICES.md matches templates/
+        run: make check-docs
