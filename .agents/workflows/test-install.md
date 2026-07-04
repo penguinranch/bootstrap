@@ -17,7 +17,7 @@ BOOTSTRAP_REPO=$(git rev-parse --show-toplevel) && mkdir -p /tmp/test-bootstrap 
 // turbo 2. Verify the expected file structure exists:
 
 ```bash
-ls -la /tmp/test-bootstrap/.devcontainer/ /tmp/test-bootstrap/scripts/ /tmp/test-bootstrap/docs/decisions/ && echo "✅ Structure intact" || echo "❌ Missing files"
+ls -la /tmp/test-bootstrap/.devcontainer/ /tmp/test-bootstrap/scripts/ /tmp/test-bootstrap/docs/ && echo "✅ Structure intact" || echo "❌ Missing files"
 ```
 
 // turbo 3. Verify key files are present:

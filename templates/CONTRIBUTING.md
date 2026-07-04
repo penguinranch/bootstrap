@@ -17,15 +17,9 @@ Before starting work, create or find a GitHub issue describing the change. Use t
 - **🐛 Bug Report** for bugs
 - **🚀 Feature Request** for new features
 
-### 2. Write an ADR (for significant changes)
+### 2. Update the Living Docs (for significant changes)
 
-If the change affects architecture, dependencies, or infrastructure, propose an Architecture Decision Record first:
-
-```
-docs/decisions/NNN-description.md
-```
-
-Use `docs/decisions/000-template.md` as a starting point.
+If the change affects architecture, dependencies, or infrastructure, record the decision (and why) in the **Decision Log** in `docs/ARCHITECTURE.md` before writing code. If it changes goals or scope, update `docs/VISION.md` too.
 
 ### 3. Create a Branch
 

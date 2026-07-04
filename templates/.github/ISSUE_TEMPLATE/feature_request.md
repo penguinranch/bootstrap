@@ -18,9 +18,9 @@ A clear description of what you want to happen.
 
 A description of any alternative solutions or features you've considered.
 
-## ADR Required?
+## Architecture Impact?
 
-- [ ] This change is significant enough to warrant an Architecture Decision Record in `docs/decisions/`
+- [ ] This change is significant enough to record in the Decision Log in `docs/ARCHITECTURE.md`
 
 ## Additional Context
 

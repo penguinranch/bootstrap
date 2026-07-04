@@ -47,7 +47,7 @@ extract_templates() {
 
 finalize_setup() {
     # Ensure standard directory structure
-    mkdir -p docs/decisions
+    mkdir -p docs
 
     # Make scripts executable
     chmod +x scripts/*.sh 2>/dev/null || true

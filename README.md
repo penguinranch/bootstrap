@@ -34,7 +34,7 @@ We have implemented physical files that prevent bad habits:
 
 - **`.editorconfig`**: Forces every IDE (even Vim) to use the exact same tab sizes, line endings, and whitespace rules.
 - **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make run`. Includes `make doctor` for instant environment health checks.
-- **`CODEOWNERS`**: Automatically requires Tech Lead PR reviews for architecture decisions (ADRs) and DevOps reviews for CI/CD changes.
+- **`CODEOWNERS`**: Automatically requires Tech Lead PR reviews for the living project docs (architecture decisions) and DevOps reviews for CI/CD changes.
 - **`dependabot.yml`**: Automatically configured to continuously scan dependencies for vulnerabilities.
 
 ---
@@ -74,7 +74,7 @@ curl -sSL https://raw.githubusercontent.com/penguinranch/bootstrap/main/install.
 Before opening the Devcontainer, decide on your tech stack. The language and framework you choose will determine how the container is configured. Open your AI IDE Assistant chat panel and prompt it with exactly this text:
 
 > _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
-> _1. Fill out the `001-initial-tech-stack.md` ADR._
+> _1. Fill out `docs/VISION.md` (goals, non-goals, roadmap) and the Tech Stack section of `docs/ARCHITECTURE.md`._
 > _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json` with the project name._
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
 > _4. Rewrite `README.md` to describe this new project and how to run it."_

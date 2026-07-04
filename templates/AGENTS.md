@@ -16,8 +16,8 @@ Before any code generation or dependency installation:
 
 ### Phase 1: Tech Stack Discovery
 
-- Discuss the project goals with the user.
-- Choose a tech stack and document it in `docs/decisions/001-initial-tech-stack.md`.
+- Discuss the project goals with the user and capture them in `docs/VISION.md` (purpose, audience, goals, non-goals, roadmap).
+- Choose a tech stack and document it in the **Tech Stack** section of `docs/ARCHITECTURE.md`, recording the choice (and why) in its Decision Log.
 - **CRITICAL:** Do NOT run `npm init`, `cargo init`, or similar commands on the host.
 
 ### Phase 2: Devcontainer Configuration
@@ -31,16 +31,31 @@ Before any code generation or dependency installation:
 
 - Only once you are confirmed to be running inside the container (check for `REMOTE_CONTAINERS=true` or `/.dockerenv`), you may proceed with initializing the project and running package managers.
 
-## 📝 Documentation & Decision Workflow
+## 📝 Living Documentation Workflow
 
-Before implementing any significant change:
+This project keeps three living documents in `docs/`, plus the `CHANGELOG.md`. You are responsible for keeping them current — they are the context every fresh AI session starts from (`make ai-context` bundles them).
 
-1. **ADR First:** Propose a new Architecture Decision Record in `docs/decisions/NNN-description.md`. Use `make new-adr` to scaffold a new record from the template.
-2. **Review Goals:** Compare the proposal against the project's long-term goals in `README.md`.
-3. **Changelog:** After a feature or fix is completed, update `CHANGELOG.md` with a summary of the _decisions_ made, not just the code changed.
-4. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks via ADRs, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
-5. **Universal Task Interface:** When the tech stack is decided, you must map the stack-specific commands (e.g., `npm test` or `go build`) to the universal standard targets in the `Makefile` (`make test`, `make build`, `make dev`). See the "Universal Make Interface" section below — this rule applies to _every_ command, not just the standard targets.
-6. **Devcontainer Naming:** When updating the `.devcontainer/` configuration for a new project, you must replace the `{{PROJECT_NAME}}` placeholder in the `"name"` property in `devcontainer.json` with the new project's name. This ensures it's easily identifiable in Docker Desktop.
+1. **`docs/VISION.md`** — purpose, audience, goals, **non-goals**, and a Now/Next/Later roadmap. Check proposals against it before implementing; never build something listed as a non-goal without discussing it first.
+2. **`docs/ARCHITECTURE.md`** — tech stack, system and deployment diagrams (Mermaid), tooling, operations runbook, and an append-only **Decision Log**. Before any significant technical change, record the decision and the _why_ in the Decision Log — one line is enough.
+3. **`docs/MEMORY.md`** — long-lived context that helps you support the developer better: preferences, environment gotchas, lessons learned, glossary. **Never store secrets or credentials in it.**
+
+### Maintenance Triggers
+
+Update the documents at these moments — do not wait to be asked:
+
+| When this happens                                       | Update this                                                                                               |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| A feature or fix is completed                           | `CHANGELOG.md` (summarize the _decisions_, not just the code) + move the roadmap item in `docs/VISION.md` |
+| A technology, library, or infrastructure choice is made | Decision Log in `docs/ARCHITECTURE.md`; update diagrams if structural                                     |
+| The developer corrects you or states a preference       | `docs/MEMORY.md`                                                                                          |
+| You discover a non-obvious quirk, gotcha, or dead end   | `docs/MEMORY.md`                                                                                          |
+| Project goals, scope, or priorities change              | `docs/VISION.md`                                                                                          |
+
+### Additional Rules
+
+1. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
+2. **Universal Task Interface:** When the tech stack is decided, you must map the stack-specific commands (e.g., `npm test` or `go build`) to the universal standard targets in the `Makefile` (`make test`, `make build`, `make dev`). See the "Universal Make Interface" section below — this rule applies to _every_ command, not just the standard targets.
+3. **Devcontainer Naming:** When updating the `.devcontainer/` configuration for a new project, you must replace the `{{PROJECT_NAME}}` placeholder in the `"name"` property in `devcontainer.json` with the new project's name. This ensures it's easily identifiable in Docker Desktop.
 
 ## 🎛 Universal Make Interface
 
@@ -99,5 +114,5 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 - `/.devcontainer`: Environment definition and boot logic.
 - `/.githooks`: Git hooks for pre-commit linting and commit message validation.
 - `/.github`: CI workflows, issue templates, CODEOWNERS, and dependabot config.
-- `/docs/decisions`: ADRs and major architectural choices.
+- `/docs`: Living project documentation (`VISION.md`, `ARCHITECTURE.md`, `MEMORY.md`).
 - `/scripts`: Automation and setup scripts (e.g., `setup-env.sh`).

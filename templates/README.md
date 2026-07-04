@@ -38,13 +38,12 @@ Here's what was installed and why:
 │   ├── doctor.sh             #    [Manual/Auto] Environment health check & troubleshooting
 │   ├── setup-ai-tools.sh     #    [postCreateCommand] Global AI CLI installations
 │   ├── ai-context.sh         #    [Manual] Bundle metadata for AI assistants
-│   ├── new-adr.sh            #    [Manual] Scaffold a new ADR file
 │   └── utils.sh              #    Shared logging & env helpers (sourced by the others)
 │
-├── docs/
-│   └── decisions/            # 📝 Architecture Decision Records (ADRs)
-│       ├── 000-template.md           # ADR template — copy for new decisions
-│       └── 001-initial-tech-stack.md  # Your first ADR — fill this out!
+├── docs/                     # 📝 Living project documentation (AI-maintained)
+│   ├── VISION.md             #    Goals, non-goals, and Now/Next/Later roadmap
+│   ├── ARCHITECTURE.md       #    Tech stack, diagrams, runbook & decision log
+│   └── MEMORY.md             #    Long-lived context for AI agents
 │
 ├── .editorconfig             # Consistent formatting across all editors
 ├── .env.example              # Template for required environment variables
@@ -70,7 +69,7 @@ Here's what was installed and why:
 Before opening the Devcontainer, define your tech stack. The language and framework you choose will determine how the container is configured. Open your AI assistant and prompt it with:
 
 > _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
-> _1. Fill out the `001-initial-tech-stack.md` ADR._
+> _1. Fill out `docs/VISION.md` (goals, non-goals, roadmap) and the Tech Stack section of `docs/ARCHITECTURE.md`._
 > _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json` with the project name._
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
 > _4. Update `SECURITY.md` with your contact details._
@@ -105,18 +104,17 @@ make setup
 
 Start developing! Use the universal `Makefile` targets:
 
-| Command           | Purpose                            |
-| ----------------- | ---------------------------------- |
-| `make help`       | Show all available targets         |
-| `make setup`      | Install deps & configure hooks     |
-| `make doctor`     | Check environment health           |
-| `make new-adr`    | Scaffold a new architecture record |
-| `make ai-context` | Bundle project context for AI      |
-| `make dev`        | Start the development server       |
-| `make test`       | Run the test suite                 |
-| `make build`      | Create a production build          |
-| `make lint`       | Run code formatting & linting      |
-| `make clean`      | Remove build artifacts             |
+| Command           | Purpose                        |
+| ----------------- | ------------------------------ |
+| `make help`       | Show all available targets     |
+| `make setup`      | Install deps & configure hooks |
+| `make doctor`     | Check environment health       |
+| `make ai-context` | Bundle project context for AI  |
+| `make dev`        | Start the development server   |
+| `make test`       | Run the test suite             |
+| `make build`      | Create a production build      |
+| `make lint`       | Run code formatting & linting  |
+| `make clean`      | Remove build artifacts         |
 
 ---
 
@@ -127,8 +125,9 @@ Start developing! Use the universal `Makefile` targets:
 | **`AGENTS.md`**       | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy.     |
 | **`Makefile`**        | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack. |
 | **`.env.example`**    | Lists all required environment variables. Copy to `.env` and fill in your values.                    |
-| **`CODEOWNERS`**      | Defines who must approve PRs for critical paths (CI, ADRs, Devcontainer).                            |
-| **`CONTRIBUTING.md`** | How to contribute: branch naming, conventional commits, ADR workflow, and PR process.                |
+| **`docs/`**           | The three living documents — `VISION.md`, `ARCHITECTURE.md`, `MEMORY.md` — that agents keep current. |
+| **`CODEOWNERS`**      | Defines who must approve PRs for critical paths (CI, docs, Devcontainer).                            |
+| **`CONTRIBUTING.md`** | How to contribute: branch naming, conventional commits, living-docs workflow, and PR process.        |
 | **`SECURITY.md`**     | How to report vulnerabilities. Replace `[SECURITY_EMAIL]` with your contact.                         |
 
 ---

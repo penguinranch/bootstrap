@@ -22,7 +22,7 @@ echo "🔍 Gathering project context..."
     echo "\`\`\`"
     echo ""
 
-    for file in README.md AGENTS.md ARCHITECTURE.md CONTRIBUTING.md; do
+    for file in README.md AGENTS.md CONTRIBUTING.md docs/VISION.md docs/ARCHITECTURE.md docs/MEMORY.md; do
         if [ -f "$file" ] && [ ! -L "$file" ]; then
             echo "## $file"
             echo "\`\`\`markdown"
@@ -31,19 +31,6 @@ echo "🔍 Gathering project context..."
             echo ""
         fi
     done
-
-    if [ -d "docs/decisions" ]; then
-        echo "## Architecture Decision Records (ADRs)"
-        for adr in docs/decisions/*.md; do
-            if [ -f "$adr" ] && [ ! -L "$adr" ]; then
-                echo "### $(basename "$adr")"
-                echo "\`\`\`markdown"
-                cat "$adr"
-                echo "\`\`\`"
-                echo ""
-            fi
-        done
-    fi
 
 } > "$OUTPUT_FILE"
 

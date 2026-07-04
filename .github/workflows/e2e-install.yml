@@ -37,6 +37,9 @@ jobs:
           test -d scripts
           test -f scripts/setup-env.sh
           test -f scripts/doctor.sh
+          test -f docs/VISION.md
+          test -f docs/ARCHITECTURE.md
+          test -f docs/MEMORY.md
 
           echo "Verifying execute permissions..."
           test -x scripts/setup-env.sh
