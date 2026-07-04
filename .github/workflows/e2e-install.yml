@@ -53,3 +53,40 @@ jobs:
           fi
 
           echo "✅ E2E Verification Passed!"
+
+      - name: Verify installer refuses a non-empty directory
+        run: |
+          cd test-project
+          if bash ../install.sh; then
+            echo "Error: installer should abort when .devcontainer already exists."
+            exit 1
+          fi
+          echo "✅ Installer guard refused to overwrite an existing project."
+
+      - name: Verify git hooks enforce the guardrails
+        run: |
+          cd test-project
+          git init -q
+          git config user.name "E2E Bot"
+          git config user.email "e2e@example.com"
+          git config core.hooksPath .githooks
+
+          test -x .githooks/commit-msg
+          test -x .githooks/pre-commit
+
+          git add -A
+          if git commit -q -m "not a conventional message"; then
+            echo "Error: commit-msg hook should reject non-conventional messages."
+            exit 1
+          fi
+          echo "✅ Non-conventional commit message rejected."
+
+          git commit -q -m "chore: initial scaffold from bootstrap"
+          echo "✅ Conventional commit accepted."
+
+      - name: Verify make targets work in the scaffold
+        run: |
+          cd test-project
+          make help | grep -q "setup"
+          make doctor
+          echo "✅ make help and make doctor run in a fresh scaffold."
