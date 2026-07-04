@@ -21,7 +21,7 @@ When you bootstrap a project using this template, you are receiving an environme
 ### 2. Secure by Default
 
 **The Problem:** Accidentally committing API keys or unverified code.
-**The Solution:** The `.env` file is heavily `.gitignore`d. Additionally, the Devcontainer is mapped to your host's `~/.ssh` directory, and Git is pre-configured to strictly require **SSH Commit Signing**.
+**The Solution:** The `.env` file is heavily `.gitignore`d, and the pre-commit hook scans every staged change for secrets with **gitleaks** before the commit is allowed. Additionally, the Devcontainer is mapped to your host's `~/.ssh` directory, and Git is pre-configured to strictly require **SSH Commit Signing**.
 
 ### 3. AI-Optimized Workflows
 

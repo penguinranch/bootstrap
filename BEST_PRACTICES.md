@@ -29,7 +29,7 @@ These are drop-in files that prevent entire categories of mistakes and require n
 | LF line endings for scripts | [`templates/.gitattributes`](templates/.gitattributes)                                              | Prevents CRLF from breaking bash scripts checked out on Windows.                                                                 |
 | Secrets never committed     | [`templates/.env.example`](templates/.env.example) + [`templates/.gitignore`](templates/.gitignore) | Real values live in `.env` (gitignored); `.env.example` documents every variable. Add new variables to `.env.example` first.     |
 | Conventional Commits        | [`templates/.githooks/commit-msg`](templates/.githooks/commit-msg)                                  | Enforces `<type>[scope]: <description>` on every commit.                                                                         |
-| Pre-commit linting          | [`templates/.githooks/pre-commit`](templates/.githooks/pre-commit)                                  | Runs `make lint` before each commit; blocks on real failures, skips gracefully if lint isn't configured yet.                     |
+| Pre-commit secrets + lint   | [`templates/.githooks/pre-commit`](templates/.githooks/pre-commit)                                  | Scans staged changes for secrets (gitleaks), then runs `make lint`; each step skips gracefully if its tool isn't available yet.  |
 | Consistent formatting       | [`templates/.prettierrc`](templates/.prettierrc)                                                    | Keep whatever formatter the project already uses — the practice is _a_ shared formatter config in the repo, not Prettier per se. |
 
 **Activate the hooks** after copying `.githooks/`:

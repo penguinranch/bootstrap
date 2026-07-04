@@ -87,7 +87,7 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 
 ## 🏗 Coding Standards
 
-- **Linting:** Run Prettier before every commit. The pre-commit hook (`.githooks/pre-commit`) runs `make lint` automatically.
+- **Linting & Secrets:** Run Prettier before every commit. The pre-commit hook (`.githooks/pre-commit`) scans staged changes for secrets with gitleaks and runs `make lint` automatically. If gitleaks flags a real secret, move it to `.env`; only use a `gitleaks:allow` comment for genuine false positives.
 - **Conventional Commits:** All commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/) format: `<type>[scope]: <description>`. The commit-msg hook enforces this. Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
 - **Testing:** Always use the language-appropriate testing framework. Do not consider a task "Done" until tests pass.
 - **Git Branching:** Work in scoped branches:

@@ -1,6 +1,17 @@
 #!/bin/bash
-# Pre-commit hook: runs lint checks before allowing a commit.
+# Pre-commit hook: scans staged changes for secrets, then runs lint checks.
 # Installed automatically by `make setup`.
+
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks git --pre-commit --staged --redact --no-banner; then
+    echo "❌ Possible secret detected in staged changes."
+    echo "   Secrets belong in .env (gitignored), never in committed files."
+    echo "   False positive? Add a 'gitleaks:allow' comment on that line."
+    exit 1
+  fi
+else
+  echo "⚠️  gitleaks not installed. Skipping secret scan."
+fi
 
 # Skip quietly if make or the lint target is unavailable (stack not configured yet)
 if ! command -v make >/dev/null 2>&1 || ! make -n lint >/dev/null 2>&1; then
