@@ -82,21 +82,15 @@ Before opening the Devcontainer, define your tech stack. The language and framew
 
 Once the Devcontainer has been configured for your stack, open this folder in **VS Code** or **Antigravity** and accept the prompt to **Reopen in Container**. Docker will build your isolated development environment automatically.
 
-### 3. Run the Setup Script
+### 3. Run the Setup Wizard
 
 Once the container is ready, open a terminal and run:
 
 ```bash
-./scripts/setup-env.sh
-```
-
-This will configure your Git identity and prompt for optional API keys (Gemini, Anthropic). For GitHub operations, run `gh auth login` inside the container for seamless HTTPS authentication.
-
-Then activate the git hooks and project setup:
-
-```bash
 make setup
 ```
+
+This walks the interactive setup wizard (Git identity, optional Gemini/Anthropic API keys), installs the AI CLI tools, and activates the git hooks. For GitHub operations, run `gh auth login` inside the container for seamless HTTPS authentication.
 
 > **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, you can manually run `./scripts/start-container.sh` to apply `.env` variables and verify hooks.
 
@@ -135,6 +129,6 @@ Start developing! Use the universal `Makefile` targets:
 ## 🛟 Need Help?
 
 - **Container not building?** Check that Docker Desktop is running and you have enough disk space.
-- **AI CLIs (Gemini / Claude) missing?** Run `bash ./scripts/setup-ai-tools.sh` manually inside the container.
+- **AI CLIs (Gemini / Claude) missing?** Run `make ai-tools` inside the container.
 - **Line-ending errors on Windows?** Run `git config --global core.autocrlf false` and re-clone.
 - **Something else?** Check the [bootstrap repo](https://github.com/penguinranch/bootstrap) for the latest docs and troubleshooting tips.

@@ -2,7 +2,7 @@
 # Wrap ALL runnable commands (npm, pip, cargo, scripts, ...) in a target here,
 # even one-line passthroughs, and give each a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
-.PHONY: help setup doctor dev test build lint clean format ai-context
+.PHONY: help setup doctor dev test build lint clean format ai-context ai-tools
 
 # Container enforcement check
 ifndef REMOTE_CONTAINERS
@@ -70,6 +70,9 @@ format: ## Format all files
 
 ai-context: ## Gather project context for AI
 	@bash ./scripts/ai-context.sh
+
+ai-tools: ## (Re)install the AI CLI tools
+	@bash ./scripts/setup-ai-tools.sh
 
 clean: ## Remove build artifacts
 	@echo "Clean target not implemented yet — update after choosing your tech stack"

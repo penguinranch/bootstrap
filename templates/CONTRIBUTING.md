@@ -5,8 +5,7 @@ Thank you for considering contributing to this project! This guide will help you
 ## Development Setup
 
 1. **Open in a Devcontainer** — All development happens inside the container. Never install dependencies on your host machine.
-2. **Run the setup script** — `./scripts/setup-env.sh` configures Git identity and API keys.
-3. **Activate git hooks** — `make setup` installs pre-commit linting and commit message validation.
+2. **Run `make setup`** — the interactive wizard configures Git identity and API keys, installs the AI CLI tools, and activates the git hooks (pre-commit linting and commit message validation).
 
 ## Workflow
 

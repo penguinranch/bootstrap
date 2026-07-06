@@ -1,6 +1,6 @@
 # Agent Memory
 
-> **Living document** — long-lived context that helps AI agents support the developer better across sessions. Add to it whenever the developer corrects you, states a preference, or you discover something non-obvious the codebase can't tell you.
+> **Living document** — long-lived context that helps AI agents support the developer better across sessions. Add to it whenever the developer corrects you, states a preference, or you discover something non-obvious the codebase can't tell you. Update an existing entry rather than adding a duplicate, and delete entries that turn out to be wrong — a stale memory is worse than none.
 >
 > **Never store secrets, API keys, tokens, or credentials here.** Those belong in `.env` (gitignored). This file is committed and readable by anyone with repo access.
 
