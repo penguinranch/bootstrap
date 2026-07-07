@@ -28,8 +28,11 @@ Here's what was installed and why:
 │       └── security.yml      #    Trivy security scanning
 │
 ├── .githooks/                # 🪝 Git hooks (installed via make setup)
-│   ├── pre-commit            #    Runs make lint before each commit
+│   ├── pre-commit            #    Scans staged changes for secrets (gitleaks), then runs make lint
 │   └── commit-msg            #    Enforces Conventional Commits format
+│
+├── .vscode/                  # 🧩 Editor defaults
+│   └── extensions.json       #    Recommended VS Code extensions
 │
 ├── scripts/                  # ⚙️  Setup & automation scripts
 │   ├── create-container.sh   #    [postCreateCommand] One-time container setup
@@ -45,6 +48,7 @@ Here's what was installed and why:
 │   ├── ARCHITECTURE.md       #    Tech stack, diagrams, runbook & decision log
 │   └── MEMORY.md             #    Long-lived context for AI agents
 │
+├── .bootstrap-version        # Which template commit this project was scaffolded from
 ├── .editorconfig             # Consistent formatting across all editors
 ├── .env.example              # Template for required environment variables
 ├── .gitattributes            # Line-ending normalization (LF for scripts)
