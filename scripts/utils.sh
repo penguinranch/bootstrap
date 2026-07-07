@@ -31,9 +31,16 @@ update_env() {
     if grep -q "^${key}=" "$env_file"; then
         local tmp_file
         tmp_file=$(mktemp)
-        awk -v k="$key" -v v="$value" 'BEGIN{FS=OFS="="} $1==k{$0=k"="v} {print}' "$env_file" > "$tmp_file"
+        # The value goes in via ENVIRON, not -v: awk -v interprets C escapes,
+        # so a value containing \n or \t would corrupt the file.
+        V="$value" awk -v k="$key" 'BEGIN{FS=OFS="="} $1==k{$0=k"="ENVIRON["V"]} {print}' "$env_file" > "$tmp_file"
         mv "$tmp_file" "$env_file"
     else
+        # A hand-edited file may lack a trailing newline — appending straight
+        # onto the last line would fuse two entries together.
+        if [ -s "$env_file" ] && [ -n "$(tail -c1 "$env_file")" ]; then
+            echo >> "$env_file"
+        fi
         printf '%s=%s\n' "$key" "$value" >> "$env_file"
     fi
 }
@@ -50,12 +57,15 @@ safe_export_env() {
     if [ ! -f "$env_file" ]; then
         return
     fi
-    while IFS='=' read -r key value; do
+    # '|| [ -n "$key" ]' keeps the final line when the file has no trailing
+    # newline — read returns non-zero at EOF and would silently drop it.
+    while IFS='=' read -r key value || [ -n "$key" ]; do
         if [[ -n "$key" && ! "$key" =~ ^# ]]; then
             key="${key#"${key%%[![:space:]]*}"}"
             key="${key%"${key##*[![:space:]]}"}"
             value="${value#"${value%%[![:space:]]*}"}"
             value="${value%"${value##*[![:space:]]}"}"
+            value=$(strip_matched_quotes "$value")
             # An empty value would clobber a key the host already provided
             # via containerEnv — skip it.
             [ -n "$value" ] || continue
@@ -70,12 +80,30 @@ safe_export_env() {
     done < "$env_file"
 }
 
-# Read a value from .env by key (returns empty string if not found)
+# Strip one pair of matched surrounding quotes, dotenv-style, so
+# GIT_NAME="Jane Doe" doesn't produce a git identity with literal quotes.
+strip_matched_quotes() {
+    local value=$1
+    if [ "${#value}" -ge 2 ]; then
+        case "$value" in
+            \"*\") value="${value#\"}"; value="${value%\"}" ;;
+            \'*\') value="${value#\'}"; value="${value%\'}" ;;
+        esac
+    fi
+    printf '%s' "$value"
+}
+
+# Read a value from .env by key (returns empty string if not found).
+# Trims whitespace and strips matched quotes, same as safe_export_env.
 read_env() {
     local key=$1
     local env_file=${2:-.env}
+    local value
     if [ -f "$env_file" ]; then
-        grep -m1 "^${key}=" "$env_file" 2>/dev/null | cut -d'=' -f2- || true
+        value=$(grep -m1 "^${key}=" "$env_file" 2>/dev/null | cut -d'=' -f2- || true)
+        value="${value#"${value%%[![:space:]]*}"}"
+        value="${value%"${value##*[![:space:]]}"}"
+        strip_matched_quotes "$value"
     fi
 }
 
