@@ -53,7 +53,10 @@ extract_templates() {
     local temp_dir
     temp_dir=$(mktemp -d)
 
-    if ! curl -sL "$REPO_TAR_URL" | tar -xz -C "$temp_dir" 2>/dev/null; then
+    # -f turns HTTP errors into a curl failure instead of piping an error
+    # page into tar; -S keeps curl's own error message visible despite -s,
+    # and tar's stderr is left alone so the real cause is shown.
+    if ! curl -fsSL "$REPO_TAR_URL" | tar -xz -C "$temp_dir"; then
         log_error "Failed to download or extract templates. Check your network connection."
         rm -rf "$temp_dir"
         exit 1

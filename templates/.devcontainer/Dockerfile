@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/devcontainers/base:trixie
 ARG GITLEAKS_VERSION=8.30.1
 RUN arch="$(dpkg --print-architecture)" \
     && case "$arch" in amd64) arch=x64 ;; esac \
-    && curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${arch}.tar.gz" \
+    && curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${arch}.tar.gz" \
     | tar -xz -C /usr/local/bin gitleaks
 
 # [Optional] Uncomment this section to install additional OS packages.

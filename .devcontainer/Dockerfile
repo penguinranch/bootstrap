@@ -9,7 +9,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 ARG GITLEAKS_VERSION=8.30.1
 RUN arch="$(dpkg --print-architecture)" \
     && case "$arch" in amd64) arch=x64 ;; esac \
-    && curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${arch}.tar.gz" \
+    && curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${arch}.tar.gz" \
     | tar -xz -C /usr/local/bin gitleaks
 
 # [Optional] Uncomment if you want to install an additional version of node using nvm
