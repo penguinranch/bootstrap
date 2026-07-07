@@ -43,9 +43,17 @@ build: ## Create a production build
 
 lint: ## Run code formatting & linting
 	@echo "🔍 Linting shell scripts..."
-	@shellcheck install.sh scripts/*.sh templates/scripts/*.sh .githooks/* templates/.githooks/* || (echo "❌ Shellcheck failed. Fix errors above." && exit 1)
+	@if command -v shellcheck >/dev/null 2>&1; then \
+		shellcheck install.sh scripts/*.sh templates/scripts/*.sh .githooks/* templates/.githooks/* || (echo "❌ Shellcheck failed. Fix errors above." && exit 1); \
+	else \
+		echo "⚠️  shellcheck not found — skipping (CI still enforces it)."; \
+	fi
 	@echo "🔍 Checking file formatting..."
-	@npx -y prettier --check "**/*.{md,json,yml}" || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1)
+	@if command -v npx >/dev/null 2>&1; then \
+		npx -y prettier --check "**/*.{md,json,yml}" || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1); \
+	else \
+		echo "⚠️  npx not found — skipping prettier (CI still enforces it)."; \
+	fi
 	@echo "🔍 Checking BEST_PRACTICES.md ↔ templates/ sync..."
 	@bash ./scripts/check-best-practices-sync.sh
 	@echo "✅ All lint checks passed."
