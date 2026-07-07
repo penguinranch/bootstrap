@@ -50,7 +50,7 @@ lint: ## Run code formatting & linting
 	fi
 	@echo "🔍 Checking file formatting..."
 	@if command -v npx >/dev/null 2>&1; then \
-		npx -y prettier --check "**/*.{md,json,yml}" || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1); \
+		npx -y prettier@3.9.4 --check "**/*.{md,json,yml}" || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1); \
 	else \
 		echo "⚠️  npx not found — skipping prettier (CI still enforces it)."; \
 	fi
@@ -63,7 +63,7 @@ check-docs: ## Verify BEST_PRACTICES.md and templates/ are in sync
 
 format: ## Format all files
 	@echo "🧹 Formatting files..."
-	@npx -y prettier --write "**/*.{md,json,yml}"
+	@npx -y prettier@3.9.4 --write "**/*.{md,json,yml}"
 	@echo "✅ Formatting complete."
 
 clean: ## Remove build artifacts

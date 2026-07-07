@@ -20,4 +20,4 @@ jobs:
 
       - name: Run Prettier check
         run: |
-          npx -y prettier --check "**/*.{md,json,yml}"
+          npx -y prettier@3.9.4 --check "**/*.{md,json,yml}"
