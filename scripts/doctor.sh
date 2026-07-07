@@ -28,24 +28,30 @@ if [ -f .env ]; then
     fi
     safe_export_env
 
-    # Apply git config from .env
-    if [ -n "${GIT_NAME:-}" ]; then
-        git config --global user.name "$GIT_NAME"
-    fi
-    if [ -n "${GIT_EMAIL:-}" ]; then
-        git config --global user.email "$GIT_EMAIL"
-    fi
-    if [ -n "${SSH_PUBLIC_KEY:-}" ]; then
-        git config --global gpg.format ssh
-        git config --global user.signingkey "key::${SSH_PUBLIC_KEY}"
-        if ssh_signing_available; then
-            git config --global commit.gpgsign true
-        else
-            git config --global commit.gpgsign false
+    # Apply git config from .env — only inside the container, so a manual
+    # 'make doctor' on the host never rewrites the developer's ~/.gitconfig
+    # (or silently disables signing they had enabled globally).
+    if is_container; then
+        if [ -n "${GIT_NAME:-}" ]; then
+            git config --global user.name "$GIT_NAME"
         fi
-    fi
-    if [ -n "${GITHUB_TOKEN:-}" ] && command -v gh &> /dev/null; then
-        gh auth setup-git 2>/dev/null || true
+        if [ -n "${GIT_EMAIL:-}" ]; then
+            git config --global user.email "$GIT_EMAIL"
+        fi
+        if [ -n "${SSH_PUBLIC_KEY:-}" ]; then
+            git config --global gpg.format ssh
+            git config --global user.signingkey "key::${SSH_PUBLIC_KEY}"
+            if ssh_signing_available; then
+                git config --global commit.gpgsign true
+            else
+                git config --global commit.gpgsign false
+            fi
+        fi
+        if [ -n "${GITHUB_TOKEN:-}" ] && command -v gh &> /dev/null; then
+            gh auth setup-git 2>/dev/null || true
+        fi
+    else
+        log_info "Not inside a container — leaving host git config untouched."
     fi
 else
     log_warn ".env file not found. Run 'make setup' to configure."
