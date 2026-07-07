@@ -13,11 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      # runCmd proves the tooling inside the container works, not just that
+      # the image builds — a container with broken make/shellcheck/gitleaks
+      # used to pass this job.
       - name: Build root devcontainer
         uses: devcontainers/ci@v0.3
         with:
           subFolder: .
           push: never
+          runCmd: |
+            make doctor
+            make lint
+            command -v gitleaks
 
   build-template:
     runs-on: ubuntu-latest
@@ -30,3 +37,7 @@ jobs:
         with:
           subFolder: templates
           push: never
+          runCmd: |
+            make help
+            make doctor
+            command -v gitleaks

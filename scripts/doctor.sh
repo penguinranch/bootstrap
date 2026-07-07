@@ -12,6 +12,14 @@ source "$SCRIPT_DIR/utils.sh"
 
 ensure_root
 
+# --strict: exit non-zero when issues are found, so CI can gate on doctor.
+# The default stays exit 0 because doctor runs in postStartCommand, where a
+# non-zero exit would abort container startup.
+STRICT=0
+if [ "${1:-}" = "--strict" ]; then
+    STRICT=1
+fi
+
 ISSUES=0
 
 echo ""
@@ -177,3 +185,8 @@ else
     log_success "All checks passed."
 fi
 echo ""
+
+if [ "$STRICT" -eq 1 ] && [ "$ISSUES" -gt 0 ]; then
+    exit 1
+fi
+exit 0
