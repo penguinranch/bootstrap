@@ -46,7 +46,7 @@ It is critical to distinguish between the two development environments in this r
 ## 📝 Contribution & Maintenance Rules
 
 1. **Eat Your Own Dog Food:** Although this is the `bootstrap` project, it should ideally eventually follow the same rules it enforces on its children (e.g., using a Devcontainer, having its own `.env` management, etc.).
-2. **Test Before Merging:** If you modify `install.sh` or the contents of `/templates/`, always run a local test by executing `bash install.sh` in a `/tmp/test-bootstrap` directory to verify extraction and structure intactness.
+2. **Test Before Merging:** If you modify `install.sh` or the contents of `/templates/`, always run the `.agents/workflows/test-install.md` workflow. It packs your working tree's `templates/` into a local tarball and points `REPO_TAR_URL` at it — running a bare `bash install.sh` instead would download the upstream `main` tarball and silently ignore your local changes.
 3. **No Destructive Operations:** The `install.sh` script must never contain `rm -rf` logic for system files, and must gracefully fail if extracting to a directory that contains conflicting files.
 4. **Windows/WSL Compatibility:** Be highly conscientious of line-endings (`CRLF` vs `LF`) and file execution permissions, as many developers will spin up this Devcontainer from a Windows host. All `.sh` scripts must retain `LF` endings to avoid immediate Linux interpreter crashes.
 5. **Host Isolation Principle:** When modifying `/templates/`, always ensure that no script or instruction leads to tool installation or code generation on the user's host machine. Maintain the "Hard Barrier" checks in the Makefile and scripts.
