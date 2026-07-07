@@ -126,4 +126,29 @@ if [ -f "LICENSE" ] && [ -n "$GIT_NAME" ]; then
     mv "$tmp_license" LICENSE
 fi
 
-log_success "Configuration complete. Restart your terminal or source the .env file."
+# Make saved keys available to future interactive shells: source .env through
+# the allowlisted parser from the container's shell profiles. Without this,
+# keys saved here would never reach the gemini/claude CLIs — containerEnv only
+# forwards host variables, and nothing else reads .env into a login shell.
+if is_container; then
+    PROJECT_ROOT="$(pwd)"
+    RC_MARKER="# >>> project env: ${PROJECT_ROOT} >>>"
+    for rc_file in "$HOME/.bashrc" "$HOME/.zshrc"; do
+        touch "$rc_file"
+        if ! grep -qF "$RC_MARKER" "$rc_file"; then
+            {
+                echo ""
+                echo "$RC_MARKER"
+                echo "# Added by 'make setup' — loads allowlisted keys from the project .env"
+                echo "if [ -f '${PROJECT_ROOT}/scripts/utils.sh' ] && [ -f '${PROJECT_ROOT}/.env' ]; then"
+                echo "    source '${PROJECT_ROOT}/scripts/utils.sh'"
+                echo "    safe_export_env '${PROJECT_ROOT}/.env'"
+                echo "fi"
+                echo "# <<< project env: ${PROJECT_ROOT} <<<"
+            } >> "$rc_file"
+        fi
+    done
+    log_success "Shell profiles now load .env keys — open a new terminal to apply."
+fi
+
+log_success "Configuration complete."

@@ -10,7 +10,7 @@ ensure_root
 ensure_container
 
 # Export .env values so API keys are available for CLI tools
-safe_export_env
+safe_export_env .env
 
 SENTINEL=".devcontainer/.bootstrapped"
 FRESH=false

@@ -40,8 +40,9 @@ update_env() {
 
 # Safely export variables from .env, restricted to an allowlist of known keys.
 # Prevents hostile key names (e.g. LD_PRELOAD, PATH) from being injected.
+# Accepts an optional path so shell profiles can source a specific project's .env.
 safe_export_env() {
-    local env_file=.env
+    local env_file=${1:-.env}
     local -a ALLOWED_KEYS=(
         GIT_NAME GIT_EMAIL SSH_PUBLIC_KEY
         GEMINI_API_KEY ANTHROPIC_API_KEY GITHUB_TOKEN
@@ -55,6 +56,9 @@ safe_export_env() {
             key="${key%"${key##*[![:space:]]}"}"
             value="${value#"${value%%[![:space:]]*}"}"
             value="${value%"${value##*[![:space:]]}"}"
+            # An empty value would clobber a key the host already provided
+            # via containerEnv — skip it.
+            [ -n "$value" ] || continue
             # Only export if key is in the allowlist
             for allowed in "${ALLOWED_KEYS[@]}"; do
                 if [[ "$key" == "$allowed" ]]; then

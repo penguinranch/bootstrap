@@ -26,7 +26,7 @@ if [ -f .env ]; then
     else
         log_success ".env file found."
     fi
-    safe_export_env
+    safe_export_env .env
 
     # Apply git config from .env — only inside the container, so a manual
     # 'make doctor' on the host never rewrites the developer's ~/.gitconfig
