@@ -28,7 +28,13 @@ EXISTING_SSH_KEY=$(read_env "SSH_PUBLIC_KEY")
 EXISTING_GEMINI_KEY=$(read_env "GEMINI_API_KEY")
 EXISTING_ANTHROPIC_KEY=$(read_env "ANTHROPIC_API_KEY")
 
-log_info "Setting up environment variables (press Enter to keep current value)..."
+log_info "Setting up environment variables (Enter keeps the current value, '-' clears it)..."
+
+# Values entered as '-' clear the saved value — otherwise a mistyped key
+# or a retired SSH key could never be removed through the wizard.
+clear_sentinel() {
+    if [ "$1" = "-" ]; then echo ""; else echo "$1"; fi
+}
 
 if [ -n "$EXISTING_GIT_NAME" ]; then
     read -rp "Git Name [$EXISTING_GIT_NAME]: " GIT_NAME
@@ -54,38 +60,43 @@ else
     read -rp "SSH Public Key (press Enter to skip): " SSH_PUBLIC_KEY
 fi
 SSH_PUBLIC_KEY="${SSH_PUBLIC_KEY:-$EXISTING_SSH_KEY}"
+SSH_PUBLIC_KEY=$(clear_sentinel "$SSH_PUBLIC_KEY")
 
+# API keys are read with -s so they don't land in terminal scrollback.
 echo ""
 log_info "Optional: The Gemini API Key is used by the Gemini CLI inside this Devcontainer."
 echo "You can get an API key from: https://aistudio.google.com/app/apikey"
 if [ -n "$EXISTING_GEMINI_KEY" ]; then
-    read -rp "Gemini API Key [****${EXISTING_GEMINI_KEY: -4}]: " GEMINI_API_KEY
+    read -rsp "Gemini API Key [****${EXISTING_GEMINI_KEY: -4}] (hidden): " GEMINI_API_KEY
 else
-    read -rp "Gemini API Key (press Enter to skip): " GEMINI_API_KEY
+    read -rsp "Gemini API Key (hidden, press Enter to skip): " GEMINI_API_KEY
 fi
+echo ""
 GEMINI_API_KEY="${GEMINI_API_KEY:-$EXISTING_GEMINI_KEY}"
+GEMINI_API_KEY=$(clear_sentinel "$GEMINI_API_KEY")
 
 echo ""
 log_info "Optional: The Anthropic API Key is used by the Claude CLI inside this Devcontainer."
 echo "You can also authenticate interactively by running: claude"
 if [ -n "$EXISTING_ANTHROPIC_KEY" ]; then
-    read -rp "Anthropic API Key [****${EXISTING_ANTHROPIC_KEY: -4}]: " ANTHROPIC_API_KEY
+    read -rsp "Anthropic API Key [****${EXISTING_ANTHROPIC_KEY: -4}] (hidden): " ANTHROPIC_API_KEY
 else
-    read -rp "Anthropic API Key (press Enter to skip): " ANTHROPIC_API_KEY
+    read -rsp "Anthropic API Key (hidden, press Enter to skip): " ANTHROPIC_API_KEY
 fi
+echo ""
 ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-$EXISTING_ANTHROPIC_KEY}"
+ANTHROPIC_API_KEY=$(clear_sentinel "$ANTHROPIC_API_KEY")
 
 echo ""
 log_info "Optional: Authenticate with GitHub CLI for automations inside the Devcontainer."
 echo "To authenticate, run: gh auth login"
 
-# Write values back (preserves existing if user pressed Enter)
+# Write values back unconditionally so a '-' clear persists to .env
 update_env "GIT_NAME" "$GIT_NAME"
 update_env "GIT_EMAIL" "$GIT_EMAIL"
-
-if [ -n "$SSH_PUBLIC_KEY" ]; then
-    update_env "SSH_PUBLIC_KEY" "$SSH_PUBLIC_KEY"
-fi
+update_env "SSH_PUBLIC_KEY" "$SSH_PUBLIC_KEY"
+update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
+update_env "ANTHROPIC_API_KEY" "$ANTHROPIC_API_KEY"
 
 # Configure git for the current environment
 if [ -n "$GIT_NAME" ]; then
@@ -105,14 +116,11 @@ if [ -n "$SSH_PUBLIC_KEY" ]; then
         git config --global commit.gpgsign false
         log_warn "SSH key saved but agent not available — signing disabled. Commits will proceed unsigned."
     fi
-fi
-
-if [ -n "$GEMINI_API_KEY" ]; then
-    update_env "GEMINI_API_KEY" "$GEMINI_API_KEY"
-fi
-
-if [ -n "$ANTHROPIC_API_KEY" ]; then
-    update_env "ANTHROPIC_API_KEY" "$ANTHROPIC_API_KEY"
+elif [ -n "$EXISTING_SSH_KEY" ]; then
+    # Key was cleared with '-' — remove the signing config that pointed at it
+    git config --global --unset user.signingkey 2>/dev/null || true
+    git config --global commit.gpgsign false
+    log_info "SSH signing key cleared — commit signing disabled."
 fi
 
 # Update the LICENSE file if it exists
