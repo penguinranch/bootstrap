@@ -13,23 +13,24 @@ yarn-error.log*
 .eslintcache
 
 # Python
+# Generic names (env, lib, bin, var...) are anchored to the repo root —
+# unanchored they would swallow real source directories in other stacks
+# (a Rails bin/, a Go lib/) at any depth.
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
-build/
+/env/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
-var/
+/var/
 wheels/
 *.egg-info/
 .installed.cfg
@@ -37,12 +38,11 @@ wheels/
 venv/
 
 # Go
-bin/
-obj/
+/bin/
+/obj/
 *.exe
 *.exe~
 *.dll
-*.so
 *.dylib
 *.test
 *.out
