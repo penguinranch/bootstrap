@@ -143,9 +143,14 @@ echo ""
 echo "🔧 Git Hooks"
 echo "──────────────────────────────────────"
 if [ -d .githooks ]; then
-    git config core.hooksPath .githooks
-    chmod +x .githooks/* 2>/dev/null || true
-    log_success "Git hooks configured."
+    if git rev-parse --git-dir >/dev/null 2>&1; then
+        git config core.hooksPath .githooks
+        chmod +x .githooks/* 2>/dev/null || true
+        log_success "Git hooks configured."
+    else
+        log_warn "Not a git repository — run 'git init' to enable hooks."
+        ISSUES=$((ISSUES + 1))
+    fi
 else
     log_info "No .githooks directory found (configure after setup)."
 fi

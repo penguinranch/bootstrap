@@ -14,9 +14,13 @@ setup: ## Interactive first-time setup wizard
 	@bash ./scripts/setup-env.sh
 	@bash ./scripts/setup-ai-tools.sh
 	@if [ -d .githooks ]; then \
-		git config core.hooksPath .githooks; \
-		chmod +x .githooks/*; \
-		echo "✅ Git hooks configured."; \
+		if git rev-parse --git-dir >/dev/null 2>&1; then \
+			git config core.hooksPath .githooks; \
+			chmod +x .githooks/*; \
+			echo "✅ Git hooks configured."; \
+		else \
+			echo "⚠️  Not a git repository — run 'git init', then 'make setup' again to enable hooks."; \
+		fi; \
 	fi
 	@chmod +x scripts/*.sh 2>/dev/null || true
 	@echo ""
