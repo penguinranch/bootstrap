@@ -107,6 +107,26 @@ jobs:
           git commit -q -m "chore: initial scaffold from bootstrap"
           echo "✅ Conventional commit accepted."
 
+      - name: Verify pre-commit blocks a staged secret
+        run: |
+          # Same pinned version the devcontainers install; without gitleaks on
+          # the runner the hook skips the scan and this guardrail goes untested.
+          GITLEAKS_VERSION=8.30.1
+          curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | sudo tar -xz -C /usr/local/bin gitleaks
+          cd test-project
+          # Fake GitHub PAT — matches gitleaks' default rules (the canonical
+          # AWS example key is allowlisted upstream, so it can't be used here).
+          printf 'github_token = "ghp_abcd1234efgh5678ijkl9012mnop3456qrst"\n' > leaky.conf
+          git add leaky.conf
+          if git commit -q -m "feat: add config"; then
+            echo "Error: pre-commit should reject a staged secret."
+            exit 1
+          fi
+          echo "✅ Staged secret rejected by gitleaks."
+          git rm -q --cached leaky.conf
+          rm leaky.conf
+
       - name: Verify make targets work in the scaffold
         run: |
           cd test-project
