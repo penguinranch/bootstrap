@@ -20,6 +20,33 @@ check_environment() {
     fi
 }
 
+# Refuse to overwrite anything that already exists in the target directory.
+# The .devcontainer check above fails fast before downloading; this is the
+# real guard, comparing every payload file against the destination.
+check_collisions() {
+    local payload_dir="$1"
+    local temp_dir="$2"
+    if [ "${BOOTSTRAP_DEV:-0}" = "1" ]; then
+        return 0
+    fi
+    local collisions=""
+    local rel
+    while IFS= read -r rel; do
+        rel="${rel#./}"
+        if [ -e "$rel" ]; then
+            collisions="${collisions}   ${rel}
+"
+        fi
+    done < <(cd "$payload_dir" && find . -type f)
+    if [ -n "$collisions" ]; then
+        log_error "These files already exist and would be overwritten:"
+        printf '%s' "$collisions"
+        echo "   Move them aside (or start from an empty directory) and re-run."
+        rm -rf "$temp_dir"
+        exit 1
+    fi
+}
+
 extract_templates() {
     log_info "Downloading the latest templates..."
     # Create a temporary directory for safe extraction
@@ -39,6 +66,7 @@ extract_templates() {
 
     # Move content from the templates directory to the current directory
     if [ -n "$extracted_dir" ] && [ -d "$extracted_dir/templates" ]; then
+        check_collisions "$extracted_dir/templates" "$temp_dir"
         cp -af "$extracted_dir/templates/." .
         BOOTSTRAP_COMMIT="${extracted_dir##*-}"
     else

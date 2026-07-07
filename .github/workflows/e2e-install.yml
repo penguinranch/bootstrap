@@ -67,6 +67,19 @@ jobs:
           fi
           echo "✅ Installer guard refused to overwrite an existing project."
 
+      - name: Verify installer refuses to overwrite conflicting files
+        run: |
+          mkdir collision-project
+          cd collision-project
+          echo "precious" > Makefile
+          export REPO_TAR_URL="https://github.com/${{ github.repository }}/tarball/${{ github.sha }}"
+          if bash ../install.sh; then
+            echo "Error: installer should abort when payload files already exist."
+            exit 1
+          fi
+          test "$(cat Makefile)" = "precious"
+          echo "✅ Installer refused to overwrite an existing Makefile."
+
       - name: Verify git hooks enforce the guardrails
         run: |
           cd test-project
