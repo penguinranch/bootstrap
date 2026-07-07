@@ -79,6 +79,12 @@ jobs:
           test -x .githooks/pre-commit
 
           git add -A
+          # The shipped VS Code config must survive the first commit — guards
+          # against a '.vscode/' ignore pattern whose negations git can't honor.
+          git ls-files --cached --others --exclude-standard | grep -qx '.vscode/extensions.json' || {
+            echo "Error: .vscode/extensions.json was not staged (gitignore is eating it)."
+            exit 1
+          }
           if git commit -q -m "not a conventional message"; then
             echo "Error: commit-msg hook should reject non-conventional messages."
             exit 1
