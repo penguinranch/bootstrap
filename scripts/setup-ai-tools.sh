@@ -57,7 +57,7 @@ if command -v gemini &> /dev/null; then
     for ext in "${GEMINI_EXTENSIONS[@]}"; do
         ext_name=$(basename "$ext")
         log_info "Installing Gemini extension: $ext_name..."
-        echo "Y" | gemini extensions install "$ext" 2>/dev/null || log_warn "Failed to install $ext_name (non-critical)."
+        gemini extensions install "$ext" --consent 2>/dev/null || log_warn "Failed to install $ext_name (non-critical)."
     done
     log_success "Gemini CLI extensions configured."
 fi
