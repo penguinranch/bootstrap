@@ -1,13 +1,13 @@
 version: 2
 updates:
   # Maintain GitHub Actions used in this repo AND shipped in the template
-  # payload. For the github-actions ecosystem, dependabot appends
-  # .github/workflows to each directory, so '/templates' covers
-  # templates/.github/workflows/.
+  # payload. Dependabot only appends .github/workflows for the '/' directory;
+  # any other directory is scanned literally, so the payload's workflows must
+  # be listed by their full path.
   - package-ecosystem: 'github-actions'
     directories:
       - '/'
-      - '/templates'
+      - '/templates/.github/workflows'
     schedule:
       interval: 'weekly'
 
