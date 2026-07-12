@@ -43,6 +43,18 @@ It is critical to distinguish between the two development environments in this r
 - Changes to `install.sh` should be extremely rare. It must remain lightweight.
 - Ensure that the tarball extraction logic remains robust: the script extracts the GitHub tarball into a temporary directory, reads the source commit from the top-level `user-repo-hash` folder name (stamped into the new project's `.bootstrap-version` for upstream diffing), and then copies only the `templates/` contents into the target directory. It relies on GitHub's tarball structure.
 
+## 🕹 Orchestrator Pattern & Subagent Delegation
+
+Work as an **orchestrator**: keep your own context window reserved for design decisions and cross-cutting changes to the template, and delegate well-defined tasks to subagents — ideally on a cheaper/faster model tier when you have high confidence a less capable model can complete the task. This cuts token cost, speeds up work through parallelism, and keeps the primary model effective by keeping its context small.
+
+- **Good delegation candidates in this repository:** running `make lint` / `make check-docs` and summarizing failures, executing the `.agents/workflows/test-install.md` workflow and reporting the outcome, auditing `templates/` against `BEST_PRACTICES.md` for drift, sweeping template files for line-ending or placeholder problems, and broad searches across the payload.
+- **Scope each delegation tightly.** Subagents do not share your conversation context — give them the exact task, the files or commands involved, the expected output format, and the done criteria.
+- **Have subagents return conclusions, not transcripts:** pass/fail with the failure list, findings with `file:line` references — never raw output dumps.
+- **Parallelize independent checks** (lint, docs sync, install test) as concurrent subagents rather than running them sequentially yourself.
+- **The orchestrator still owns "done".** A subagent's report is an input, not a verification — spot-check before relying on it.
+
+The same pattern is prescribed for downstream projects in `templates/AGENTS.md`; keep the two sections aligned when either evolves.
+
 ## 📝 Contribution & Maintenance Rules
 
 1. **Eat Your Own Dog Food:** Although this is the `bootstrap` project, it should ideally eventually follow the same rules it enforces on its children (e.g., using a Devcontainer, having its own `.env` management, etc.).

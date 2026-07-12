@@ -127,10 +127,20 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 - Port **9222** is reserved for browser-based automation and debugging.
 - When attempting to verify UI changes or run browser-based tasks, ensure you are utilizing the mapped ports defined in `devcontainer.json`.
 
+## 🕹 Orchestrator Pattern & Subagent Delegation
+
+Work as an **orchestrator**: keep your own context window reserved for design decisions, ambiguity, and cross-cutting changes, and delegate well-defined tasks to subagents. This cuts token cost, speeds up work by running independent tasks in parallel, and keeps the most capable model effective by keeping its context small. Use whatever delegation mechanism your harness provides — built-in subagents/task tools, or one-shot CLI invocations of another agent (see Token Optimization below).
+
+1. **Delegate what a smaller model can confidently do.** If a task is mechanical, well-specified, and easy to verify, run it in a subagent on a cheaper/faster model tier and have it report back. Good candidates: running the test suite and summarizing failures, linting and formatting, dependency and security audits, broad codebase searches, log triage, and repetitive edits across many files. Reserve the most capable model for architecture, ambiguous requirements, and changes that span the system.
+2. **Scope each delegation tightly.** Subagents do not share your conversation context. Give a complete brief: the exact task, the files or commands involved, the expected output format, and the done criteria. A vague brief wastes more tokens than delegation saves.
+3. **Have subagents return conclusions, not transcripts.** Instruct them to report a concise structured result — pass/fail with the failure list, findings with `file:line` references, a summary of changes made — never raw command output dumps or full file contents.
+4. **Parallelize independent work.** Tasks with no dependency between them (e.g., lint + tests + docs audit) should run as concurrent subagents rather than sequentially in your own context.
+5. **The orchestrator still owns "done".** A subagent's claim is an input, not a verification. Spot-check reports before relying on them — the "Done means verified" rule in Working Judgment applies to delegated work too.
+
 ## 🤖 Token Optimization & CLI Usage
 
 - **GitHub CLI:** The `gh` command is available in this container. Use `gh auth login` to authenticate. This enables seamless GitHub operations and can configure Git as your credential helper.
-- **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) or Claude Code CLI (`@anthropic-ai/claude-code`) installed in this container for well-structured tasks.
+- **Offload Structured Edge-Tasks:** To preserve your context window (tokens) for complex logic, use the Gemini CLI (`@google/gemini-cli`) or Claude Code CLI (`@anthropic-ai/claude-code`) installed in this container for well-structured tasks. These CLIs are one way to implement the Orchestrator Pattern above when your harness has no native subagent support.
 - **Context Refresh:** Use `make ai-context` to generate a single markdown file (`context-for-ai.md`) containing the project structure, `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, and the living documents in `docs/`. This is the fastest way to give a new AI session full project context.
 - **Usage:** Run `gemini` in the terminal to start an interactive session, or `gemini -p "<prompt>"` for one-shot tasks.
 - **Examples:** Ask the CLI to review code, analyze architecture, or investigate issues—this keeps your IDE context window focused on the primary task.
