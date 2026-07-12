@@ -127,6 +127,25 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 - Port **9222** is reserved for browser-based automation and debugging.
 - When attempting to verify UI changes or run browser-based tasks, ensure you are utilizing the mapped ports defined in `devcontainer.json`.
 
+## 🔌 MCP Servers
+
+The project ships pre-configured MCP servers in two project-scoped files: `.mcp.json` (Claude Code and other MCP-aware tools) and `.gemini/settings.json` (Gemini CLI). Both define the same five servers — **keep them in sync when editing either**:
+
+| Server            | Transport                                          | Auth / requirements                                                                       |
+| ----------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `notion`          | Remote HTTP (`https://mcp.notion.com/mcp`)         | OAuth — the CLI opens a browser flow on first use; no token to manage                     |
+| `context7`        | Remote HTTP (`https://mcp.context7.com/mcp`)       | Optional `CONTEXT7_API_KEY` from `.env` for higher rate limits; works without a key       |
+| `github`          | Remote HTTP (`https://api.githubcopilot.com/mcp/`) | `GITHUB_TOKEN` from `.env` (fine-grained PAT), injected via `${GITHUB_TOKEN:-}` expansion |
+| `playwright`      | Local stdio (`npx @playwright/mcp`)                | Runs headless Chromium inside the container (`--headless --no-sandbox --isolated`)        |
+| `chrome-devtools` | Local stdio (`npx chrome-devtools-mcp`)            | Connects to a Chrome instance exposing CDP on port **9222** (see Antigravity Integration) |
+
+Rules for maintaining this config:
+
+1. **Never put secrets in `.mcp.json`** — it is committed. Use `${VAR}` / `${VAR:-default}` environment expansion and keep the actual values in `.env` (documented in `.env.example`).
+2. **Prune what the project doesn't use.** If the project has no Notion workspace, remove the `notion` entry rather than leaving dead config; record the change like any other tooling decision.
+3. **When adding a server,** prefer the vendor's official remote (OAuth) endpoint over a local package with a long-lived token, and add any required variable to `.env.example` first.
+4. **Prefer MCP tools over ad-hoc alternatives** when both exist — e.g. use the GitHub MCP tools or `gh` CLI rather than scraping github.com, and the Playwright/Chrome DevTools servers rather than hand-rolled browser scripts.
+
 ## 🕹 Orchestrator Pattern & Subagent Delegation
 
 Work as an **orchestrator**: keep your own context window reserved for design decisions, ambiguity, and cross-cutting changes, and delegate well-defined tasks to subagents. This cuts token cost, speeds up work by running independent tasks in parallel, and keeps the most capable model effective by keeping its context small. Use whatever delegation mechanism your harness provides — built-in subagents/task tools, or one-shot CLI invocations of another agent (see Token Optimization below).

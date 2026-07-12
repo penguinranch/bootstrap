@@ -16,6 +16,9 @@ Here's what was installed and why:
 │   ├── Dockerfile            #    Base image & system dependencies
 │   └── devcontainer.json     #    VS Code / IDE container config
 │
+├── .gemini/                  # ♊ Gemini CLI project settings
+│   └── settings.json         #    MCP servers (mirrors .mcp.json)
+│
 ├── .github/                  # 🤖 GitHub automation
 │   ├── ISSUE_TEMPLATE/       #    Standardized issue forms
 │   │   ├── bug_report.md     #    Bug report template
@@ -52,6 +55,7 @@ Here's what was installed and why:
 ├── .editorconfig             # Consistent formatting across all editors
 ├── .env.example              # Template for required environment variables
 ├── .gitattributes            # Line-ending normalization (LF for scripts)
+├── .mcp.json                 # MCP servers for AI agents (Notion, Context7, GitHub, Playwright, Chrome DevTools)
 ├── .gitignore                # Sensible defaults (node_modules, .env, etc.)
 ├── .nvmrc                    # Pins Node.js version (matches CI)
 ├── .prettierrc               # Code formatter configuration
