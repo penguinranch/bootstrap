@@ -1,19 +1,13 @@
 {
   "version": "0.2",
   "language": "en",
-  "ignorePaths": [
-    ".git/**",
-    "node_modules/**",
-    "package-lock.json",
-    ".devcontainer/devcontainer-lock.json"
-  ],
+  "ignorePaths": [".git/**", "node_modules/**", "package-lock.json"],
   "ignoreRegExpList": ["AAAA[A-Za-z0-9+/=]+", "gh[a-z]_[A-Za-z0-9]+"],
   "words": [
     "anson",
     "aquasecurity",
     "automations",
     "bierner",
-    "dockerfiles",
     "dotenv",
     "dpkg",
     "esac",
@@ -22,19 +16,13 @@
     "gpgsign",
     "gsub",
     "mechatroner",
-    "mktemp",
     "moby",
     "noninteractive",
-    "nvmrc",
     "passthroughs",
     "penguinranch",
-    "pytest",
     "pythonpath",
     "sarif",
-    "shellcheck",
     "signingkey",
-    "tmpl",
-    "toplevel",
     "trixie",
     "unconfigured"
   ]
