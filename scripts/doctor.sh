@@ -145,7 +145,7 @@ for script in scripts/*.sh templates/scripts/*.sh; do
         PERM_ISSUE=1
     fi
 done
-if [ $PERM_ISSUE -eq 1 ]; then
+if [ "$PERM_ISSUE" -eq 1 ]; then
     chmod +x scripts/*.sh templates/scripts/*.sh 2>/dev/null || true
     log_success "Fixed missing execute permissions on scripts."
 else

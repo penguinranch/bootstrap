@@ -1,0 +1,7 @@
+# Optional checks promoted to errors. Only rules the tree already passes are
+# listed, so this ratchets against regressions rather than creating a backlog.
+# The editor extension reads this file too, keeping it in step with 'make lint'.
+enable=avoid-nullary-conditions
+enable=check-unassigned-uppercase
+enable=deprecate-which
+enable=quote-safe-variables

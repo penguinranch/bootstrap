@@ -19,6 +19,7 @@
     "mechatroner",
     "moby",
     "noninteractive",
+    "nullary",
     "passthroughs",
     "penguinranch",
     "pycache",
@@ -26,6 +27,7 @@
     "sarif",
     "sdist",
     "signingkey",
+    "timonwong",
     "trixie",
     "unconfigured",
     "venv"

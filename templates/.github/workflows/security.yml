@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: ['main']
 
+# Least privilege by default; the scan job widens this for its SARIF upload.
+permissions:
+  contents: read
+
 # Cancel redundant runs on the same branch
 concurrency:
   group: security-${{ github.ref }}

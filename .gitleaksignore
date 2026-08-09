@@ -1,0 +1,5 @@
+# The E2E workflow needs a string gitleaks will actually flag, to prove the
+# pre-commit hook blocks it. The live line carries a 'gitleaks:allow' comment;
+# this fingerprint covers the commit that introduced it, which a history scan
+# still reaches.
+3ae7a377d970408de7129406c2f171ecbd51e160:.github/workflows/e2e-install.yml:github-pat:120

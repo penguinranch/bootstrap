@@ -1,5 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/base:trixie
 
+# a broken curl in the download pipe below must fail the build, not get
+# masked by tar's exit status
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # gitleaks release assets use x64/arm64, dpkg says amd64/arm64
 ARG GITLEAKS_VERSION=8.30.1
 RUN arch="$(dpkg --print-architecture)" \
@@ -9,7 +13,8 @@ RUN arch="$(dpkg --print-architecture)" \
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+#     && apt-get -y install --no-install-recommends <your-package-list-here> \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Claude Code and Gemini CLI state each persist on a named volume (see
 # devcontainer.json mounts; Claude's dir is additionally pointed here via

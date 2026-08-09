@@ -125,7 +125,7 @@ jobs:
           cd test-project
           # Fake GitHub PAT — matches gitleaks' default rules (the canonical
           # AWS example key is allowlisted upstream, so it can't be used here).
-          printf 'github_token = "ghp_abcd1234efgh5678ijkl9012mnop3456qrst"\n' > leaky.conf
+          printf 'github_token = "ghp_abcd1234efgh5678ijkl9012mnop3456qrst"\n' > leaky.conf # gitleaks:allow
           git add leaky.conf
           if git commit -q -m "feat: add config"; then
             echo "Error: pre-commit should reject a staged secret."

@@ -1,8 +1,13 @@
 FROM mcr.microsoft.com/devcontainers/base:trixie
 
+# a broken curl in the download pipe below must fail the build, not get
+# masked by tar's exit status
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # shellcheck backs 'make lint' — not optional in this image
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends shellcheck
+    && apt-get -y install --no-install-recommends shellcheck \
+    && rm -rf /var/lib/apt/lists/*
 
 # gitleaks powers the pre-commit secret scan — same version as the template
 # payload. Release assets use x64/arm64, dpkg says amd64/arm64.
