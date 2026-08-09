@@ -53,6 +53,7 @@ safe_export_env() {
     local -a ALLOWED_KEYS=(
         GIT_NAME GIT_EMAIL SSH_PUBLIC_KEY
         GEMINI_API_KEY ANTHROPIC_API_KEY GITHUB_TOKEN
+        CONTEXT7_API_KEY
     )
     if [ ! -f "$env_file" ]; then
         return
