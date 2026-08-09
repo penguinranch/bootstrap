@@ -15,4 +15,11 @@ log_info "Running first-time container setup..."
 # 1. Install AI CLI tools (Gemini, Claude, extensions)
 bash ./scripts/setup-ai-tools.sh
 
+# 2. Install the repo's formatting toolchain (pinned prettier) so make
+#    lint/format use the same version CI enforces.
+if [ -f package-lock.json ] && command -v npm >/dev/null 2>&1; then
+    log_info "Installing formatting toolchain (npm ci)..."
+    npm ci --no-audit --no-fund
+fi
+
 log_success "Container creation setup complete."

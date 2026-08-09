@@ -56,10 +56,10 @@ lint: ## Run code formatting & linting
 		echo "⚠️  shellcheck not found — skipping (CI still enforces it)."; \
 	fi
 	@echo "🔍 Checking file formatting..."
-	@if command -v npx >/dev/null 2>&1; then \
-		npx -y prettier@3.9.6 --check "**/*.{md,json,yml}" || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1); \
+	@if [ -x node_modules/.bin/prettier ]; then \
+		npm run --silent format:check || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1); \
 	else \
-		echo "⚠️  npx not found — skipping prettier (CI still enforces it)."; \
+		echo "⚠️  prettier not installed — run 'npm ci' (CI still enforces it)."; \
 	fi
 	@echo "🔍 Checking BEST_PRACTICES.md ↔ templates/ sync..."
 	@bash ./scripts/check-best-practices-sync.sh
@@ -70,7 +70,11 @@ check-docs: ## Verify BEST_PRACTICES.md and templates/ are in sync
 
 format: ## Format all files
 	@echo "🧹 Formatting files..."
-	@npx -y prettier@3.9.6 --write "**/*.{md,json,yml}"
+	@if [ -x node_modules/.bin/prettier ]; then \
+		npm run --silent format; \
+	else \
+		echo "⚠️  prettier not installed — run 'npm ci' first."; \
+	fi
 	@echo "✅ Formatting complete."
 
 clean: ## Remove build artifacts

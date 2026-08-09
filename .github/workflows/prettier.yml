@@ -17,7 +17,10 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run Prettier check
-        run: |
-          npx -y prettier@3.9.6 --check "**/*.{md,json,yml}"
+        run: npm run format:check

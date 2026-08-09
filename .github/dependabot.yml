@@ -27,3 +27,11 @@ updates:
       - '/templates'
     schedule:
       interval: 'weekly'
+
+  # Track the repo's own formatting toolchain (prettier in package.json). The
+  # template payload is language-agnostic and ships no package.json, so this
+  # covers the bootstrap repo only.
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
