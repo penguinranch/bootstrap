@@ -6,10 +6,12 @@
   "scripts": {
     "format": "prettier --write \"**/*.{md,json,yml}\"",
     "format:check": "prettier --check \"**/*.{md,json,yml}\"",
-    "spell": "cspell lint --no-progress --dot \"**/*\""
+    "spell": "cspell lint --no-progress --dot \"**/*\"",
+    "lint:md": "markdownlint-cli2"
   },
   "devDependencies": {
     "cspell": "10.0.1",
+    "markdownlint-cli2": "0.23.2",
     "prettier": "3.9.6"
   }
 }

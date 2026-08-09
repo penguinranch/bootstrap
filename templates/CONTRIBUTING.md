@@ -41,7 +41,7 @@ Use scoped branch naming:
 
 All commits must follow [Conventional Commits](https://www.conventionalcommits.org/) format:
 
-```
+```text
 <type>[optional scope]: <description>
 ```
 

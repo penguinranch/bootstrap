@@ -76,6 +76,12 @@ lint: ensure-toolchain ## Run code formatting & linting
 	else \
 		echo "⚠️  cspell unavailable (npm not found) — skipping (CI still enforces it)."; \
 	fi
+	@echo "🔍 Linting markdown..."
+	@if [ -x node_modules/.bin/markdownlint-cli2 ]; then \
+		npm run --silent lint:md || (echo "❌ Markdown lint failed. Fix the errors above." && exit 1); \
+	else \
+		echo "⚠️  markdownlint unavailable (npm not found) — skipping (CI still enforces it)."; \
+	fi
 	@echo "🔍 Checking BEST_PRACTICES.md ↔ templates/ sync..."
 	@bash ./scripts/check-best-practices-sync.sh
 	@echo "🔍 Checking bootstrap ↔ template payload sync..."
