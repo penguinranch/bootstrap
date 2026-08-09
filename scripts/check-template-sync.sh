@@ -36,6 +36,17 @@ if [ -n "$root_gl" ] && [ -n "$tmpl_gl" ] && [ "$root_gl" != "$tmpl_gl" ]; then
     fail=1
 fi
 
+# The e2e workflow installs its own gitleaks to test the pre-commit hook;
+# it must test the same version the devcontainers ship.
+e2e_gl=$(gitleaks_ver .github/workflows/e2e-install.yml)
+if [ -z "$e2e_gl" ]; then
+    echo "❌ no GITLEAKS_VERSION pin found in .github/workflows/e2e-install.yml"
+    fail=1
+elif [ -n "$root_gl" ] && [ "$root_gl" != "$e2e_gl" ]; then
+    echo "❌ gitleaks pin differs: .devcontainer=$root_gl e2e-install.yml=$e2e_gl"
+    fail=1
+fi
+
 if [ "$fail" -eq 0 ]; then
     echo "✅ Bootstrap repo and template payload are in sync."
 fi
