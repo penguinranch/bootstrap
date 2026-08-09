@@ -19,9 +19,6 @@ RUN arch="$(dpkg --print-architecture)" \
 RUN mkdir -p /home/vscode/.claude /home/vscode/.gemini \
     && chown vscode:vscode /home/vscode/.claude /home/vscode/.gemini
 
-# [Optional] Uncomment if you want to install an additional version of node using nvm
-# ARG EXTRA_NODE_VERSION=10
-# RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${EXTRA_NODE_VERSION}"
-
-# [Optional] Uncomment if you want to install more global node modules
-# RUN su node -c "npm install -g <your-package-list-here>"
+# Node comes from the devcontainer node feature AFTER this image builds, so
+# node/npm are not usable in RUN layers. Install global node modules in
+# scripts/setup-ai-tools.sh (postCreateCommand) instead.
