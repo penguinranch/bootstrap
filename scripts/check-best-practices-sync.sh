@@ -64,7 +64,9 @@ while IFS= read -r file; do
         echo "❌ Template file not referenced in $DOC (add a reference or allowlist it): $file"
         fail=1
     fi
-done < <(git ls-files templates/)
+# --others so a payload file that is staged-but-new, or not yet added at all,
+# is checked here rather than passing locally and failing in CI once committed
+done < <(git ls-files --cached --others --exclude-standard templates/ | sort -u)
 
 if [ "$fail" -eq 0 ]; then
     echo "✅ $DOC and templates/ are in sync."
