@@ -12,6 +12,7 @@
     "dpkg",
     "esac",
     "esbenp",
+    "eslintcache",
     "gomod",
     "gpgsign",
     "gsub",
@@ -20,10 +21,13 @@
     "noninteractive",
     "passthroughs",
     "penguinranch",
+    "pycache",
     "pythonpath",
     "sarif",
+    "sdist",
     "signingkey",
     "trixie",
-    "unconfigured"
+    "unconfigured",
+    "venv"
   ]
 }
