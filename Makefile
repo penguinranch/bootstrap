@@ -1,7 +1,7 @@
 # Universal task runner — the single entry point for every project command.
 # Wrap ALL runnable commands in a target with a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
-.PHONY: help setup doctor doctor-strict dev test build lint clean format check-docs
+.PHONY: help setup doctor doctor-strict dev test build lint clean format check-docs ensure-prettier
 
 # Default variables
 APP_NAME := bootstrap
@@ -48,7 +48,13 @@ test: ## Run the test suite
 build: ## Create a production build
 	@echo "Build target not implemented yet — update after choosing your tech stack"
 
-lint: ## Run code formatting & linting
+ensure-prettier: # internal: install the pinned formatting toolchain if absent
+	@if [ ! -x node_modules/.bin/prettier ] && command -v npm >/dev/null 2>&1 && [ -f package-lock.json ]; then \
+		echo "📦 Installing formatting toolchain (npm ci)..."; \
+		npm ci --no-audit --no-fund || echo "⚠️  npm ci failed — prettier steps will be skipped (CI still enforces it)."; \
+	fi
+
+lint: ensure-prettier ## Run code formatting & linting
 	@echo "🔍 Linting shell scripts..."
 	@if command -v shellcheck >/dev/null 2>&1; then \
 		shellcheck install.sh scripts/*.sh templates/scripts/*.sh .githooks/* templates/.githooks/* || (echo "❌ Shellcheck failed. Fix errors above." && exit 1); \
@@ -59,7 +65,7 @@ lint: ## Run code formatting & linting
 	@if [ -x node_modules/.bin/prettier ]; then \
 		npm run --silent format:check || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1); \
 	else \
-		echo "⚠️  prettier not installed — run 'npm ci' (CI still enforces it)."; \
+		echo "⚠️  prettier unavailable (npm not found) — skipping (CI still enforces it)."; \
 	fi
 	@echo "🔍 Checking BEST_PRACTICES.md ↔ templates/ sync..."
 	@bash ./scripts/check-best-practices-sync.sh
@@ -71,12 +77,12 @@ check-docs: ## Verify BEST_PRACTICES.md and templates/ are in sync
 	@bash ./scripts/check-best-practices-sync.sh
 	@bash ./scripts/check-template-sync.sh
 
-format: ## Format all files
+format: ensure-prettier ## Format all files
 	@echo "🧹 Formatting files..."
 	@if [ -x node_modules/.bin/prettier ]; then \
 		npm run --silent format; \
 	else \
-		echo "⚠️  prettier not installed — run 'npm ci' first."; \
+		echo "⚠️  prettier unavailable (npm not found) — skipping."; \
 	fi
 	@echo "✅ Formatting complete."
 
