@@ -7,6 +7,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 source "$SCRIPT_DIR/utils.sh"
 
 cd_repo_root
+ensure_container
 
 # Export .env values so API keys are available for CLI tools
 safe_export_env .env

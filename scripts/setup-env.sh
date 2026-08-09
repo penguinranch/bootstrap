@@ -7,6 +7,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 source "$SCRIPT_DIR/utils.sh"
 
 cd_repo_root
+ensure_container
 
 # Re-runnable script to initialize or update .env
 if [ ! -f .env.example ]; then

@@ -9,6 +9,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 source "$SCRIPT_DIR/utils.sh"
 
 cd_repo_root
+ensure_container
 
 log_info "Running first-time container setup..."
 
