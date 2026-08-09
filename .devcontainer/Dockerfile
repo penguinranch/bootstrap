@@ -12,10 +12,10 @@ RUN arch="$(dpkg --print-architecture)" \
     && curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${arch}.tar.gz" \
     | tar -xz -C /usr/local/bin gitleaks
 
-# Claude Code and Gemini CLI state each persist on a named volume mounted here
-# (see devcontainer.json mounts / CLAUDE_CONFIG_DIR); pre-create the dirs owned
-# by vscode so the fresh volumes inherit that ownership on first mount instead
-# of coming up root-owned.
+# Claude Code and Gemini CLI state each persist on a named volume (see
+# devcontainer.json mounts; Claude's dir is additionally pointed here via
+# CLAUDE_CONFIG_DIR). Pre-create the dirs owned by vscode so the fresh volumes
+# inherit that ownership on first mount instead of coming up root-owned.
 RUN mkdir -p /home/vscode/.claude /home/vscode/.gemini \
     && chown vscode:vscode /home/vscode/.claude /home/vscode/.gemini
 
