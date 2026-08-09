@@ -63,10 +63,13 @@ lint: ## Run code formatting & linting
 	fi
 	@echo "🔍 Checking BEST_PRACTICES.md ↔ templates/ sync..."
 	@bash ./scripts/check-best-practices-sync.sh
+	@echo "🔍 Checking bootstrap ↔ template payload sync..."
+	@bash ./scripts/check-template-sync.sh
 	@echo "✅ All lint checks passed."
 
 check-docs: ## Verify BEST_PRACTICES.md and templates/ are in sync
 	@bash ./scripts/check-best-practices-sync.sh
+	@bash ./scripts/check-template-sync.sh
 
 format: ## Format all files
 	@echo "🧹 Formatting files..."
