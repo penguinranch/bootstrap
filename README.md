@@ -69,9 +69,14 @@ curl -sSL https://raw.githubusercontent.com/penguinranch/bootstrap/main/install.
 
 > **Note for Windows Users:** Command Prompt and PowerShell do not natively support running `.sh` bash scripts. You must execute the above `curl` command using [Git Bash](https://gitforwindows.org/) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-### Step 2: The AI Architecture Kickoff
+### Step 2: Open the Project in Antigravity
 
-Before opening the Devcontainer, decide on your tech stack. The language and framework you choose will determine how the container is configured. Open your AI IDE Assistant chat panel and prompt it with exactly this text:
+1. Open the folder in **Antigravity**.
+2. An alert will appear prompting you to reopen the project in a Dev Container — **hold off for now**. The container should be configured for your stack first (next step).
+
+### Step 3: The AI Architecture Kickoff
+
+Decide on your tech stack — the language and framework you choose determine how the container is configured. Open your AI IDE Assistant chat panel and prompt it with exactly this text:
 
 > _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
 > _1. Fill out `docs/VISION.md` (goals, non-goals, roadmap) and the Tech Stack section of `docs/ARCHITECTURE.md`._
@@ -79,15 +84,13 @@ Before opening the Devcontainer, decide on your tech stack. The language and fra
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
 > _4. Rewrite `README.md` to describe this new project and how to run it."_
 
-### Step 3: Open the Devcontainer
+### Step 4: Open the Devcontainer
 
-1. Open the folder in **Antigravity**.
-2. An alert will appear prompting you to reopen the project in a Dev Container.
-3. Click to **Reopen in Container**.
+Once the AI has configured `.devcontainer/`, click **Reopen in Container** (or run **Dev Containers: Reopen in Container** from the command palette).
 
 _Wait a few minutes while Docker builds the Linux environment for your chosen stack._
 
-### Step 4: Initial Setup Scripts
+### Step 5: Initial Setup Scripts
 
 Once Antigravity reloads inside the container, open a new **Terminal** and run:
 
