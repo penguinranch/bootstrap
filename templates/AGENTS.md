@@ -38,7 +38,7 @@ Before any code generation or dependency installation:
 
 - Update `.devcontainer/Dockerfile` to include the necessary system dependencies and runtimes.
 - Update `.devcontainer/devcontainer.json` to include required features (e.g., node, python, go).
-- Replace the `{{PROJECT_NAME}}` placeholder in `devcontainer.json`.
+- Replace the `{{PROJECT_NAME}}` placeholders in `devcontainer.json` and the `Makefile` (`APP_NAME`).
 - **ACTION:** Instruct the user to **"Rebuild and Reopen in Container"**.
 
 ### Phase 3: Initialization (Post-Container)
@@ -69,7 +69,7 @@ Update the documents at these moments — do not wait to be asked:
 
 1. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
 2. **Universal Task Interface:** When the tech stack is decided, you must map the stack-specific commands (e.g., `npm test` or `go build`) to the universal standard targets in the `Makefile` (`make test`, `make build`, `make dev`). See the "Universal Make Interface" section below — this rule applies to _every_ command, not just the standard targets.
-3. **Devcontainer Naming:** When updating the `.devcontainer/` configuration for a new project, you must replace the `{{PROJECT_NAME}}` placeholder in the `"name"` property in `devcontainer.json` with the new project's name. This ensures it's easily identifiable in Docker Desktop.
+3. **Devcontainer Naming:** When updating the `.devcontainer/` configuration for a new project, you must replace the `{{PROJECT_NAME}}` placeholder in the `"name"` property in `devcontainer.json` with the new project's name, and the matching `APP_NAME` placeholder in the `Makefile`. This ensures it's easily identifiable in Docker Desktop and that `$(APP_NAME)`-based targets never leak the literal placeholder.
 
 ## 🎛 Universal Make Interface
 
