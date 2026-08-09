@@ -9,7 +9,9 @@ fail=0
 # Newline-separated list rather than an array: mapfile needs bash >= 4 and
 # macOS ships 3.2, where this runs via the pre-commit hook on the host.
 # Anchor fragments (#section) are stripped before the existence check.
-refs=$(grep -oE '\]\(templates/[^)]*\)' "$DOC" | sed -E 's/^\]\(//; s/\)$//; s/#.*$//' | sort -u)
+# '|| true': zero links is not an error here — it means every template
+# file below gets reported as unreferenced, which is the useful output.
+refs=$(grep -oE '\]\(templates/[^)]*\)' "$DOC" | sed -E 's/^\]\(//; s/\)$//; s/#.*$//' | sort -u || true)
 
 while IFS= read -r ref; do
     [ -n "$ref" ] || continue
