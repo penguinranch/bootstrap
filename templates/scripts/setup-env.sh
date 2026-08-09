@@ -142,6 +142,9 @@ fi
 # forwards host variables, and nothing else reads .env into a login shell.
 if is_container; then
     PROJECT_ROOT="$(pwd)"
+    # a single quote in the path would unbalance the quoting in the
+    # emitted shell code and break every future shell in the container
+    RC_ROOT="${PROJECT_ROOT//\'/\'\\\'\'}"
     RC_MARKER="# >>> project env: ${PROJECT_ROOT} >>>"
     for rc_file in "$HOME/.bashrc" "$HOME/.zshrc"; do
         touch "$rc_file"
@@ -150,9 +153,9 @@ if is_container; then
                 echo ""
                 echo "$RC_MARKER"
                 echo "# Added by 'make setup' — loads allowlisted keys from the project .env"
-                echo "if [ -f '${PROJECT_ROOT}/scripts/utils.sh' ] && [ -f '${PROJECT_ROOT}/.env' ]; then"
-                echo "    source '${PROJECT_ROOT}/scripts/utils.sh'"
-                echo "    safe_export_env '${PROJECT_ROOT}/.env'"
+                echo "if [ -f '${RC_ROOT}/scripts/utils.sh' ] && [ -f '${RC_ROOT}/.env' ]; then"
+                echo "    source '${RC_ROOT}/scripts/utils.sh'"
+                echo "    safe_export_env '${RC_ROOT}/.env'"
                 echo "fi"
                 echo "# <<< project env: ${PROJECT_ROOT} <<<"
             } >> "$rc_file"
