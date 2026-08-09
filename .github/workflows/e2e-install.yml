@@ -65,6 +65,10 @@ jobs:
       - name: Verify installer refuses a non-empty directory
         run: |
           cd test-project
+          # The .devcontainer guard aborts before downloading, but if it ever
+          # regresses this must test THIS commit's collision guard, not
+          # whatever upstream main's installer would fetch by default.
+          export REPO_TAR_URL="https://github.com/${{ github.repository }}/tarball/${{ github.sha }}"
           if bash ../install.sh; then
             echo "Error: installer should abort when .devcontainer already exists."
             exit 1
