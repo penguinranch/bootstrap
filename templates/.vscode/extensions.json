@@ -1,10 +1,13 @@
 {
   "recommendations": [
     "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "timonwong.shellcheck",
+    "redhat.vscode-yaml",
     "bierner.markdown-mermaid",
     "mechatroner.rainbow-csv",
-    "ms-vscode.makefile-tools",
     "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
     "github.vscode-github-actions",
     "github.vscode-pull-request-github",
     "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries",
