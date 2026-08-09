@@ -176,6 +176,18 @@ for tool in git node npm make; do
     fi
 done
 
+if command -v docker &> /dev/null; then
+    if docker info &> /dev/null; then
+        log_success "docker installed and daemon reachable."
+    else
+        log_warn "docker installed but daemon unreachable (is Docker running on the host?)."
+        ISSUES=$((ISSUES + 1))
+    fi
+else
+    log_warn "docker not installed."
+    ISSUES=$((ISSUES + 1))
+fi
+
 # --- Summary ---
 echo ""
 echo "──────────────────────────────────────"
