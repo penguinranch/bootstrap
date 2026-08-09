@@ -6,7 +6,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck source=scripts/utils.sh
 source "$SCRIPT_DIR/utils.sh"
 
-ensure_root
+cd_repo_root
 ensure_container
 
 # Export .env values so API keys are available for CLI tools

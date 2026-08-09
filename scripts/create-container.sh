@@ -8,7 +8,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck source=scripts/utils.sh
 source "$SCRIPT_DIR/utils.sh"
 
-ensure_root
+cd_repo_root
 
 log_info "Running first-time container setup..."
 

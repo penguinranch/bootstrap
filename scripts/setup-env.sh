@@ -6,7 +6,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck source=scripts/utils.sh
 source "$SCRIPT_DIR/utils.sh"
 
-ensure_root
+cd_repo_root
 
 # Re-runnable script to initialize or update .env
 if [ ! -f .env.example ]; then

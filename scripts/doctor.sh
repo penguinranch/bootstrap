@@ -10,7 +10,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck source=scripts/utils.sh
 source "$SCRIPT_DIR/utils.sh"
 
-ensure_root
+cd_repo_root
 
 # --strict: exit non-zero when issues are found, so CI can gate on doctor.
 # The default stays exit 0 because doctor runs in postStartCommand, where a

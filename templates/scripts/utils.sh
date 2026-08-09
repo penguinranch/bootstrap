@@ -114,7 +114,7 @@ ssh_signing_available() {
 }
 
 # Ensure we are at the repository root
-ensure_root() {
+cd_repo_root() {
     local script_dir
     script_dir=$(dirname "${BASH_SOURCE[0]}")
     cd "$script_dir/.." || exit 1
