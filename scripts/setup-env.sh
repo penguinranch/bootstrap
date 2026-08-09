@@ -42,6 +42,7 @@ else
     read -rp "Git Name: " GIT_NAME
 fi
 GIT_NAME="${GIT_NAME:-$EXISTING_GIT_NAME}"
+GIT_NAME=$(clear_sentinel "$GIT_NAME")
 
 if [ -n "$EXISTING_GIT_EMAIL" ]; then
     read -rp "Git Email [$EXISTING_GIT_EMAIL]: " GIT_EMAIL
@@ -49,6 +50,7 @@ else
     read -rp "Git Email: " GIT_EMAIL
 fi
 GIT_EMAIL="${GIT_EMAIL:-$EXISTING_GIT_EMAIL}"
+GIT_EMAIL=$(clear_sentinel "$GIT_EMAIL")
 
 echo ""
 log_info "Optional: SSH Public Key for commit signing."
