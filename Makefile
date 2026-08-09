@@ -76,7 +76,7 @@ lint: ensure-prettier ## Run code formatting & linting
 	@bash ./scripts/check-template-sync.sh
 	@echo "✅ All lint checks passed."
 
-check-docs: ## Verify BEST_PRACTICES.md and templates/ are in sync
+check-docs: ## Verify BEST_PRACTICES.md links/coverage and repo ↔ template payload sync
 	@bash ./scripts/check-best-practices-sync.sh
 	@bash ./scripts/check-template-sync.sh
 
