@@ -60,6 +60,7 @@ Here's what was installed and why:
 ├── .nvmrc                    # Pins Node.js version (matches CI)
 ├── .prettierrc               # Code formatter configuration
 ├── AGENTS.md                 # AI agent instructions & project context
+├── cspell.json               # Spell-checker dictionary (shared word list)
 ├── CHANGELOG.md              # Project changelog (Keep a Changelog format)
 ├── CODE_OF_CONDUCT.md        # Contributor code of conduct
 ├── CONTRIBUTING.md           # How to contribute to this project
