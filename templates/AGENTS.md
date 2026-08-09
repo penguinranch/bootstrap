@@ -122,7 +122,7 @@ When adding or modifying automation scripts for the devcontainer, you must adher
   - `docs/...` for documentation-only changes.
 - **Diagrams:** Use Mermaid.js in markdown files to illustrate complex logic or architecture.
 
-## 🚀 Antigravity Integration
+## 🚀 Browser Automation Integration
 
 - Port **9222** is reserved for browser-based automation and debugging.
 - When attempting to verify UI changes or run browser-based tasks, ensure you are utilizing the mapped ports defined in `devcontainer.json`.
@@ -131,13 +131,13 @@ When adding or modifying automation scripts for the devcontainer, you must adher
 
 The project ships pre-configured MCP servers in two project-scoped files: `.mcp.json` (Claude Code and other MCP-aware tools) and `.gemini/settings.json` (Gemini CLI). Both define the same five servers — **keep them in sync when editing either**:
 
-| Server            | Transport                                          | Auth / requirements                                                                       |
-| ----------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `notion`          | Remote HTTP (`https://mcp.notion.com/mcp`)         | OAuth — the CLI opens a browser flow on first use; no token to manage                     |
-| `context7`        | Remote HTTP (`https://mcp.context7.com/mcp`)       | Optional `CONTEXT7_API_KEY` from `.env` for higher rate limits; works without a key       |
-| `github`          | Remote HTTP (`https://api.githubcopilot.com/mcp/`) | `GITHUB_TOKEN` from `.env` (fine-grained PAT), injected via `${GITHUB_TOKEN:-}` expansion |
-| `playwright`      | Local stdio (`npx @playwright/mcp`)                | Runs headless Chromium inside the container (`--headless --no-sandbox --isolated`)        |
-| `chrome-devtools` | Local stdio (`npx chrome-devtools-mcp`)            | Connects to a Chrome instance exposing CDP on port **9222** (see Antigravity Integration) |
+| Server            | Transport                                          | Auth / requirements                                                                              |
+| ----------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `notion`          | Remote HTTP (`https://mcp.notion.com/mcp`)         | OAuth — the CLI opens a browser flow on first use; no token to manage                            |
+| `context7`        | Remote HTTP (`https://mcp.context7.com/mcp`)       | Optional `CONTEXT7_API_KEY` from `.env` for higher rate limits; works without a key              |
+| `github`          | Remote HTTP (`https://api.githubcopilot.com/mcp/`) | `GITHUB_TOKEN` from `.env` (fine-grained PAT), injected via `${GITHUB_TOKEN:-}` expansion        |
+| `playwright`      | Local stdio (`npx @playwright/mcp`)                | Runs headless Chromium inside the container (`--headless --no-sandbox --isolated`)               |
+| `chrome-devtools` | Local stdio (`npx chrome-devtools-mcp`)            | Connects to a Chrome instance exposing CDP on port **9222** (see Browser Automation Integration) |
 
 Rules for maintaining this config:
 

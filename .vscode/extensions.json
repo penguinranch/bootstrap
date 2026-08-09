@@ -10,6 +10,7 @@
     "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries",
     "streetsidesoftware.code-spell-checker",
     "anthropic.claude-code",
+    "google.gemini-cli-vscode-ide-companion",
     "DavidAnson.vscode-markdownlint"
   ]
 }

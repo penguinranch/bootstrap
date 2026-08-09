@@ -50,7 +50,8 @@ The installer below is for brand-new, empty projects. If you have an existing co
 ### Prerequisites (On your Host Machine)
 
 1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
-2. Install [Antigravity](https://antigravity.google/).
+2. Install [Visual Studio Code](https://code.visualstudio.com/).
+3. Install the [Claude Code extension](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code) (`anthropic.claude-code`) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (`ms-vscode-remote.remote-containers`).
 
 ### Step 1: Scaffold the Project
 
@@ -69,14 +70,14 @@ curl -sSL https://raw.githubusercontent.com/penguinranch/bootstrap/main/install.
 
 > **Note for Windows Users:** Command Prompt and PowerShell do not natively support running `.sh` bash scripts. You must execute the above `curl` command using [Git Bash](https://gitforwindows.org/) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-### Step 2: Open the Project in Antigravity
+### Step 2: Open the Project in VS Code
 
-1. Open the folder in **Antigravity**.
+1. Open the folder in **VS Code**. When prompted to install the workspace's recommended extensions, accept — the scaffold ships a `.vscode/extensions.json` that includes the Claude Code extension.
 2. An alert will appear prompting you to reopen the project in a Dev Container — **hold off for now**. The container should be configured for your stack first (next step).
 
 ### Step 3: The AI Architecture Kickoff
 
-Decide on your tech stack — the language and framework you choose determine how the container is configured. Open your AI IDE Assistant chat panel and prompt it with exactly this text:
+Decide on your tech stack — the language and framework you choose determine how the container is configured. Open the **Claude Code** panel in VS Code and prompt it with exactly this text:
 
 > _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
 > _1. Fill out `docs/VISION.md` (goals, non-goals, roadmap) and the Tech Stack section of `docs/ARCHITECTURE.md`._
@@ -92,7 +93,7 @@ _Wait a few minutes while Docker builds the Linux environment for your chosen st
 
 ### Step 5: Initial Setup Scripts
 
-Once Antigravity reloads inside the container, open a new **Terminal** and run:
+Once VS Code reloads inside the container, open a new **Terminal** and run:
 
 ```bash
 make setup

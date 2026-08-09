@@ -109,7 +109,7 @@ finalize_setup() {
     chmod +x scripts/*.sh 2>/dev/null || true
     chmod +x .githooks/* 2>/dev/null || true
 
-    log_success "Bootstrap complete. Open in VS Code or Antigravity to start the Devcontainer."
+    log_success "Bootstrap complete. Open in VS Code to start the Devcontainer."
 }
 
 # Main execution
