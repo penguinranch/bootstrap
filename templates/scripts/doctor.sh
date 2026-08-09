@@ -52,7 +52,9 @@ if [ -f .env ]; then
             if ssh_signing_available; then
                 git config --global commit.gpgsign true
             else
-                git config --global commit.gpgsign false
+                # agent socket can race container start; never silently
+                # disable signing the user had on
+                log_warn "SSH agent unavailable — leaving commit.gpgsign unchanged. Re-run 'make doctor' once the agent is up."
             fi
         fi
         if [ -n "${GITHUB_TOKEN:-}" ] && command -v gh &> /dev/null; then
