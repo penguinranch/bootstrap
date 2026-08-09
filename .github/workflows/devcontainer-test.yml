@@ -22,6 +22,7 @@ jobs:
           subFolder: .
           push: never
           runCmd: |
+            set -euo pipefail
             make doctor
             make lint
             command -v gitleaks
@@ -38,6 +39,7 @@ jobs:
           subFolder: templates
           push: never
           runCmd: |
+            set -euo pipefail
             make help
             make doctor
             command -v gitleaks
