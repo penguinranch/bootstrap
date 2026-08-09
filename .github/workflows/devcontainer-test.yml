@@ -23,7 +23,7 @@ jobs:
           push: never
           runCmd: |
             set -euo pipefail
-            make doctor
+            make doctor-ci
             make lint
             command -v gitleaks
 
@@ -41,5 +41,5 @@ jobs:
           runCmd: |
             set -euo pipefail
             make help
-            make doctor
+            make doctor-ci
             command -v gitleaks

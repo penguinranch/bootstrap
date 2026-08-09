@@ -131,5 +131,5 @@ jobs:
         run: |
           cd test-project
           make help | grep -q "setup"
-          make doctor
-          echo "✅ make help and make doctor run in a fresh scaffold."
+          make doctor-ci
+          echo "✅ make help and make doctor-ci run in a fresh scaffold."

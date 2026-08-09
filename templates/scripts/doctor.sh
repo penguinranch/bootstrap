@@ -12,15 +12,19 @@ source "$SCRIPT_DIR/utils.sh"
 
 cd_repo_root
 
-# --strict: exit non-zero when issues are found, so CI can gate on doctor.
+# --strict: exit non-zero on any issue. --ci: exit non-zero only on core
+# toolchain issues (git/node/npm/make), since user-environment checks like
+# .env, gh auth, and the docker daemon can never pass in a CI runner.
 # The default stays exit 0 because doctor runs in postStartCommand, where a
 # non-zero exit would abort container startup.
-STRICT=0
-if [ "${1:-}" = "--strict" ]; then
-    STRICT=1
-fi
+MODE="default"
+case "${1:-}" in
+    --strict) MODE="strict" ;;
+    --ci) MODE="ci" ;;
+esac
 
 ISSUES=0
+CORE_ISSUES=0
 
 echo ""
 echo "🔍 Environment Status"
@@ -175,6 +179,7 @@ for tool in git node npm make; do
     else
         log_error "$tool missing."
         ISSUES=$((ISSUES + 1))
+        CORE_ISSUES=$((CORE_ISSUES + 1))
     fi
 done
 
@@ -200,7 +205,10 @@ else
 fi
 echo ""
 
-if [ "$STRICT" -eq 1 ] && [ "$ISSUES" -gt 0 ]; then
+if [ "$MODE" = "strict" ] && [ "$ISSUES" -gt 0 ]; then
+    exit 1
+fi
+if [ "$MODE" = "ci" ] && [ "$CORE_ISSUES" -gt 0 ]; then
     exit 1
 fi
 exit 0

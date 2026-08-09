@@ -2,7 +2,7 @@
 # Wrap ALL runnable commands (npm, pip, cargo, scripts, ...) in a target here,
 # even one-line passthroughs, and give each a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
-.PHONY: help setup doctor doctor-strict dev test build lint clean format ai-context ai-tools
+.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format ai-context ai-tools
 
 # Container enforcement check
 ifndef REMOTE_CONTAINERS
@@ -49,8 +49,11 @@ setup: ## Interactive first-time setup wizard
 doctor: ## Check environment health and status
 	@bash ./scripts/doctor.sh
 
-doctor-strict: ## Doctor that exits non-zero on issues (for CI gating)
+doctor-strict: ## Doctor that exits non-zero on any issue
 	@bash ./scripts/doctor.sh --strict
+
+doctor-ci: ## Doctor that exits non-zero only on core toolchain issues (for CI gating)
+	@bash ./scripts/doctor.sh --ci
 
 dev: ## Start the development server
 	@echo "Dev target not implemented yet — update after choosing your tech stack"
