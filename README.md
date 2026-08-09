@@ -35,7 +35,7 @@ We have implemented physical files that prevent bad habits:
 - **`.editorconfig`**: Forces every IDE (even Vim) to use the exact same tab sizes, line endings, and whitespace rules.
 - **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make run`. Includes `make doctor` for instant environment health checks.
 - **`CODEOWNERS`**: Automatically requires Tech Lead PR reviews for the living project docs (architecture decisions) and DevOps reviews for CI/CD changes.
-- **`dependabot.yml`**: Automatically configured to continuously scan dependencies for vulnerabilities.
+- **`dependabot.yml`**: Pre-configured to open PRs that keep dependencies (GitHub Actions, Docker images, devcontainer features) up to date. Pair it with GitHub's Dependabot alerts (a repository setting) for vulnerability scanning — the shipped Trivy workflow covers scanning on PRs.
 
 ---
 
