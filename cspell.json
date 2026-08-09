@@ -18,6 +18,7 @@
     "dpkg",
     "esac",
     "esbenp",
+    "eslintcache",
     "gomod",
     "gpgsign",
     "gsub",
@@ -28,14 +29,18 @@
     "nvmrc",
     "passthroughs",
     "penguinranch",
+    "pipefail",
+    "pycache",
     "pytest",
     "pythonpath",
     "sarif",
+    "sdist",
     "shellcheck",
     "signingkey",
     "tmpl",
     "toplevel",
     "trixie",
-    "unconfigured"
+    "unconfigured",
+    "venv"
   ]
 }
