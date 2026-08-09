@@ -2,7 +2,7 @@ name: Devcontainer Build Validation
 
 on:
   push:
-    branches: [main, booting]
+    branches: [main]
   pull_request:
     branches: [main]
 

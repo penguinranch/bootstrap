@@ -2,7 +2,7 @@ name: Shell Script Linting
 
 on:
   push:
-    branches: [main, booting]
+    branches: [main]
   pull_request:
     branches: [main]
 

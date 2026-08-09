@@ -2,7 +2,7 @@ name: Formatting Check
 
 on:
   push:
-    branches: [main, booting]
+    branches: [main]
   pull_request:
     branches: [main]
 
