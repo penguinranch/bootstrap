@@ -6,10 +6,20 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # gitleaks release assets use x64/arm64, dpkg says amd64/arm64
 ARG GITLEAKS_VERSION=8.30.1
+# from the release's gitleaks_<version>_checksums.txt — bump alongside the
+# version or the build fails closed rather than installing an unknown binary
+ARG GITLEAKS_SHA256_X64=551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+ARG GITLEAKS_SHA256_ARM64=e4a487ee7ccd7d3a7f7ec08657610aa3606637dab924210b3aee62570fb4b080
 RUN arch="$(dpkg --print-architecture)" \
-    && case "$arch" in amd64) arch=x64 ;; esac \
-    && curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${arch}.tar.gz" \
-    | tar -xz -C /usr/local/bin gitleaks
+    && case "$arch" in \
+        amd64) arch=x64; sha="${GITLEAKS_SHA256_X64}" ;; \
+        arm64) sha="${GITLEAKS_SHA256_ARM64}" ;; \
+        *) echo "unsupported architecture: ${arch}" >&2; exit 1 ;; \
+    esac \
+    && curl -fsSL -o /tmp/gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${arch}.tar.gz" \
+    && echo "${sha}  /tmp/gitleaks.tar.gz" | sha256sum -c - \
+    && tar -xzf /tmp/gitleaks.tar.gz -C /usr/local/bin gitleaks \
+    && rm /tmp/gitleaks.tar.gz
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
