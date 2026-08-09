@@ -102,9 +102,9 @@ _This will prompt you for your Git credentials and (optionally) your Gemini and 
 ## 🚑 Troubleshooting
 
 - **The IDE Window is hung / The AI CLIs didn't install:**
-  Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside the container and manually run `bash ./scripts/setup-ai-tools.sh` to finish the installation.
+  Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside the container and manually run `make ai-tools` to finish the installation.
 - **Git complains about missing user name and email:**
-  If the Devcontainer hangs after building, the startup health check might not have run to configure your Git profile from `.env`. You can fix this by running `make doctor` (which re-applies `.env` settings) or by running `./scripts/setup-env.sh` again.
+  If the Devcontainer hangs after building, the startup health check might not have run to configure your Git profile from `.env`. You can fix this by running `make doctor` (which re-applies `.env` settings) or by running `make setup` again.
 - **Windows / WSL line-ending errors (bash scripts crashing):**
   Windows uses `CRLF` format for new lines, which crashes Linux bash scripts. We have a `.gitattributes` file to prevent this, but if you still see `\r` errors, ensure your global git config is set: `git config --global core.autocrlf false`.
 
