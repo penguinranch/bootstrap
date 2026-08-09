@@ -90,6 +90,8 @@ Before opening the Devcontainer, define your tech stack. The language and framew
 
 Once the Devcontainer has been configured for your stack, open this folder in **VS Code** or **Antigravity** and accept the prompt to **Reopen in Container**. Docker will build your isolated development environment automatically.
 
+> **AI state persists across rebuilds.** Claude Code (`~/.claude`) and Gemini CLI (`~/.gemini`) each store their conversation history, logins, and MCP/trust approvals on a per-project named Docker volume, so rebuilding the container won't wipe them. To start fresh, remove the volumes on your host: `docker volume rm claude-code-config-<id> gemini-cli-config-<id>` (find the exact names with `docker volume ls`).
+
 ### 3. Run the Setup Wizard
 
 Once the container is ready, open a terminal and run:

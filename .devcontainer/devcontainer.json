@@ -14,6 +14,10 @@
     },
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
+  "mounts": [
+    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume",
+    "source=gemini-cli-config-${devcontainerId},target=/home/vscode/.gemini,type=volume"
+  ],
   "postCreateCommand": "bash ./scripts/create-container.sh",
   "customizations": {
     "vscode": {
@@ -39,7 +43,8 @@
   "containerEnv": {
     "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
     "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
-    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
   },
   "postStartCommand": "/bin/bash ./scripts/start-container.sh"
 }

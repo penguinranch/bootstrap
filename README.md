@@ -26,7 +26,7 @@ When you bootstrap a project using this template, you are receiving an environme
 ### 3. AI-Optimized Workflows
 
 **The Problem:** Generative AI tools (like GitHub Copilot or Gemini) get confused easily and burn through their context "tokens" doing repetitive tasks.
-**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** (`@google/gemini-cli`) and **Claude Code CLI** (`@anthropic-ai/claude-code`) are installed globally inside the container, and `make ai-context` is provided to instantly bundle project metadata for an AI assistant—saving precious IDE tokens.
+**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** (`@google/gemini-cli`) and **Claude Code CLI** (`@anthropic-ai/claude-code`) are installed globally inside the container, and `make ai-context` is provided to instantly bundle project metadata for an AI assistant—saving precious IDE tokens. Their state—conversation history, logins, and MCP/trust approvals—lives on per-project named Docker volumes, so it survives a container rebuild instead of resetting every time.
 
 ### 4. Structural Guardrails
 
