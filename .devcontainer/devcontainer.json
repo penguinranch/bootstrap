@@ -3,7 +3,6 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "forwardPorts": [3000, 9222],
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "configureZshAsDefaultShell": true
