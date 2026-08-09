@@ -18,10 +18,20 @@ if ! diff -q scripts/utils.sh templates/scripts/utils.sh >/dev/null; then
 fi
 
 # The gitleaks pin must match across both devcontainer Dockerfiles.
-gitleaks_ver() { grep -oE 'GITLEAKS_VERSION=[0-9.]+' "$1" | head -n1 | cut -d= -f2; }
+# '|| true' keeps a missing pin from killing the script under set -e —
+# the explicit empty-check below is the diagnostic we want in that case.
+gitleaks_ver() { grep -oE 'GITLEAKS_VERSION=[0-9.]+' "$1" | head -n1 | cut -d= -f2 || true; }
 root_gl=$(gitleaks_ver .devcontainer/Dockerfile)
 tmpl_gl=$(gitleaks_ver templates/.devcontainer/Dockerfile)
-if [ "$root_gl" != "$tmpl_gl" ]; then
+if [ -z "$root_gl" ]; then
+    echo "❌ no GITLEAKS_VERSION pin found in .devcontainer/Dockerfile"
+    fail=1
+fi
+if [ -z "$tmpl_gl" ]; then
+    echo "❌ no GITLEAKS_VERSION pin found in templates/.devcontainer/Dockerfile"
+    fail=1
+fi
+if [ -n "$root_gl" ] && [ -n "$tmpl_gl" ] && [ "$root_gl" != "$tmpl_gl" ]; then
     echo "❌ gitleaks pin differs: .devcontainer=$root_gl templates/.devcontainer=$tmpl_gl"
     fail=1
 fi
