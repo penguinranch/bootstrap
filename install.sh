@@ -38,6 +38,15 @@ check_collisions() {
 "
         fi
     done < <(cd "$payload_dir" && find . -type f)
+    # A payload directory colliding with an existing regular file would make
+    # cp -af fail mid-copy, leaving a partial bootstrap; catch it here instead.
+    while IFS= read -r rel; do
+        rel="${rel#./}"
+        if [ -e "$rel" ] && [ ! -d "$rel" ]; then
+            collisions="${collisions}   ${rel} (exists as a file; a directory is needed)
+"
+        fi
+    done < <(cd "$payload_dir" && find . -mindepth 1 -type d)
     if [ -n "$collisions" ]; then
         log_error "These files already exist and would be overwritten:"
         printf '%s' "$collisions"
