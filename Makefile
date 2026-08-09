@@ -1,7 +1,7 @@
 # Universal task runner — the single entry point for every project command.
 # Wrap ALL runnable commands in a target with a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
-.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format check-docs ensure-prettier
+.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format check-docs ensure-toolchain
 
 # Default variables
 APP_NAME := bootstrap
@@ -51,13 +51,13 @@ test: ## Run the test suite
 build: ## Create a production build
 	@echo "Build target not implemented yet — update after choosing your tech stack"
 
-ensure-prettier: # internal: install the pinned formatting toolchain if absent
+ensure-toolchain: # internal: install the pinned lint toolchain if absent
 	@if [ ! -x node_modules/.bin/prettier ] && command -v npm >/dev/null 2>&1 && [ -f package-lock.json ]; then \
-		echo "📦 Installing formatting toolchain (npm ci)..."; \
-		npm ci --no-audit --no-fund || echo "⚠️  npm ci failed — prettier steps will be skipped (CI still enforces it)."; \
+		echo "📦 Installing lint toolchain (npm ci)..."; \
+		npm ci --no-audit --no-fund || echo "⚠️  npm ci failed — npm-based checks will be skipped (CI still enforces it)."; \
 	fi
 
-lint: ensure-prettier ## Run code formatting & linting
+lint: ensure-toolchain ## Run code formatting & linting
 	@echo "🔍 Linting shell scripts..."
 	@if command -v shellcheck >/dev/null 2>&1; then \
 		shellcheck install.sh scripts/*.sh templates/scripts/*.sh .githooks/* templates/.githooks/* || (echo "❌ Shellcheck failed. Fix errors above." && exit 1); \
@@ -70,6 +70,12 @@ lint: ensure-prettier ## Run code formatting & linting
 	else \
 		echo "⚠️  prettier unavailable (npm not found) — skipping (CI still enforces it)."; \
 	fi
+	@echo "🔍 Checking spelling..."
+	@if [ -x node_modules/.bin/cspell ]; then \
+		npm run --silent spell || (echo "❌ Spell check failed. Fix the typo, or add the term to cspell.json." && exit 1); \
+	else \
+		echo "⚠️  cspell unavailable (npm not found) — skipping (CI still enforces it)."; \
+	fi
 	@echo "🔍 Checking BEST_PRACTICES.md ↔ templates/ sync..."
 	@bash ./scripts/check-best-practices-sync.sh
 	@echo "🔍 Checking bootstrap ↔ template payload sync..."
@@ -80,7 +86,7 @@ check-docs: ## Verify BEST_PRACTICES.md links/coverage and repo ↔ template pay
 	@bash ./scripts/check-best-practices-sync.sh
 	@bash ./scripts/check-template-sync.sh
 
-format: ensure-prettier ## Format all files
+format: ensure-toolchain ## Format all files
 	@echo "🧹 Formatting files..."
 	@if [ -x node_modules/.bin/prettier ]; then \
 		npm run --silent format; \

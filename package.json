@@ -2,12 +2,14 @@
   "name": "bootstrap-tooling",
   "version": "0.0.0",
   "private": true,
-  "description": "Formatting toolchain for the bootstrap repository itself (not shipped in the template payload).",
+  "description": "Formatting and linting toolchain for the bootstrap repository itself (not shipped in the template payload).",
   "scripts": {
     "format": "prettier --write \"**/*.{md,json,yml}\"",
-    "format:check": "prettier --check \"**/*.{md,json,yml}\""
+    "format:check": "prettier --check \"**/*.{md,json,yml}\"",
+    "spell": "cspell lint --no-progress --dot \"**/*\""
   },
   "devDependencies": {
+    "cspell": "10.0.1",
     "prettier": "3.9.6"
   }
 }
