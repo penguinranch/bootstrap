@@ -28,7 +28,7 @@ What actually happened instead.
 
 - **OS:** [e.g., macOS 15, Ubuntu 24.04, Windows 11 WSL]
 - **Container:** [Running in Devcontainer? Yes/No]
-- **Node version:** [e.g., 20.x]
+- **Node version:** [e.g., 24.x]
 - **Branch:** [e.g., main, feat/my-feature]
 
 ## Screenshots / Logs
