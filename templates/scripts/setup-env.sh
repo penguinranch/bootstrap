@@ -137,7 +137,10 @@ if [ -f "LICENSE" ] && [ -n "$GIT_NAME" ]; then
         BEGIN { gsub(/&/, "\\\\&", name) }
         { gsub(/\[Year\]/, year); gsub(/\[Full Name\]/, name); print }
     ' LICENSE > "$tmp_license"
-    mv "$tmp_license" LICENSE
+    # Copy the contents back rather than mv'ing the temp file into place: mktemp
+    # creates 0600, and mv would carry that mode onto a tracked 0644 file.
+    cat "$tmp_license" > LICENSE
+    rm -f "$tmp_license"
 fi
 
 if is_container; then
