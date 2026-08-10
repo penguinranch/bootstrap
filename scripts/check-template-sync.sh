@@ -17,35 +17,46 @@ if ! diff -q scripts/utils.sh templates/scripts/utils.sh >/dev/null; then
     fail=1
 fi
 
-# The gitleaks pin must match across both devcontainer Dockerfiles.
+# The gitleaks version AND its checksums must match across both devcontainer
+# Dockerfiles and the e2e workflow. Checking only the version let a stale
+# checksum through: the Docker build then fails at 'sha256sum -c' in a
+# downstream project instead of failing here, where it can be fixed.
 # '|| true' keeps a missing pin from killing the script under set -e —
 # the explicit empty-check below is the diagnostic we want in that case.
-gitleaks_ver() { grep -oE 'GITLEAKS_VERSION=[0-9.]+' "$1" | head -n1 | cut -d= -f2 || true; }
-root_gl=$(gitleaks_ver .devcontainer/Dockerfile)
-tmpl_gl=$(gitleaks_ver templates/.devcontainer/Dockerfile)
-if [ -z "$root_gl" ]; then
-    echo "❌ no GITLEAKS_VERSION pin found in .devcontainer/Dockerfile"
-    fail=1
-fi
-if [ -z "$tmpl_gl" ]; then
-    echo "❌ no GITLEAKS_VERSION pin found in templates/.devcontainer/Dockerfile"
-    fail=1
-fi
-if [ -n "$root_gl" ] && [ -n "$tmpl_gl" ] && [ "$root_gl" != "$tmpl_gl" ]; then
-    echo "❌ gitleaks pin differs: .devcontainer=$root_gl templates/.devcontainer=$tmpl_gl"
-    fail=1
-fi
+pin() { grep -oE "$2=[0-9a-f.]+" "$1" | head -n1 | cut -d= -f2 || true; }
 
-# The e2e workflow installs its own gitleaks to test the pre-commit hook;
-# it must test the same version the devcontainers ship.
-e2e_gl=$(gitleaks_ver .github/workflows/e2e-install.yml)
-if [ -z "$e2e_gl" ]; then
-    echo "❌ no GITLEAKS_VERSION pin found in .github/workflows/e2e-install.yml"
-    fail=1
-elif [ -n "$root_gl" ] && [ "$root_gl" != "$e2e_gl" ]; then
-    echo "❌ gitleaks pin differs: .devcontainer=$root_gl e2e-install.yml=$e2e_gl"
-    fail=1
-fi
+# Compare one pin across a pair of files, reporting a missing or drifted value.
+check_pin() {
+    local label=$1 file_a=$2 key_a=$3 file_b=$4 key_b=$5
+    local val_a val_b
+    val_a=$(pin "$file_a" "$key_a")
+    val_b=$(pin "$file_b" "$key_b")
+    if [ -z "$val_a" ]; then
+        echo "❌ no $key_a pin found in $file_a"
+        fail=1
+    fi
+    if [ -z "$val_b" ]; then
+        echo "❌ no $key_b pin found in $file_b"
+        fail=1
+    fi
+    if [ -n "$val_a" ] && [ -n "$val_b" ] && [ "$val_a" != "$val_b" ]; then
+        echo "❌ gitleaks $label differs: $file_a=$val_a $file_b=$val_b"
+        fail=1
+    fi
+}
+
+ROOT_DF=.devcontainer/Dockerfile
+TMPL_DF=templates/.devcontainer/Dockerfile
+E2E_WF=.github/workflows/e2e-install.yml
+
+check_pin version "$ROOT_DF" GITLEAKS_VERSION "$TMPL_DF" GITLEAKS_VERSION
+check_pin x64-checksum "$ROOT_DF" GITLEAKS_SHA256_X64 "$TMPL_DF" GITLEAKS_SHA256_X64
+check_pin arm64-checksum "$ROOT_DF" GITLEAKS_SHA256_ARM64 "$TMPL_DF" GITLEAKS_SHA256_ARM64
+
+# The e2e workflow installs its own gitleaks to test the pre-commit hook; it
+# runs on an x64 runner, so it must match the x64 pin the devcontainers ship.
+check_pin version "$ROOT_DF" GITLEAKS_VERSION "$E2E_WF" GITLEAKS_VERSION
+check_pin x64-checksum "$ROOT_DF" GITLEAKS_SHA256_X64 "$E2E_WF" GITLEAKS_SHA256
 
 if [ "$fail" -eq 0 ]; then
     echo "✅ Bootstrap repo and template payload are in sync."
