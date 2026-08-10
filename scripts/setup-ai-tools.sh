@@ -12,13 +12,13 @@ ensure_container
 # Export .env values so API keys are available for CLI tools
 safe_export_env .env
 
-# Pinned so a container build installs a known version instead of whatever npm
-# resolves that day — the same reason the GitHub Actions carry commit SHAs and
-# the gitleaks download carries a checksum. Nothing watches these for updates
-# (Dependabot does not read this file), so bump them here deliberately.
-GEMINI_CLI_VERSION=0.54.4
-CLAUDE_CLI_VERSION=2.1.226
-NPM_VERSION=12.0.2
+# The AI CLIs deliberately track @latest, unlike the MCP servers in .mcp.json,
+# which carry pinned versions. Both ship several releases a week and nothing
+# here watches a pin — Dependabot does not read this file — so a pinned version
+# would just rot silently and hand out a stale CLI. The MCP servers are pinned
+# because they are launched by an agent on every session with the host Docker
+# socket in reach; these two are installed once, into the container, by a
+# developer running setup.
 
 # Optional, third-party, and NOT installed by default — see
 # install_gemini_extensions below.
@@ -58,27 +58,43 @@ FRESH=false
 
 if [ ! -f "$SENTINEL" ]; then
     FRESH=true
-    log_info "Fresh bootstrap detected — installing pinned versions."
+    log_info "Fresh bootstrap detected — installing latest versions."
 else
-    log_info "Existing environment detected — ensuring tools match the pinned versions."
+    log_info "Existing environment detected — ensuring tools are present."
 fi
 
-# Installed unconditionally rather than only when the binary is missing: a
-# container holding an older pin would otherwise never move to a new one.
-log_info "Installing Gemini CLI ${GEMINI_CLI_VERSION}..."
-npm install -g "@google/gemini-cli@${GEMINI_CLI_VERSION}"
-log_success "Gemini CLI installed."
+# Install or upgrade Gemini CLI
+if $FRESH; then
+    log_info "Installing Gemini CLI (latest)..."
+    npm install -g @google/gemini-cli@latest
+    log_success "Gemini CLI installed."
+elif ! command -v gemini &> /dev/null; then
+    log_info "Installing Gemini CLI..."
+    npm install -g @google/gemini-cli
+    log_success "Gemini CLI installed."
+else
+    log_success "Gemini CLI is already installed."
+fi
 
-log_info "Installing Claude CLI ${CLAUDE_CLI_VERSION}..."
-npm install -g "@anthropic-ai/claude-code@${CLAUDE_CLI_VERSION}"
-log_success "Claude CLI installed."
+# Install or upgrade Claude CLI
+if $FRESH; then
+    log_info "Installing Claude CLI (latest)..."
+    npm install -g @anthropic-ai/claude-code@latest
+    log_success "Claude CLI installed."
+elif ! command -v claude &> /dev/null; then
+    log_info "Installing Claude CLI..."
+    npm install -g @anthropic-ai/claude-code
+    log_success "Claude CLI installed."
+else
+    log_success "Claude CLI is already installed."
+fi
 
 log_info "Optional Gemini extensions are not installed automatically — run 'make ai-extensions'."
 
-# Pin npm itself on fresh bootstrap
+# Upgrade npm itself on fresh bootstrap
 if $FRESH; then
-    log_info "Installing npm ${NPM_VERSION}..."
-    npm install -g "npm@${NPM_VERSION}" 2>/dev/null || log_warn "npm self-upgrade failed (non-critical)."
+    log_info "Upgrading npm to latest..."
+    npm install -g npm@latest 2>/dev/null || log_warn "npm self-upgrade failed (non-critical)."
 fi
 
 # Write sentinel on fresh bootstrap
