@@ -1,7 +1,7 @@
 # Universal task runner — the single entry point for every project command.
 # Wrap ALL runnable commands in a target with a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
-.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format check-docs ensure-toolchain
+.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format check-docs ensure-toolchain ai-extensions
 
 # Default variables
 APP_NAME := bootstrap
@@ -35,6 +35,9 @@ setup: ## Interactive first-time setup wizard
 
 doctor: ## Check environment health and status
 	@bash ./scripts/doctor.sh
+
+ai-extensions: ## Install the optional third-party Gemini CLI extensions (interactive)
+	@bash ./scripts/setup-ai-tools.sh --extensions
 
 doctor-strict: ## Doctor that exits non-zero on any issue
 	@bash ./scripts/doctor.sh --strict
