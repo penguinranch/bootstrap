@@ -115,8 +115,12 @@ if [ -n "$SSH_PUBLIC_KEY" ]; then
         git config --global commit.gpgsign true
         log_success "SSH commit signing enabled (agent available)."
     else
-        git config --global commit.gpgsign false
-        log_warn "SSH key saved but agent not available — signing disabled. Commits will proceed unsigned."
+        # Leave commit.gpgsign as it was: the agent socket can race container
+        # start, and a locked 1Password looks identical to "no agent". Turning
+        # signing off here would silently disarm it for someone who re-ran
+        # setup at the wrong moment. doctor.sh takes the same position.
+        log_warn "SSH key saved but the agent is not reachable right now — leaving commit.gpgsign unchanged."
+        log_warn "If 1Password is locked, unlock it and run 'make doctor' to enable signing."
     fi
 elif [ -n "$EXISTING_SSH_KEY" ]; then
     # Key was cleared with '-' — remove the signing config that pointed at it
