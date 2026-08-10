@@ -83,7 +83,7 @@ Decide on your tech stack — the language and framework you choose determine ho
 > _1. Fill out `docs/VISION.md` (goals, non-goals, roadmap) and the Tech Stack section of `docs/ARCHITECTURE.md`._
 > _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and replace the `{{PROJECT_NAME}}` placeholders in `devcontainer.json` and the `Makefile` (`APP_NAME`) with the project name._
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
-> _4. Update `SECURITY.md` with your contact details._
+> _4. Replace the `[SECURITY_EMAIL]` placeholder in `SECURITY.md` and `CODE_OF_CONDUCT.md` with a real contact address._
 > _5. Rewrite `README.md` to describe this new project and how to run it."_
 
 ### Step 4: Open the Devcontainer
