@@ -16,4 +16,8 @@ log_info "Running first-time container setup..."
 # 1. Install AI CLI tools (Gemini, Claude, extensions)
 bash ./scripts/setup-ai-tools.sh
 
+# 2. Reinstall the .env shell loader. A rebuild resets $HOME, so this has to
+#    run on create rather than only from 'make setup'.
+install_env_loader
+
 log_success "Container creation setup complete."

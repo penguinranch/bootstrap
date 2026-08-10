@@ -23,4 +23,8 @@ if [ -f package-lock.json ] && command -v npm >/dev/null 2>&1; then
     npm ci --no-audit --no-fund
 fi
 
+# 3. Reinstall the .env shell loader. A rebuild resets $HOME, so this has to
+#    run on create rather than only from 'make setup'.
+install_env_loader
+
 log_success "Container creation setup complete."

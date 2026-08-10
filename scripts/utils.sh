@@ -114,6 +114,41 @@ ssh_signing_available() {
     [ -n "${SSH_AUTH_SOCK:-}" ] && [ -S "${SSH_AUTH_SOCK}" ] && ssh-add -L &>/dev/null
 }
 
+# Install a block in the container's shell profiles that loads the project's
+# allowlisted .env keys into future interactive shells. containerEnv only
+# forwards host variables, and nothing else reads .env into a login shell, so
+# without this the saved keys never reach the gemini/claude CLIs.
+#
+# Called from 'make setup' AND from postCreateCommand: $HOME is not on a named
+# volume (only ~/.claude and ~/.gemini are), so a container rebuild wipes the
+# profiles. Re-running it on create keeps a rebuild from silently unplugging
+# the keys until someone thinks to run 'make setup' again.
+# Idempotent — keyed on a per-project marker.
+install_env_loader() {
+    is_container || return 0
+    local project_root rc_root rc_marker rc_file
+    project_root="$(pwd)"
+    # a single quote in the path would unbalance the quoting in the emitted
+    # shell code and break every future shell in the container
+    rc_root="${project_root//\'/\'\\\'\'}"
+    rc_marker="# >>> project env: ${project_root} >>>"
+    for rc_file in "$HOME/.bashrc" "$HOME/.zshrc"; do
+        touch "$rc_file"
+        if ! grep -qF "$rc_marker" "$rc_file"; then
+            {
+                echo ""
+                echo "$rc_marker"
+                echo "# Added by the bootstrap scripts — loads allowlisted keys from the project .env"
+                echo "if [ -f '${rc_root}/scripts/utils.sh' ] && [ -f '${rc_root}/.env' ]; then"
+                echo "    source '${rc_root}/scripts/utils.sh'"
+                echo "    safe_export_env '${rc_root}/.env'"
+                echo "fi"
+                echo "# <<< project env: ${project_root} <<<"
+            } >> "$rc_file"
+        fi
+    done
+}
+
 # Ensure we are at the repository root
 cd_repo_root() {
     local script_dir
