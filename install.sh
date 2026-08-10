@@ -9,6 +9,7 @@ log_success() { echo -e "\033[0;32m✅ [SUCCESS]\033[0m $1"; }
 log_error() { echo -e "\033[0;31m❌ [ERROR]\033[0m $1"; }
 
 REPO_TAR_URL="${REPO_TAR_URL:-https://github.com/penguinranch/bootstrap/tarball/main}"
+VERSION_STAMP=".bootstrap-version"
 
 check_environment() {
     log_info "Initializing Gold Standard Environment..."
@@ -31,6 +32,13 @@ check_collisions() {
     fi
     local collisions=""
     local rel
+    # Written by write_version_stamp rather than shipped in the payload, so the
+    # find below never sees it — check it explicitly or a project's existing
+    # stamp gets silently overwritten with a different source commit.
+    if [ -e "$VERSION_STAMP" ]; then
+        collisions="${collisions}   ${VERSION_STAMP}
+"
+    fi
     while IFS= read -r rel; do
         rel="${rel#./}"
         if [ -e "$rel" ]; then
@@ -98,7 +106,7 @@ write_version_stamp() {
         echo "commit=${BOOTSTRAP_COMMIT}"
         echo "installed=$(date +%Y-%m-%d)"
         echo "source=https://github.com/penguinranch/bootstrap"
-    } > .bootstrap-version
+    } > "$VERSION_STAMP"
 }
 
 finalize_setup() {
