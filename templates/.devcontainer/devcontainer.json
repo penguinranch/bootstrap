@@ -56,6 +56,7 @@
     "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
     "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
     "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+    "CONTEXT7_API_KEY": "${localEnv:CONTEXT7_API_KEY}",
     "CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
   },
   "postStartCommand": "/bin/bash ./scripts/start-container.sh"
