@@ -4,6 +4,12 @@ FROM mcr.microsoft.com/devcontainers/base:trixie
 # masked by tar's exit status
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# shellcheck backs 'make lint' — the payload ships shell scripts and a
+# .shellcheckrc, so without it in the image that lint step has nothing to run
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends shellcheck \
+    && rm -rf /var/lib/apt/lists/*
+
 # gitleaks release assets use x64/arm64, dpkg says amd64/arm64
 ARG GITLEAKS_VERSION=8.30.1
 # from the release's gitleaks_<version>_checksums.txt — bump alongside the

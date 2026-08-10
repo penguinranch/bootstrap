@@ -143,4 +143,21 @@ jobs:
           cd test-project
           make help | grep -q "setup"
           make doctor-ci
-          echo "✅ make help and make doctor-ci run in a fresh scaffold."
+          # 'make lint' is what the pre-commit hook runs, so leaving it out of
+          # this check is how the scaffold's lint target regressed to a no-op
+          # that still reported a pass.
+          make lint | tee lint.log
+          grep -q "Linting shell scripts" lint.log
+          rm lint.log
+          echo "✅ make help, make doctor-ci and make lint run in a fresh scaffold."
+
+      - name: Verify the scaffold's lint gate actually fails on a broken script
+        run: |
+          cd test-project
+          printf '#!/bin/bash\nif [ "$UNCLOSED = 1 ]; then :; fi\n' > scripts/broken.sh
+          if make lint; then
+            echo "Error: make lint should fail on a script shellcheck rejects."
+            exit 1
+          fi
+          rm scripts/broken.sh
+          echo "✅ Scaffold lint gate rejects a broken shell script."
