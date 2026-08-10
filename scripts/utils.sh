@@ -45,16 +45,20 @@ update_env() {
     fi
 }
 
-# Safely export variables from .env, restricted to an allowlist of known keys.
-# Prevents hostile key names (e.g. LD_PRELOAD, PATH) from being injected.
-# Accepts an optional path so shell profiles can source a specific project's .env.
+# Keys allowed to cross from an env file into the environment. Anything else in
+# the file is ignored, so a hostile key name (e.g. LD_PRELOAD, PATH) cannot be
+# injected by editing .env.
+ENV_ALLOWED_KEYS=(
+    GIT_NAME GIT_EMAIL SSH_PUBLIC_KEY
+    GEMINI_API_KEY ANTHROPIC_API_KEY GITHUB_TOKEN
+    CONTEXT7_API_KEY
+)
+
+# Safely export variables from .env, restricted to the allowlist above.
+# Accepts an optional path so callers can read a specific project's .env.
 safe_export_env() {
     local env_file=${1:-.env}
-    local -a ALLOWED_KEYS=(
-        GIT_NAME GIT_EMAIL SSH_PUBLIC_KEY
-        GEMINI_API_KEY ANTHROPIC_API_KEY GITHUB_TOKEN
-        CONTEXT7_API_KEY
-    )
+    local -a ALLOWED_KEYS=("${ENV_ALLOWED_KEYS[@]}")
     if [ ! -f "$env_file" ]; then
         return
     fi
@@ -80,6 +84,21 @@ safe_export_env() {
         fi
     done < "$env_file"
 }
+
+# Emit 'export KEY=VALUE' lines for the allowlisted keys in an env file, with
+# values shell-quoted for eval. Lets a shell profile pick up the keys without
+# sourcing this library into the user's interactive namespace.
+# The body is a subshell, so the parse never leaks into the caller.
+print_env_exports() (
+    local env_file=${1:-.env}
+    local key
+    safe_export_env "$env_file"
+    for key in "${ENV_ALLOWED_KEYS[@]}"; do
+        if [ -n "${!key:-}" ]; then
+            printf 'export %s=%q\n' "$key" "${!key}"
+        fi
+    done
+)
 
 # Strip one pair of matched surrounding quotes, dotenv-style, so
 # GIT_NAME="Jane Doe" doesn't produce a git identity with literal quotes.
@@ -135,16 +154,20 @@ install_env_loader() {
     for rc_file in "$HOME/.bashrc" "$HOME/.zshrc"; do
         touch "$rc_file"
         if ! grep -qF "$rc_marker" "$rc_file"; then
-            {
-                echo ""
-                echo "$rc_marker"
-                echo "# Added by the bootstrap scripts — loads allowlisted keys from the project .env"
-                echo "if [ -f '${rc_root}/scripts/utils.sh' ] && [ -f '${rc_root}/.env' ]; then"
-                echo "    source '${rc_root}/scripts/utils.sh'"
-                echo "    safe_export_env '${rc_root}/.env'"
-                echo "fi"
-                echo "# <<< project env: ${project_root} <<<"
-            } >> "$rc_file"
+            # Run through 'bash -c' and eval only the export lines, rather than
+            # sourcing this file: it is a bash library (${!var}, [[ ]]) and one
+            # of the two profiles is .zshrc, and sourcing would also define the
+            # log helpers and color names (RED, NC, ...) in every session.
+            # The root goes in as $1 so the bash snippet needs no interpolation.
+            cat >> "$rc_file" <<RC_BLOCK
+
+${rc_marker}
+# Added by the bootstrap scripts — loads allowlisted keys from the project .env
+if [ -f '${rc_root}/scripts/utils.sh' ] && [ -f '${rc_root}/.env' ]; then
+    eval "\$(bash -c '. "\$1/scripts/utils.sh"; print_env_exports "\$1/.env"' _ '${rc_root}')"
+fi
+# <<< project env: ${project_root} <<<
+RC_BLOCK
         fi
     done
 }
