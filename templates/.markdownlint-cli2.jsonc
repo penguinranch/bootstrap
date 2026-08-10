@@ -7,10 +7,10 @@
     "MD028": false,
     "MD029": { "style": "ordered" },
     // PR and issue templates render inside a form where an H1 would be wrong
-    "MD041": false
+    "MD041": false,
   },
   // .agents/ holds agent workflow definitions, not prose. Their numbered steps
   // interleave column-0 code fences and '// turbo' directives, which this
   // linter reads as a broken list and the agent runner reads as significant.
-  "globs": ["**/*.md", "!node_modules", "!.agents"]
+  "globs": ["**/*.md", "!node_modules", "!.agents"],
 }

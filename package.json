@@ -4,8 +4,8 @@
   "private": true,
   "description": "Formatting and linting toolchain for the bootstrap repository itself (not shipped in the template payload).",
   "scripts": {
-    "format": "prettier --write \"**/*.{md,json,yml}\"",
-    "format:check": "prettier --check \"**/*.{md,json,yml}\"",
+    "format": "prettier --write \"**/*.{md,json,jsonc,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{md,json,jsonc,yml,yaml}\"",
     "spell": "cspell lint --no-progress --dot \"**/*\"",
     "lint:md": "markdownlint-cli2"
   },
