@@ -20,7 +20,7 @@ bash ./scripts/setup-ai-tools.sh
 #    lint/format use the same version CI enforces.
 if [ -f package-lock.json ] && command -v npm >/dev/null 2>&1; then
     log_info "Installing formatting toolchain (npm ci)..."
-    npm ci --no-audit --no-fund
+    npm ci --ignore-scripts --no-audit --no-fund
 fi
 
 # 3. Reinstall the .env shell loader. A rebuild resets $HOME, so this has to

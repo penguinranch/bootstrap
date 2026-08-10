@@ -3,6 +3,21 @@
 # appears in 'make help'. Developers only ever need to remember 'make help'.
 .PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format check-docs ensure-toolchain ai-extensions
 
+# Container enforcement check — the same guard the payload's Makefile carries.
+# Skipped under CI, where the workflows deliberately run make on the runner.
+ifndef CI
+ifndef REMOTE_CONTAINERS
+ifndef CODESPACES
+ifneq ($(wildcard /.dockerenv),/.dockerenv)
+$(warning ⚠️  WARNING: You are NOT running inside a devcontainer.)
+$(warning This project is designed to be developed in an isolated environment.)
+$(warning Future AI assistants may jump the gun and install tools on your host.)
+$(warning Please open in a container before proceeding with setup.)
+endif
+endif
+endif
+endif
+
 # Default variables
 APP_NAME := bootstrap
 
@@ -36,14 +51,14 @@ setup: ## Interactive first-time setup wizard
 doctor: ## Check environment health and status
 	@bash ./scripts/doctor.sh
 
-ai-extensions: ## Install the optional third-party Gemini CLI extensions (interactive)
-	@bash ./scripts/setup-ai-tools.sh --extensions
-
 doctor-strict: ## Doctor that exits non-zero on any issue
 	@bash ./scripts/doctor.sh --strict
 
 doctor-ci: ## Doctor that exits non-zero only on core toolchain issues (for CI gating)
 	@bash ./scripts/doctor.sh --ci
+
+ai-extensions: ## Install the optional third-party Gemini CLI extensions (interactive)
+	@bash ./scripts/setup-ai-tools.sh --extensions
 
 dev: ## Start the development server
 	@echo "Dev target not implemented yet — update after choosing your tech stack"
@@ -57,7 +72,7 @@ build: ## Create a production build
 ensure-toolchain: # internal: install the pinned lint toolchain if absent
 	@if [ ! -x node_modules/.bin/prettier ] && command -v npm >/dev/null 2>&1 && [ -f package-lock.json ]; then \
 		echo "📦 Installing lint toolchain (npm ci)..."; \
-		npm ci --no-audit --no-fund || echo "⚠️  npm ci failed — npm-based checks will be skipped (CI still enforces it)."; \
+		npm ci --ignore-scripts --no-audit --no-fund || echo "⚠️  npm ci failed — npm-based checks will be skipped (CI still enforces it)."; \
 	fi
 
 lint: ensure-toolchain ## Run code formatting & linting
