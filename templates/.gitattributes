@@ -1,6 +1,11 @@
 # Enforce LF line endings for bash scripts to prevent Windows CRLF interpretation errors
 *.sh text eol=lf
 
+# The hooks have no extension, so the rule above misses them. A CRLF shebang
+# makes them die on 'bad interpreter: /bin/bash^M', which silently disables the
+# secret scan and the commit-message check on any autocrlf=true checkout.
+.githooks/* text eol=lf
+
 # Enforce LF for other text files commonly edited across platforms
 *.yml text eol=lf
 *.yaml text eol=lf
