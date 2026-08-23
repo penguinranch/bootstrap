@@ -36,6 +36,35 @@ for rel in "${IDENTICAL_PAIRS[@]}"; do
     fi
 done
 
+# The VS Code extension list exists in four places (two devcontainer.json
+# customizations blocks, two .vscode/extensions.json). The devcontainer and
+# .vscode lists differ on purpose (remote-containers is meaningless inside a
+# container), but each root/template pair must agree. Order-insensitive:
+# entries are compared sorted.
+extract_list() {
+    sed -n "/\"$2\": \[/,/\]/p" "$1" | grep -oE '"[^"]+"' | grep -vx "\"$2\"" | sort
+}
+
+check_ext_pair() {
+    local label=$1 file_a=$2 file_b=$3 key=$4
+    local list_a list_b
+    list_a=$(extract_list "$file_a" "$key")
+    list_b=$(extract_list "$file_b" "$key")
+    if [ -z "$list_a" ] || [ -z "$list_b" ]; then
+        echo "❌ Could not extract the \"$key\" list from $file_a or $file_b."
+        fail=1
+    elif [ "$list_a" != "$list_b" ]; then
+        echo "❌ The $label differ between $file_a and $file_b:"
+        diff <(printf '%s\n' "$list_a") <(printf '%s\n' "$list_b") || true
+        fail=1
+    fi
+}
+
+check_ext_pair "devcontainer extension lists" \
+    .devcontainer/devcontainer.json templates/.devcontainer/devcontainer.json extensions
+check_ext_pair ".vscode extension recommendations" \
+    .vscode/extensions.json templates/.vscode/extensions.json recommendations
+
 # The AI kickoff prompt is quoted verbatim in both READMEs and has drifted
 # before. Its lines are the only '> _' blockquote lines in either file.
 prompt_root=$(grep '^> _' README.md || true)
