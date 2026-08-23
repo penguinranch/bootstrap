@@ -23,6 +23,7 @@
     "gomod",
     "gpgsign",
     "gsub",
+    "makefiles",
     "mechatroner",
     "mktemp",
     "moby",

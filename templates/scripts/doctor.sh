@@ -140,13 +140,15 @@ echo ""
 echo "🔐 Script Permissions"
 echo "──────────────────────────────────────"
 PERM_ISSUE=0
-for script in scripts/*.sh; do
+# templates/scripts/ only exists in the bootstrap repo; downstream the glob
+# stays literal and the -f test skips it
+for script in scripts/*.sh templates/scripts/*.sh; do
     if [ -f "$script" ] && [ ! -x "$script" ]; then
         PERM_ISSUE=1
     fi
 done
 if [ "$PERM_ISSUE" -eq 1 ]; then
-    chmod +x scripts/*.sh 2>/dev/null || true
+    chmod +x scripts/*.sh templates/scripts/*.sh 2>/dev/null || true
     log_success "Fixed missing execute permissions on scripts."
 else
     log_success "All scripts have correct permissions."

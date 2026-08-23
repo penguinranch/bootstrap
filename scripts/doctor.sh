@@ -140,6 +140,8 @@ echo ""
 echo "🔐 Script Permissions"
 echo "──────────────────────────────────────"
 PERM_ISSUE=0
+# templates/scripts/ only exists in the bootstrap repo; downstream the glob
+# stays literal and the -f test skips it
 for script in scripts/*.sh templates/scripts/*.sh; do
     if [ -f "$script" ] && [ ! -x "$script" ]; then
         PERM_ISSUE=1

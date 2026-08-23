@@ -4,16 +4,48 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 # Guards invariants between the bootstrap repo's own copies and the shipped
-# template payload. Some files diverge on purpose (doctor.sh scans both trees,
-# lifecycle scripts guard differently); the checks below are only the pairs
-# that MUST stay identical. Add a pair here when a new shared invariant appears.
+# template payload. Some files diverge on purpose (.env.example, .gitignore,
+# cspell.json, the Makefiles and Dockerfiles); everything in the manifest
+# below MUST stay identical, because this repo dog-foods those files and a
+# fix applied to only one copy is a bug shipped to the other. To diverge a
+# pair on purpose, remove it here in the same commit and say why.
 
 fail=0
 
-# utils.sh is the shared helper library — it must be identical in both trees.
-if ! diff -q scripts/utils.sh templates/scripts/utils.sh >/dev/null; then
-    echo "❌ scripts/utils.sh and templates/scripts/utils.sh have drifted:"
-    diff scripts/utils.sh templates/scripts/utils.sh || true
+IDENTICAL_PAIRS=(
+    scripts/utils.sh
+    scripts/setup-env.sh
+    scripts/setup-ai-tools.sh
+    scripts/doctor.sh
+    scripts/create-container.sh
+    scripts/start-container.sh
+    .githooks/pre-commit
+    .githooks/commit-msg
+    .editorconfig
+    .gitattributes
+    .prettierrc
+    .shellcheckrc
+    .markdownlint-cli2.jsonc
+)
+
+for rel in "${IDENTICAL_PAIRS[@]}"; do
+    if ! diff -q "$rel" "templates/$rel" >/dev/null; then
+        echo "❌ $rel and templates/$rel have drifted:"
+        diff "$rel" "templates/$rel" || true
+        fail=1
+    fi
+done
+
+# The AI kickoff prompt is quoted verbatim in both READMEs and has drifted
+# before. Its lines are the only '> _' blockquote lines in either file.
+prompt_root=$(grep '^> _' README.md || true)
+prompt_tmpl=$(grep '^> _' templates/README.md || true)
+if [ -z "$prompt_root" ] || [ -z "$prompt_tmpl" ]; then
+    echo "❌ Could not find the '> _' kickoff prompt lines in one of the READMEs."
+    fail=1
+elif [ "$prompt_root" != "$prompt_tmpl" ]; then
+    echo "❌ The kickoff prompt differs between README.md and templates/README.md:"
+    diff <(printf '%s\n' "$prompt_root") <(printf '%s\n' "$prompt_tmpl") || true
     fail=1
 fi
 

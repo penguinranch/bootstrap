@@ -16,7 +16,15 @@ log_info "Running first-time container setup..."
 # 1. Install AI CLI tools (Gemini, Claude, extensions)
 bash ./scripts/setup-ai-tools.sh
 
-# 2. Reinstall the .env shell loader. A rebuild resets $HOME, so this has to
+# 2. Install the pinned npm toolchain when the project has a lockfile, so
+#    make lint/format use the same versions CI enforces. A fresh scaffold
+#    has no lockfile yet and skips this.
+if [ -f package-lock.json ] && command -v npm >/dev/null 2>&1; then
+    log_info "Installing npm toolchain (npm ci)..."
+    npm ci --ignore-scripts --no-audit --no-fund
+fi
+
+# 3. Reinstall the .env shell loader. A rebuild resets $HOME, so this has to
 #    run on create rather than only from 'make setup'.
 install_env_loader
 
