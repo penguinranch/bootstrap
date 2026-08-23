@@ -84,7 +84,8 @@ Decide on your tech stack — the language and framework you choose determine ho
 > _2. Update the `.devcontainer/` configuration (Dockerfile and devcontainer.json) for our chosen stack, and replace the `{{PROJECT_NAME}}` placeholders in `devcontainer.json` and the `Makefile` (`APP_NAME`) with the project name._
 > _3. Configure the universal `Makefile` and setup `dependabot.yml`._
 > _4. Replace the `[SECURITY_EMAIL]` placeholder in `SECURITY.md` and `CODE_OF_CONDUCT.md` with a real contact address._
-> _5. Rewrite `README.md` to describe this new project and how to run it."_
+> _5. Replace the `[Year]` / `[Full Name]` placeholders in `LICENSE`, and update the `@core-maintainers` / `@tech-leads` / `@devops` team slugs in `.github/CODEOWNERS` to teams or usernames that exist in our org._
+> _6. Rewrite `README.md` to describe this new project and how to run it."_
 
 ### Step 4: Open the Devcontainer
 
