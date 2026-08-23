@@ -21,148 +21,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Run installer
-        run: |
-          mkdir test-project
-          cd test-project
-          # We point to the local install.sh but it will still try to download a tarball.
-          # To test the logic of the script using the CURRENT branch changes,
-          # we override REPO_TAR_URL to point to this repository's current commit.
-          # No BOOTSTRAP_DEV here: the primary install must exercise the same
-          # guarded code path a real user hits, so a guard that misfires on an
-          # empty directory fails CI instead of only breaking real installs.
-          export REPO_TAR_URL="https://github.com/${{ github.repository }}/tarball/${{ github.sha }}"
-          bash ../install.sh
-
-      - name: Verify files
-        run: |
-          cd test-project
-          echo "Verifying critical files exist..."
-          test -d .devcontainer
-          test -f .gitignore
-          test -f Makefile
-          test -f README.md
-          test -f AGENTS.md
-          test -d scripts
-          test -f scripts/setup-env.sh
-          test -f scripts/doctor.sh
-          test -f docs/VISION.md
-          test -f docs/ARCHITECTURE.md
-          test -f docs/MEMORY.md
-
-          echo "Verifying execute permissions..."
-          test -x scripts/setup-env.sh
-          test -x scripts/start-container.sh
-          test -x scripts/doctor.sh
-
-          echo "Verifying version stamp..."
-          test -f .bootstrap-version
-          grep -q '^commit=..*' .bootstrap-version
-
-          echo "Verifying no root-only files leaked..."
-          if [ -f "install.sh" ]; then
-            echo "Error: install.sh should not be in the project root."
-            exit 1
-          fi
-
-          echo "✅ E2E Verification Passed!"
-
-      - name: Verify installer refuses a non-empty directory
-        run: |
-          cd test-project
-          # The .devcontainer guard aborts before downloading, but if it ever
-          # regresses this must test THIS commit's collision guard, not
-          # whatever upstream main's installer would fetch by default.
-          export REPO_TAR_URL="https://github.com/${{ github.repository }}/tarball/${{ github.sha }}"
-          if bash ../install.sh; then
-            echo "Error: installer should abort when .devcontainer already exists."
-            exit 1
-          fi
-          echo "✅ Installer guard refused to overwrite an existing project."
-
-      - name: Verify installer refuses to overwrite conflicting files
-        run: |
-          mkdir collision-project
-          cd collision-project
-          echo "precious" > Makefile
-          export REPO_TAR_URL="https://github.com/${{ github.repository }}/tarball/${{ github.sha }}"
-          if bash ../install.sh; then
-            echo "Error: installer should abort when payload files already exist."
-            exit 1
-          fi
-          test "$(cat Makefile)" = "precious"
-          echo "✅ Installer refused to overwrite an existing Makefile."
-
-      - name: Verify git hooks enforce the guardrails
-        run: |
-          cd test-project
-          git init -q
-          git config user.name "E2E Bot"
-          git config user.email "e2e@example.com"
-          git config core.hooksPath .githooks
-
-          test -x .githooks/commit-msg
-          test -x .githooks/pre-commit
-
-          git add -A
-          # The shipped VS Code config must survive the first commit — guards
-          # against a '.vscode/' ignore pattern whose negations git can't honor.
-          git ls-files --cached --others --exclude-standard | grep -qx '.vscode/extensions.json' || {
-            echo "Error: .vscode/extensions.json was not staged (gitignore is eating it)."
-            exit 1
-          }
-          if git commit -q -m "not a conventional message"; then
-            echo "Error: commit-msg hook should reject non-conventional messages."
-            exit 1
-          fi
-          echo "✅ Non-conventional commit message rejected."
-
-          git commit -q -m "chore: initial scaffold from bootstrap"
-          echo "✅ Conventional commit accepted."
-
-      - name: Verify pre-commit blocks a staged secret
+      - name: Install gitleaks
         run: |
           # Same pinned version the devcontainers install; without gitleaks on
-          # the runner the hook skips the scan and this guardrail goes untested.
+          # the runner the hook skips the scan and that guardrail goes untested.
           GITLEAKS_VERSION=8.30.1
           GITLEAKS_SHA256=551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
           curl -fsSL -o gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
           echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
           sudo tar -xzf gitleaks.tar.gz -C /usr/local/bin gitleaks
           rm gitleaks.tar.gz
-          cd test-project
-          # Fake GitHub PAT — matches gitleaks' default rules (the canonical
-          # AWS example key is allowlisted upstream, so it can't be used here).
-          printf 'github_token = "ghp_abcd1234efgh5678ijkl9012mnop3456qrst"\n' > leaky.conf # gitleaks:allow
-          git add leaky.conf
-          if git commit -q -m "feat: add config"; then
-            echo "Error: pre-commit should reject a staged secret."
-            exit 1
-          fi
-          echo "✅ Staged secret rejected by gitleaks."
-          git rm -q --cached leaky.conf
-          rm leaky.conf
 
-      - name: Verify make targets work in the scaffold
+      - name: Run the install e2e
         run: |
-          cd test-project
-          make help | grep -q "setup"
-          make doctor-ci
-          # 'make lint' is what the pre-commit hook runs, so leaving it out of
-          # this check is how the scaffold's lint target regressed to a no-op
-          # that still reported a pass.
-          make lint | tee lint.log
-          grep -q "Linting shell scripts" lint.log
-          rm lint.log
-          echo "✅ make help, make doctor-ci and make lint run in a fresh scaffold."
-
-      - name: Verify the scaffold's lint gate actually fails on a broken script
-        run: |
-          cd test-project
-          printf '#!/bin/bash\nif [ "$UNCLOSED = 1 ]; then :; fi\n' > scripts/broken.sh
-          if make lint; then
-            echo "Error: make lint should fail on a script shellcheck rejects."
-            exit 1
-          fi
-          rm scripts/broken.sh
-          echo "✅ Scaffold lint gate rejects a broken shell script."
+          # scripts/test-install.sh is the single source of truth for the
+          # install assertions — 'make test' runs the same script locally.
+          # Overriding REPO_TAR_URL to this commit's tarball exercises the
+          # real download path instead of a locally packed payload.
+          export REPO_TAR_URL="https://github.com/${{ github.repository }}/tarball/${{ github.sha }}"
+          make test

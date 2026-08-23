@@ -63,8 +63,8 @@ ai-extensions: ## Install the optional third-party Gemini CLI extensions (intera
 dev: ## Start the development server
 	@echo "Dev target not implemented yet — update after choosing your tech stack"
 
-test: ## Run the test suite
-	@echo "Test target not implemented yet — update after choosing your tech stack"
+test: ## Run the install e2e against the working tree's payload
+	@bash ./scripts/test-install.sh
 
 build: ## Create a production build
 	@echo "Build target not implemented yet — update after choosing your tech stack"
