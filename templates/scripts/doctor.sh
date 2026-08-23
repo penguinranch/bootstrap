@@ -171,6 +171,32 @@ else
     log_info "No .githooks directory found (configure after setup)."
 fi
 
+# --- Scaffold placeholders ---
+# Root-level files only: in the bootstrap repo the payload under templates/
+# keeps its placeholders on purpose, and the repo's own root files carry none.
+echo ""
+echo "🏷  Scaffold Placeholders"
+echo "──────────────────────────────────────"
+PLACEHOLDER_ISSUE=0
+check_placeholder() {
+    local file=$1 pattern=$2 hint=$3
+    if [ -f "$file" ] && grep -qE "$pattern" "$file"; then
+        log_warn "$file still contains the $hint placeholder — replace it (see the kickoff checklist in the bootstrap README)."
+        PLACEHOLDER_ISSUE=1
+    fi
+}
+check_placeholder Makefile '\{\{PROJECT_NAME\}\}' '{{PROJECT_NAME}}'
+check_placeholder .devcontainer/devcontainer.json '\{\{PROJECT_NAME\}\}' '{{PROJECT_NAME}}'
+check_placeholder SECURITY.md '\[SECURITY_EMAIL\]' '[SECURITY_EMAIL]'
+check_placeholder CODE_OF_CONDUCT.md '\[SECURITY_EMAIL\]' '[SECURITY_EMAIL]'
+check_placeholder LICENSE '\[(Year|Full Name)\]' '[Year] / [Full Name]'
+check_placeholder .github/CODEOWNERS '@(core-maintainers|tech-leads|devops)' 'team slug'
+if [ "$PLACEHOLDER_ISSUE" -eq 1 ]; then
+    ISSUES=$((ISSUES + 1))
+else
+    log_success "No scaffold placeholders remaining."
+fi
+
 # --- Core tools ---
 echo ""
 echo "🛠  Core Tools"
