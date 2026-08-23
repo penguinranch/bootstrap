@@ -132,6 +132,14 @@ grep -q "Linting shell scripts" "$WORK_DIR/lint.log" || fail "scaffold lint skip
 echo "✅ make help, make doctor-ci and make lint run in a fresh scaffold."
 
 echo ""
+echo "🧪 bootstrap-sync recognizes its own payload as current"
+# REPO_TAR_URL still points at the tarball this scaffold came from, so the
+# stamped commit and the "latest" commit must match
+SYNC_OUTPUT=$(make bootstrap-sync)
+echo "$SYNC_OUTPUT" | grep -q "Already up to date" || fail "bootstrap-sync did not report up to date against its own payload"
+echo "✅ bootstrap-sync compares against the version stamp."
+
+echo ""
 echo "🧪 Scaffold lint gate fails on a broken script"
 # shellcheck disable=SC2016 # the unexpanded $UNCLOSED is the point
 printf '#!/bin/bash\nif [ "$UNCLOSED = 1 ]; then :; fi\n' > scripts/broken.sh

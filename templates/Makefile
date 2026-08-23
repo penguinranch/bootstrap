@@ -2,7 +2,7 @@
 # Wrap ALL runnable commands (npm, pip, cargo, scripts, ...) in a target here,
 # even one-line passthroughs, and give each a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
-.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format ai-context ai-tools ai-extensions
+.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format ai-context ai-tools ai-extensions bootstrap-sync
 
 # Container enforcement check
 ifndef REMOTE_CONTAINERS
@@ -111,6 +111,9 @@ ai-tools: ## (Re)install the AI CLI tools
 
 ai-extensions: ## Install the optional third-party Gemini CLI extensions (interactive)
 	@bash ./scripts/setup-ai-tools.sh --extensions
+
+bootstrap-sync: ## Diff this project against the latest upstream bootstrap standards
+	@bash ./scripts/bootstrap-sync.sh
 
 clean: ## Remove build artifacts
 	@echo "Clean target not implemented yet — update after choosing your tech stack"

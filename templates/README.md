@@ -44,6 +44,7 @@ Here's what was installed and why:
 │   ├── doctor.sh             #    [Manual/Auto] Environment health check & troubleshooting
 │   ├── setup-ai-tools.sh     #    [postCreateCommand] Global AI CLI installations
 │   ├── ai-context.sh         #    [Manual] Bundle metadata for AI assistants
+│   ├── bootstrap-sync.sh     #    [Manual] Diff this project against upstream bootstrap standards
 │   └── utils.sh              #    Shared logging & env helpers (sourced by the others)
 │
 ├── docs/                     # 📝 Living project documentation (AI-maintained)

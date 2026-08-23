@@ -89,10 +89,9 @@ This project was scaffolded from [penguinranch/bootstrap](https://github.com/pen
 
 When the developer asks for a standards refresh (or you are doing broader repo maintenance and the stamp is old):
 
-1. Read the `commit=` value from `.bootstrap-version`.
-2. Review what changed upstream since then: `https://github.com/penguinranch/bootstrap/compare/<commit>...main`, or fetch the latest `BEST_PRACTICES.md` from the repo and compare it against this project's adopted files.
-3. Propose the relevant updates to the developer. Templates are a starting point — apply upstream changes with judgment, never by overwriting local adaptations wholesale.
-4. After syncing, update `commit=` and `installed=` in `.bootstrap-version` to the upstream commit you synced to, and record the sync in the `docs/ARCHITECTURE.md` Decision Log.
+1. Run `make bootstrap-sync`. It reads the `commit=` value from `.bootstrap-version`, downloads the latest upstream payload, and prints a per-file diff plus the upstream compare URL (`https://github.com/penguinranch/bootstrap/compare/<commit>...main`) — without writing anything.
+2. Propose the relevant updates to the developer. Templates are a starting point — apply upstream changes with judgment, never by overwriting local adaptations wholesale; a local diff may be an intentional adaptation.
+3. After syncing, update `commit=` and `installed=` in `.bootstrap-version` to the upstream commit you synced to, and record the sync in the `docs/ARCHITECTURE.md` Decision Log.
 
 ## 🧠 Engineering Philosophy
 
