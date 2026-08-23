@@ -143,7 +143,11 @@ echo ""
 echo "🧪 Scaffold lint gate fails on a broken script"
 # shellcheck disable=SC2016 # the unexpanded $UNCLOSED is the point
 printf '#!/bin/bash\nif [ "$UNCLOSED = 1 ]; then :; fi\n' > scripts/broken.sh
-if make lint; then
+# capture the lint output: the planted script's shellcheck errors read like
+# a real failure when they print mid-run, so show them only if the gate
+# wrongly passes
+if LINT_OUTPUT=$(make lint 2>&1); then
+    echo "$LINT_OUTPUT"
     fail "make lint should fail on a script shellcheck rejects"
 fi
 rm scripts/broken.sh
