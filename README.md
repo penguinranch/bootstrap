@@ -21,7 +21,7 @@ When you bootstrap a project using this template, you are receiving an environme
 ### 2. Secure by Default
 
 **The Problem:** Accidentally committing API keys or unverified code.
-**The Solution:** The `.env` file is heavily `.gitignore`d, and the pre-commit hook scans every staged change for secrets with **gitleaks** before the commit is allowed. Additionally, VS Code forwards your host's SSH agent into the Devcontainer, and Git is pre-configured for **SSH Commit Signing** whenever that agent is reachable — when it isn't, commits proceed unsigned rather than blocking you.
+**The Solution:** The `.env` file is heavily `.gitignore`d, and the pre-commit hook scans every staged change for secrets with **gitleaks** before the commit is allowed. Additionally, VS Code forwards your host's SSH agent into the Devcontainer, and if you supply an SSH public key during `make setup`, Git is configured for **SSH Commit Signing** — it turns on once that agent is reachable (if it wasn't at setup time, unlock your key manager and run `make doctor` to enable it).
 
 ### 3. AI-Optimized Workflows
 
@@ -33,7 +33,7 @@ When you bootstrap a project using this template, you are receiving an environme
 We have implemented physical files that prevent bad habits:
 
 - **`.editorconfig`**: Forces every IDE (even Vim) to use the exact same tab sizes, line endings, and whitespace rules.
-- **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make run`. Includes `make doctor` for instant environment health checks.
+- **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make dev`. Includes `make doctor` for instant environment health checks.
 - **`CODEOWNERS`**: Automatically requires Tech Lead PR reviews for the living project docs (architecture decisions) and DevOps reviews for CI/CD changes.
 - **`dependabot.yml`**: Pre-configured to open PRs that keep dependencies (GitHub Actions, Docker images, devcontainer features) up to date. Pair it with GitHub's Dependabot alerts (a repository setting) for vulnerability scanning — the shipped Trivy workflow covers scanning on PRs.
 
