@@ -14,7 +14,8 @@ Here's what was installed and why:
 .
 ├── .devcontainer/            # 🐳 Containerized dev environment
 │   ├── Dockerfile            #    Base image & system dependencies
-│   └── devcontainer.json     #    VS Code / IDE container config
+│   ├── devcontainer.json     #    VS Code / IDE container config
+│   └── devcontainer-lock.json #   Pins devcontainer feature versions
 │
 ├── .gemini/                  # ♊ Gemini CLI project settings
 │   └── settings.json         #    MCP servers (mirrors .mcp.json)
@@ -22,12 +23,13 @@ Here's what was installed and why:
 ├── .github/                  # 🤖 GitHub automation
 │   ├── ISSUE_TEMPLATE/       #    Standardized issue forms
 │   │   ├── bug_report.md     #    Bug report template
+│   │   ├── config.yml        #    Issue chooser config
 │   │   └── feature_request.md #   Feature request template
 │   ├── CODEOWNERS            #    Auto-assigns reviewers for critical paths
 │   ├── PULL_REQUEST_TEMPLATE.md  # Standardized PR checklist
-│   ├── dependabot.yml        #    Automated dependency vulnerability scanning
+│   ├── dependabot.yml        #    Automated dependency version updates
 │   └── workflows/
-│       ├── ci.yml            #    CI pipeline (runs on every PR)
+│       ├── ci.yml            #    CI pipeline (runs on PRs into main)
 │       └── security.yml      #    Trivy security scanning
 │
 ├── .githooks/                # 🪝 Git hooks (installed via make setup)
@@ -45,7 +47,7 @@ Here's what was installed and why:
 │   ├── setup-ai-tools.sh     #    [postCreateCommand] Global AI CLI installations
 │   ├── ai-context.sh         #    [Manual] Bundle metadata for AI assistants
 │   ├── bootstrap-sync.sh     #    [Manual] Diff this project against upstream bootstrap standards
-│   └── utils.sh              #    Shared logging & env helpers (sourced by the others)
+│   └── utils.sh              #    Shared logging & env helpers (sourced by the other scripts, except ai-context.sh)
 │
 ├── docs/                     # 📝 Living project documentation (AI-maintained)
 │   ├── VISION.md             #    Goals, non-goals, and Now/Next/Later roadmap
@@ -58,8 +60,10 @@ Here's what was installed and why:
 ├── .gitattributes            # Line-ending normalization (LF for scripts)
 ├── .mcp.json                 # MCP servers for AI agents (Notion, Context7, GitHub, Playwright, Chrome DevTools)
 ├── .gitignore                # Sensible defaults (node_modules, .env, etc.)
+├── .markdownlint-cli2.jsonc  # Markdown lint rules (used by make lint)
 ├── .nvmrc                    # Pins Node.js version (matches CI)
 ├── .prettierrc               # Code formatter configuration
+├── .shellcheckrc             # Shell lint rules (used by make lint)
 ├── AGENTS.md                 # AI agent instructions & project context
 ├── cspell.json               # Spell-checker dictionary (shared word list)
 ├── CHANGELOG.md              # Project changelog (Keep a Changelog format)
