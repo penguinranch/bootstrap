@@ -89,7 +89,7 @@ This project was scaffolded from [penguinranch/bootstrap](https://github.com/pen
 
 When the developer asks for a standards refresh (or you are doing broader repo maintenance and the stamp is old):
 
-1. Run `make bootstrap-sync`. It reads the `commit=` value from `.bootstrap-version`, downloads the latest upstream payload, and prints a per-file diff plus the upstream compare URL (`https://github.com/penguinranch/bootstrap/compare/<commit>...main`) — without writing anything.
+1. Run `make bootstrap-sync`. It reads the `commit=` value from `.bootstrap-version`, downloads the latest upstream payload, and prints a per-file diff plus the upstream compare URL (`https://github.com/penguinranch/bootstrap/compare/<old-commit>...<new-commit>`) — without writing anything.
 2. Propose the relevant updates to the developer. Templates are a starting point — apply upstream changes with judgment, never by overwriting local adaptations wholesale; a local diff may be an intentional adaptation.
 3. After syncing, update `commit=` and `installed=` in `.bootstrap-version` to the upstream commit you synced to, and record the sync in the `docs/ARCHITECTURE.md` Decision Log.
 
@@ -105,7 +105,7 @@ When the developer asks for a standards refresh (or you are doing broader repo m
 
 When adding or modifying automation scripts for the devcontainer, you must adhere to the following execution contexts defined in `devcontainer.json`:
 
-1. **`postCreateCommand`**: Use for heavy, one-time global installations (e.g., global `npm` packages, binaries) that should be baked into the image after the `Dockerfile` completes. Examples: `create-container.sh` (which runs `setup-ai-tools.sh`). This runs _only once_ when the container is built.
+1. **`postCreateCommand`**: Use for heavy, one-time global installations (e.g., global `npm` packages, binaries) that the `Dockerfile` can't provide — node/npm aren't available at image build time. Examples: `create-container.sh` (which runs `setup-ai-tools.sh`). This runs _only once_ when the container is created; the installs live in the container filesystem and are redone on a rebuild.
 2. **`postStartCommand`**: Use for fast, idempotent environment checks and initializations that must be present every time the developer connects. Examples: `start-container.sh` (which configures git hooks and reads `.env`). This runs _every time_ the container starts or wakes up.
 3. **Manual Interactive Scripts**: Any script that requires user interaction (e.g., using `read -p`) must **never** be added to an automated lifecycle hook. If added to `postStartCommand`, the container boot process will hang indefinitely waiting for input on a detached TTY. Examples: `setup-env.sh`. Instead, ensure the idempotent `start-container.sh` script checks for the required state and warns the user to run the interactive script manually.
 
