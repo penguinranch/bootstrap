@@ -2,7 +2,7 @@
 
 > **Bootstrapped with [Penguin Ranch Bootstrap](https://github.com/penguinranch/bootstrap).**
 
-Welcome to your new project! This repository has been scaffolded with a ready-to-go developer environment. Everything you need to get started is already here. Just open it in a Devcontainer and go.
+Welcome to your new project! This repository has been scaffolded with a ready-to-go developer environment. Everything you need to get started is already here. Just open it in a devcontainer and go.
 
 ---
 
@@ -80,7 +80,7 @@ Here's what was installed and why:
 
 ### 1. Define Your Architecture
 
-Before opening the Devcontainer, define your tech stack. The language and framework you choose will determine how the container is configured. Open your AI assistant and prompt it with:
+Before opening the devcontainer, define your tech stack. The language and framework you choose will determine how the container is configured. Open your AI assistant and prompt it with:
 
 > _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
 > _1. Fill out `docs/VISION.md` (goals, non-goals, roadmap) and the Tech Stack section of `docs/ARCHITECTURE.md`._
@@ -95,7 +95,7 @@ Before opening the Devcontainer, define your tech stack. The language and framew
 
 ### 2. Open in a Devcontainer
 
-Once the Devcontainer has been configured for your stack, open this folder in **VS Code** and accept the prompt to **Reopen in Container**. Docker will build your isolated development environment automatically.
+Once the devcontainer has been configured for your stack, open this folder in **VS Code** and accept the prompt to **Reopen in Container**. Docker will build your isolated development environment automatically.
 
 > **AI state persists across rebuilds.** Claude Code (`~/.claude`) and Gemini CLI (`~/.gemini`) each store their conversation history, logins, and MCP/trust approvals on a per-project named Docker volume, so rebuilding the container won't wipe them. To start fresh, remove the volumes on your host: `docker volume rm claude-code-config-<id> gemini-cli-config-<id>` (find the exact names with `docker volume ls`).
 

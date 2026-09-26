@@ -16,12 +16,12 @@ When you bootstrap a project using this template, you are receiving an environme
 ### 1. Devcontainer Only (Zero-Host Dependency)
 
 **The Problem:** "It works on my machine!"
-**The Solution:** All work happens strictly inside a VS Code Devcontainer. Whether you are on macOS, Linux, or Windows (WSL), once you reopen the project in its container, Docker builds the same pre-configured Linux environment for everyone. You never need to install Node, Python, or Go on your host computer again.
+**The Solution:** All work happens strictly inside a VS Code Dev Container. Whether you are on macOS, Linux, or Windows (WSL), once you reopen the project in its container, Docker builds the same pre-configured Linux environment for everyone. You never need to install Node, Python, or Go on your host computer again.
 
 ### 2. Secure by Default
 
 **The Problem:** Accidentally committing API keys or unverified code.
-**The Solution:** `.env` (and every `.env.*` except `.env.example`) is gitignored, and the pre-commit hook scans every staged change for secrets with **gitleaks** before the commit is allowed. VS Code also forwards your host's SSH agent into the Devcontainer, so Git is set up for **SSH commit signing**. Signing turns on once you give `make setup` a public key and the SSH agent is reachable. If the agent wasn't reachable at setup time, unlock your key manager (1Password, say) and run `make doctor`.
+**The Solution:** `.env` (and every `.env.*` except `.env.example`) is gitignored, and the pre-commit hook scans every staged change for secrets with **gitleaks** before the commit is allowed. VS Code also forwards your host's SSH agent into the devcontainer, so Git is set up for **SSH commit signing**. Signing turns on once you give `make setup` a public key and the SSH agent is reachable. If the agent wasn't reachable at setup time, unlock your key manager (1Password, say) and run `make doctor`.
 
 ### 3. AI-Optimized Workflows
 
@@ -110,7 +110,7 @@ _This asks for your Git name and email, an optional SSH public key for commit si
 - **The IDE Window is hung / The AI CLIs didn't install:**
   Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside your generated project's container and run `make ai-tools` to finish the installation.
 - **Git complains about missing user name and email:**
-  If the Devcontainer hangs after building, the startup health check might not have run to configure your Git profile from `.env`. You can fix this by running `make doctor` (which re-applies `.env` settings) or by running `make setup` again.
+  If the devcontainer hangs after building, the startup health check might not have run to configure your Git profile from `.env`. You can fix this by running `make doctor` (which re-applies `.env` settings) or by running `make setup` again.
 - **Windows / WSL line-ending errors (bash scripts crashing):**
   Windows uses `CRLF` (Windows-style) line endings, which crash Linux bash scripts expecting `LF` (Unix-style). We have a `.gitattributes` file to prevent this, but if you still see `\r` errors, set your global git config: `git config --global core.autocrlf false`.
 

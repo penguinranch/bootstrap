@@ -102,7 +102,7 @@ Copy this into the PR that introduces the standards and check off what was adopt
 - [ ] docs/ living documents (VISION.md, ARCHITECTURE.md, MEMORY.md), with the adoption itself recorded in the Decision Log
 - [ ] ai-context script, context-for-ai.md in .gitignore
 - [ ] MCP config (.mcp.json, .gemini/settings.json) pruned to the servers in use
-- [ ] Devcontainer plus its lifecycle scripts (optional, see Tier 3)
+- [ ] devcontainer plus its lifecycle scripts (optional, see Tier 3)
 - [ ] setup-env.sh / doctor.sh / utils.sh (needs the devcontainer)
 - [ ] Source commit recorded (PR body or .bootstrap-version), bootstrap-sync.sh if using the stamp
 ```

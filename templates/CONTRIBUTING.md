@@ -4,7 +4,7 @@ Thank you for considering contributing to this project! This guide will help you
 
 ## Development Setup
 
-1. **Open in a Devcontainer:** All development happens inside the container. Never install dependencies on your host machine.
+1. **Open in a devcontainer:** All development happens inside the container. Never install dependencies on your host machine.
 2. **Run `make setup`:** The interactive wizard configures your Git identity, optional SSH signing key and API keys. It also installs the AI CLI tools and activates the git hooks (pre-commit secret scanning + linting, and commit message validation).
 
 ## Workflow
