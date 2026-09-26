@@ -82,7 +82,7 @@ fi
 # Dockerfiles and the e2e workflow. Checking only the version let a stale
 # checksum through: the Docker build then fails at 'sha256sum -c' in a
 # downstream project instead of failing here, where it can be fixed.
-# '|| true' keeps a missing pin from killing the script under set -e —
+# '|| true' keeps a missing pin from killing the script under set -e:
 # the explicit empty-check below is the diagnostic we want in that case.
 pin() { grep -oE "$2=[0-9a-f.]+" "$1" | head -n1 | cut -d= -f2 || true; }
 

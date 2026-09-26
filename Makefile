@@ -1,9 +1,9 @@
-# Universal task runner — the single entry point for every project command.
+# Universal task runner: the single entry point for every project command.
 # Wrap ALL runnable commands in a target with a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
 .PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format check-docs ensure-toolchain ai-extensions
 
-# Container enforcement check — the same guard the payload's Makefile carries.
+# Container enforcement check: the same guard the payload's Makefile carries.
 # Skipped under CI, where the workflows deliberately run make on the runner.
 ifndef CI
 ifndef REMOTE_CONTAINERS
@@ -34,16 +34,16 @@ setup: ## Interactive first-time setup wizard
 			chmod +x .githooks/*; \
 			echo "✅ Git hooks configured."; \
 		else \
-			echo "⚠️  Not a git repository — run 'git init', then 'make setup' again to enable hooks."; \
+			echo "⚠️  Not a git repository: run 'git init', then 'make setup' again to enable hooks."; \
 		fi; \
 	fi
 	@chmod +x scripts/*.sh 2>/dev/null || true
 	@echo ""
 	@echo "────────────────────────────────────────"
 	@echo "  Next steps:"
-	@echo "    gh auth login     — Authenticate GitHub CLI"
-	@echo "    claude            — Start Claude CLI"
-	@echo "    gemini            — Start Gemini CLI"
+	@echo "    gh auth login     : Authenticate GitHub CLI"
+	@echo "    claude            : Start Claude CLI"
+	@echo "    gemini            : Start Gemini CLI"
 	@echo "────────────────────────────────────────"
 	@echo ""
 	@echo "✅ Setup complete. Run 'make' to see all available commands."
@@ -61,18 +61,18 @@ ai-extensions: ## Install the optional third-party Gemini CLI extensions (intera
 	@bash ./scripts/setup-ai-tools.sh --extensions
 
 dev: ## Start the development server
-	@echo "Dev target not implemented yet — update after choosing your tech stack"
+	@echo "Dev target not implemented yet: update after choosing your tech stack"
 
 test: ## Run the install e2e against the working tree's payload
 	@bash ./scripts/test-install.sh
 
 build: ## Create a production build
-	@echo "Build target not implemented yet — update after choosing your tech stack"
+	@echo "Build target not implemented yet: update after choosing your tech stack"
 
 ensure-toolchain: # internal: install the pinned lint toolchain if absent
 	@if [ ! -x node_modules/.bin/prettier ] && command -v npm >/dev/null 2>&1 && [ -f package-lock.json ]; then \
 		echo "📦 Installing lint toolchain (npm ci)..."; \
-		npm ci --ignore-scripts --no-audit --no-fund || echo "⚠️  npm ci failed — npm-based checks will be skipped (CI still enforces it)."; \
+		npm ci --ignore-scripts --no-audit --no-fund || echo "⚠️  npm ci failed: npm-based checks will be skipped (CI still enforces it)."; \
 	fi
 
 lint: ensure-toolchain ## Run code formatting & linting
@@ -80,25 +80,25 @@ lint: ensure-toolchain ## Run code formatting & linting
 	@if command -v shellcheck >/dev/null 2>&1; then \
 		shellcheck install.sh scripts/*.sh templates/scripts/*.sh .githooks/* templates/.githooks/* || (echo "❌ Shellcheck failed. Fix errors above." && exit 1); \
 	else \
-		echo "⚠️  shellcheck not found — skipping (CI still enforces it)."; \
+		echo "⚠️  shellcheck not found: skipping (CI still enforces it)."; \
 	fi
 	@echo "🔍 Checking file formatting..."
 	@if [ -x node_modules/.bin/prettier ]; then \
 		npm run --silent format:check || (echo "❌ Formatting check failed. Run 'make format' to fix." && exit 1); \
 	else \
-		echo "⚠️  prettier unavailable (npm not found) — skipping (CI still enforces it)."; \
+		echo "⚠️  prettier unavailable (npm not found): skipping (CI still enforces it)."; \
 	fi
 	@echo "🔍 Checking spelling..."
 	@if [ -x node_modules/.bin/cspell ]; then \
 		npm run --silent spell || (echo "❌ Spell check failed. Fix the typo, or add the term to cspell.json." && exit 1); \
 	else \
-		echo "⚠️  cspell unavailable (npm not found) — skipping (CI still enforces it)."; \
+		echo "⚠️  cspell unavailable (npm not found): skipping (CI still enforces it)."; \
 	fi
 	@echo "🔍 Linting markdown..."
 	@if [ -x node_modules/.bin/markdownlint-cli2 ]; then \
 		npm run --silent lint:md || (echo "❌ Markdown lint failed. Fix the errors above." && exit 1); \
 	else \
-		echo "⚠️  markdownlint unavailable (npm not found) — skipping (CI still enforces it)."; \
+		echo "⚠️  markdownlint unavailable (npm not found): skipping (CI still enforces it)."; \
 	fi
 	@echo "🔍 Checking BEST_PRACTICES.md ↔ templates/ sync..."
 	@bash ./scripts/check-best-practices-sync.sh
@@ -115,9 +115,9 @@ format: ensure-toolchain ## Format all files
 	@if [ -x node_modules/.bin/prettier ]; then \
 		npm run --silent format; \
 	else \
-		echo "⚠️  prettier unavailable (npm not found) — skipping."; \
+		echo "⚠️  prettier unavailable (npm not found): skipping."; \
 	fi
 	@echo "✅ Formatting complete."
 
 clean: ## Remove build artifacts
-	@echo "Clean target not implemented yet — update after choosing your tech stack"
+	@echo "Clean target not implemented yet: update after choosing your tech stack"

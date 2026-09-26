@@ -9,7 +9,7 @@ fail=0
 # Newline-separated list rather than an array: mapfile needs bash >= 4 and
 # macOS ships 3.2, where this runs via the pre-commit hook on the host.
 # Anchor fragments (#section) are stripped before the existence check.
-# '|| true': zero links is not an error here — it means every template
+# '|| true': zero links is not an error here. It means every template
 # file below gets reported as unreferenced, which is the useful output.
 refs=$(grep -oE '\]\(templates/[^)]*\)' "$DOC" | sed -E 's/^\]\(//; s/\)$//; s/#.*$//' | sort -u || true)
 
@@ -21,7 +21,7 @@ while IFS= read -r ref; do
     fi
 done <<< "$refs"
 
-# project skeleton files, not documented practices — when adding a template
+# project skeleton files, not documented practices: when adding a template
 # file, either reference it in BEST_PRACTICES.md or consciously list it here
 allowlist=(
     "templates/README.md"

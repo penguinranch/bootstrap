@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 # utils.sh: Shared utility functions for Penguin Ranch scripts.
 # NOTE: This file must stay identical to its counterpart in the bootstrap
-# repository (scripts/utils.sh <-> templates/scripts/utils.sh) — CI enforces this.
+# repository (scripts/utils.sh <-> templates/scripts/utils.sh). CI enforces this.
 
 # Colors for logging
 RED='\033[0;31m'
@@ -36,7 +36,7 @@ update_env() {
         V="$value" awk -v k="$key" 'BEGIN{FS=OFS="="} $1==k{$0=k"="ENVIRON["V"]} {print}' "$env_file" > "$tmp_file"
         mv "$tmp_file" "$env_file"
     else
-        # A hand-edited file may lack a trailing newline — appending straight
+        # A hand-edited file may lack a trailing newline: appending straight
         # onto the last line would fuse two entries together.
         if [ -s "$env_file" ] && [ -n "$(tail -c1 "$env_file")" ]; then
             echo >> "$env_file"
@@ -63,7 +63,7 @@ safe_export_env() {
         return
     fi
     # '|| [ -n "$key" ]' keeps the final line when the file has no trailing
-    # newline — read returns non-zero at EOF and would silently drop it.
+    # newline: read returns non-zero at EOF and would silently drop it.
     while IFS='=' read -r key value || [ -n "$key" ]; do
         if [[ -n "$key" && ! "$key" =~ ^# ]]; then
             key="${key#"${key%%[![:space:]]*}"}"
@@ -72,7 +72,7 @@ safe_export_env() {
             value="${value%"${value##*[![:space:]]}"}"
             value=$(strip_matched_quotes "$value")
             # An empty value would clobber a key the host already provided
-            # via containerEnv — skip it.
+            # via containerEnv: skip it.
             [ -n "$value" ] || continue
             # Only export if key is in the allowlist
             for allowed in "${ALLOWED_KEYS[@]}"; do
@@ -142,7 +142,7 @@ ssh_signing_available() {
 # volume (only ~/.claude and ~/.gemini are), so a container rebuild wipes the
 # profiles. Re-running it on create keeps a rebuild from silently unplugging
 # the keys until someone thinks to run 'make setup' again.
-# Idempotent — keyed on a per-project marker.
+# Idempotent: keyed on a per-project marker.
 install_env_loader() {
     is_container || return 0
     local project_root rc_root rc_marker rc_file
@@ -162,7 +162,7 @@ install_env_loader() {
             cat >> "$rc_file" <<RC_BLOCK
 
 ${rc_marker}
-# Added by the bootstrap scripts — loads allowlisted keys from the project .env
+# Added by the bootstrap scripts: loads allowlisted keys from the project .env
 if [ -f '${rc_root}/scripts/utils.sh' ] && [ -f '${rc_root}/.env' ]; then
     eval "\$(bash -c '. "\$1/scripts/utils.sh"; print_env_exports "\$1/.env"' _ '${rc_root}')"
 fi

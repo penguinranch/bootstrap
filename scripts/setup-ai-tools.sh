@@ -14,13 +14,13 @@ safe_export_env .env
 
 # The AI CLIs deliberately track @latest, unlike the MCP servers in .mcp.json,
 # which carry pinned versions. Both ship several releases a week and nothing
-# here watches a pin — Dependabot does not read this file — so a pinned version
+# here watches a pin (Dependabot does not read this file), so a pinned version
 # would just rot silently and hand out a stale CLI. The MCP servers are pinned
 # because they are launched by an agent on every session with the host Docker
 # socket in reach; these two are installed once, into the container, by a
 # developer running setup.
 
-# Optional, third-party, and NOT installed by default — see
+# Optional, third-party, and NOT installed by default: see
 # install_gemini_extensions below.
 GEMINI_EXTENSIONS=(
     "https://github.com/gemini-cli-extensions/security"
@@ -39,7 +39,7 @@ install_gemini_extensions() {
         exit 1
     fi
     log_warn "These extensions are third-party code from outside this project."
-    log_warn "Approve each prompt yourself — nothing here consents on your behalf."
+    log_warn "Approve each prompt yourself: nothing here consents on your behalf."
     local ext ext_name
     for ext in "${GEMINI_EXTENSIONS[@]}"; do
         ext_name=$(basename "$ext")
@@ -58,9 +58,9 @@ FRESH=false
 
 if [ ! -f "$SENTINEL" ]; then
     FRESH=true
-    log_info "Fresh bootstrap detected — installing latest versions."
+    log_info "Fresh bootstrap detected: installing latest versions."
 else
-    log_info "Existing environment detected — ensuring tools are present."
+    log_info "Existing environment detected: ensuring tools are present."
 fi
 
 # Install or upgrade Gemini CLI
@@ -89,7 +89,7 @@ else
     log_success "Claude CLI is already installed."
 fi
 
-log_info "Optional Gemini extensions are not installed automatically — run 'make ai-extensions'."
+log_info "Optional Gemini extensions are not installed automatically: run 'make ai-extensions'."
 
 # Upgrade npm itself on fresh bootstrap
 if $FRESH; then
@@ -101,5 +101,5 @@ fi
 if $FRESH; then
     mkdir -p "$(dirname "$SENTINEL")"
     date -u '+%Y-%m-%dT%H:%M:%SZ' > "$SENTINEL"
-    log_success "Bootstrap complete — sentinel written."
+    log_success "Bootstrap complete: sentinel written."
 fi

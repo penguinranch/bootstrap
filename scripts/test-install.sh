@@ -17,7 +17,7 @@ fail() {
 }
 
 # Without an override, install.sh downloads the upstream main tarball and
-# silently ignores local changes — so default to packing the working tree.
+# silently ignores local changes, so default to packing the working tree.
 # CI exports REPO_TAR_URL to the pushed commit's GitHub tarball instead,
 # which also exercises the real download path.
 if [ -z "${REPO_TAR_URL:-}" ]; then
@@ -81,7 +81,7 @@ echo "🧪 Git hooks enforce the guardrails"
 cd "$PROJECT"
 git config user.name "E2E Bot"
 git config user.email "e2e@example.com"
-# fixture commits only — the developer's own signing setup isn't under test
+# fixture commits only: the developer's own signing setup isn't under test
 # and a missing agent must not fail the suite
 git config commit.gpgsign false
 git config core.hooksPath .githooks
@@ -89,7 +89,7 @@ test -x .githooks/commit-msg || fail "commit-msg hook not executable"
 test -x .githooks/pre-commit || fail "pre-commit hook not executable"
 
 git add -A
-# The shipped VS Code config must survive the first commit — guards against
+# The shipped VS Code config must survive the first commit: guards against
 # a '.vscode/' ignore pattern whose negations git can't honor.
 git ls-files --cached --others --exclude-standard | grep -qx '.vscode/extensions.json' \
     || fail ".vscode/extensions.json was not staged (gitignore is eating it)"
@@ -103,7 +103,7 @@ echo "✅ Conventional commit accepted."
 echo ""
 echo "🧪 Pre-commit blocks a staged secret"
 if command -v gitleaks >/dev/null 2>&1; then
-    # Fake GitHub PAT — matches gitleaks' default rules (the canonical AWS
+    # Fake GitHub PAT: matches gitleaks' default rules (the canonical AWS
     # example key is allowlisted upstream, so it can't be used here).
     printf 'github_token = "ghp_abcd1234efgh5678ijkl9012mnop3456qrst"\n' > leaky.conf # gitleaks:allow
     git add leaky.conf
@@ -114,7 +114,7 @@ if command -v gitleaks >/dev/null 2>&1; then
     rm leaky.conf
     echo "✅ Staged secret rejected by gitleaks."
 else
-    echo "⚠️  gitleaks not installed — skipping the secret-block test."
+    echo "⚠️  gitleaks not installed: skipping the secret-block test."
 fi
 
 echo ""

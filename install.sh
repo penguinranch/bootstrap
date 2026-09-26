@@ -33,7 +33,7 @@ check_collisions() {
     local collisions=""
     local rel
     # Written by write_version_stamp rather than shipped in the payload, so the
-    # find below never sees it — check it explicitly or a project's existing
+    # find below never sees it: check it explicitly or a project's existing
     # stamp gets silently overwritten with a different source commit.
     if [ -e "$VERSION_STAMP" ]; then
         collisions="${collisions}   ${VERSION_STAMP}

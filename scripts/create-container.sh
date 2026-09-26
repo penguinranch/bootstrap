@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Orchestrator for postCreateCommand — runs once when the container is first created.
+# Orchestrator for postCreateCommand: runs once when the container is first created.
 # Calls individual setup scripts in the correct order.
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"

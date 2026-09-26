@@ -40,7 +40,7 @@ if [ -f .env ]; then
     fi
     safe_export_env .env
 
-    # Apply git config from .env — only inside the container, so a manual
+    # Apply git config from .env: only inside the container, so a manual
     # 'make doctor' on the host never rewrites the developer's ~/.gitconfig
     # (or silently disables signing they had enabled globally).
     if is_container; then
@@ -58,14 +58,14 @@ if [ -f .env ]; then
             else
                 # agent socket can race container start; never silently
                 # disable signing the user had on
-                log_warn "SSH agent unavailable — leaving commit.gpgsign unchanged. Re-run 'make doctor' once the agent is up."
+                log_warn "SSH agent unavailable: leaving commit.gpgsign unchanged. Re-run 'make doctor' once the agent is up."
             fi
         fi
         if [ -n "${GITHUB_TOKEN:-}" ] && command -v gh &> /dev/null; then
             gh auth setup-git 2>/dev/null || true
         fi
     else
-        log_info "Not inside a container — leaving host git config untouched."
+        log_info "Not inside a container: leaving host git config untouched."
     fi
 else
     log_warn ".env file not found. Run 'make setup' to configure."
@@ -88,7 +88,7 @@ if [ -n "$SIGNING_KEY" ]; then
     if ssh_signing_available; then
         log_success "SSH commit signing enabled (1Password / SSH agent detected)."
     else
-        log_info "SSH signing key configured but agent not available — signing disabled."
+        log_info "SSH signing key configured but agent not available: signing disabled."
     fi
 else
     log_info "SSH commit signing not configured (optional)."
@@ -164,7 +164,7 @@ if [ -d .githooks ]; then
         chmod +x .githooks/* 2>/dev/null || true
         log_success "Git hooks configured."
     else
-        log_warn "Not a git repository — run 'git init' to enable hooks."
+        log_warn "Not a git repository: run 'git init' to enable hooks."
         ISSUES=$((ISSUES + 1))
     fi
 else
@@ -181,7 +181,7 @@ PLACEHOLDER_ISSUE=0
 check_placeholder() {
     local file=$1 pattern=$2 hint=$3
     if [ -f "$file" ] && grep -qE "$pattern" "$file"; then
-        log_warn "$file still contains the $hint placeholder — replace it (see the kickoff checklist in the bootstrap README)."
+        log_warn "$file still contains the $hint placeholder: replace it (see the kickoff checklist in the bootstrap README)."
         PLACEHOLDER_ISSUE=1
     fi
 }

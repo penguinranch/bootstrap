@@ -30,7 +30,7 @@ EXISTING_ANTHROPIC_KEY=$(read_env "ANTHROPIC_API_KEY")
 
 log_info "Setting up environment variables (Enter keeps the current value, '-' clears it)..."
 
-# Values entered as '-' clear the saved value — otherwise a mistyped key
+# Values entered as '-' clear the saved value: otherwise a mistyped key
 # or a retired SSH key could never be removed through the wizard.
 clear_sentinel() {
     if [ "$1" = "-" ]; then echo ""; else echo "$1"; fi
@@ -119,14 +119,14 @@ if [ -n "$SSH_PUBLIC_KEY" ]; then
         # start, and a locked 1Password looks identical to "no agent". Turning
         # signing off here would silently disarm it for someone who re-ran
         # setup at the wrong moment. doctor.sh takes the same position.
-        log_warn "SSH key saved but the agent is not reachable right now — leaving commit.gpgsign unchanged."
+        log_warn "SSH key saved but the agent is not reachable right now: leaving commit.gpgsign unchanged."
         log_warn "If 1Password is locked, unlock it and run 'make doctor' to enable signing."
     fi
 elif [ -n "$EXISTING_SSH_KEY" ]; then
-    # Key was cleared with '-' — remove the signing config that pointed at it
+    # Key was cleared with '-': remove the signing config that pointed at it
     git config --global --unset user.signingkey 2>/dev/null || true
     git config --global commit.gpgsign false
-    log_info "SSH signing key cleared — commit signing disabled."
+    log_info "SSH signing key cleared: commit signing disabled."
 fi
 
 # Update the LICENSE file if it exists
@@ -145,7 +145,7 @@ fi
 
 if is_container; then
     install_env_loader
-    log_success "Shell profiles now load .env keys — open a new terminal to apply."
+    log_success "Shell profiles now load .env keys: open a new terminal to apply."
 fi
 
 log_success "Configuration complete."
