@@ -71,7 +71,7 @@ Update the documents at these moments. Do not wait to be asked:
 ### Additional Rules
 
 1. **Automate Security & Updates:** When determining the initial tech stack or adding new languages/frameworks, you must automatically create or update `.github/dependabot.yml` to reflect the chosen package ecosystems (e.g., `npm`, `pip`, `gomod`, `docker`, `github-actions`).
-2. **Universal Task Interface:** Once the stack is picked, map its commands (e.g., `npm test` or `go build`) onto `make test`, `make build`, `make dev`. See Universal Make Interface below. The shipped `.github/workflows/ci.yml` still calls npm directly. Switch those steps to `make lint` / `make test` when you map the stack.
+2. **Universal Task Interface:** Once the stack is picked, map its commands (e.g., `npm test` or `go build`) onto `make test`, `make build`, `make dev`. See Universal Make Interface below. The shipped `.github/workflows/ci.yml` already runs `make lint` and `make test`, so mapping the stack is enough.
 
 ## 🎛 Universal Make Interface
 

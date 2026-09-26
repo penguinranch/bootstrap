@@ -26,11 +26,13 @@ jobs:
       # --- Node.js Setup (replace with your stack) ---
       # If your project uses a different language, replace this section.
       # See AGENTS.md for instructions on mapping stack-specific commands to the Makefile.
-      # Every step is gated on a lockfile existing, so a freshly scaffolded
-      # project (no stack chosen yet) stays green on its first push.
+      # Setup, install and test are gated on a lockfile existing, so a freshly
+      # scaffolded project (no stack chosen yet) stays green on its first push.
+      # Lint is not gated: shellcheck runs from day one, and prettier, cspell and
+      # markdownlint join in once npm ci has installed them.
       - name: Note unconfigured stack
         if: hashFiles('package-lock.json') == ''
-        run: echo "No package-lock.json found — stack not chosen yet, skipping build steps."
+        run: echo "No package-lock.json found... stack not chosen yet, skipping install and test."
 
       - name: Use Node.js
         if: hashFiles('package-lock.json') != ''
@@ -43,13 +45,12 @@ jobs:
         if: hashFiles('package-lock.json') != ''
         run: npm ci --ignore-scripts
 
-      - name: Run lint
-        if: hashFiles('package-lock.json') != ''
-        run: npm run lint --if-present
+      - name: Lint
+        run: make lint
 
-      - name: Run tests
+      - name: Test
         if: hashFiles('package-lock.json') != ''
-        run: npm test --if-present
+        run: make test
 
       # --- Python Setup (alternative) ---
       # For Python projects with a src/ layout, you may need PYTHONPATH:

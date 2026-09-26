@@ -4,7 +4,8 @@
 # appears in 'make help'. Developers only ever need to remember 'make help'.
 .PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format ai-context ai-tools ai-extensions bootstrap-sync
 
-# Container enforcement check
+# Container enforcement check. Skipped under CI, where ci.yml runs make on the runner.
+ifndef CI
 ifndef REMOTE_CONTAINERS
 ifndef CODESPACES
 ifneq ($(wildcard /.dockerenv),/.dockerenv)
@@ -12,6 +13,7 @@ $(warning ⚠️  WARNING: You are NOT running inside a devcontainer.)
 $(warning This project is designed to be developed in an isolated environment.)
 $(warning Future AI assistants may jump the gun and install tools on your host.)
 $(warning Please open in a container before proceeding with setup.)
+endif
 endif
 endif
 endif
