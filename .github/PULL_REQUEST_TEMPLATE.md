@@ -21,7 +21,7 @@ Please describe the tests that you ran to verify your changes.
 
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
-- [ ] Non-obvious decisions are explained — in this PR, or in a code comment only where the code cannot say it
+- [ ] Non-obvious decisions are explained (in this PR, or in a code comment only where the code cannot say it)
 - [ ] I have made corresponding changes to the documentation
 - [ ] My changes generate no new warnings
 - [ ] Any dependent changes have been merged and published in downstream modules
