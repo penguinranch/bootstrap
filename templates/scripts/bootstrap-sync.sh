@@ -1,11 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-# Read-only standards refresh: diffs this project against the latest upstream
-# bootstrap payload, using the .bootstrap-version stamp as the baseline.
-# Writes nothing — applying changes is left to the developer (or their agent),
-# who should update the stamp and Decision Log afterward (see AGENTS.md,
-# "Staying Current with Upstream Standards").
+# Read-only standards refresh: diffs this project's files against the latest
+# upstream bootstrap payload and prints a compare link from the commit in the
+# .bootstrap-version stamp. Writes nothing. Applying changes is left to the
+# developer (or their agent), who should update the stamp and Decision Log
+# afterward (see AGENTS.md, "Staying Current with Upstream Standards").
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck source=scripts/utils.sh
