@@ -1,6 +1,6 @@
 # Architecture
 
-> **Living document** — the single source of truth for how this project is built, deployed, and operated. Update it when a technology choice is made, the system structure changes, or deployment/tooling changes. Use [Mermaid](https://mermaid.js.org/) diagrams for anything structural.
+> **Living document**: the single source of truth for how this project is built, deployed, and operated. Update it when a technology choice is made, the system structure changes, or deployment/tooling changes. Use [Mermaid](https://mermaid.js.org/) diagrams for anything structural.
 
 ## Tech Stack
 
@@ -47,7 +47,7 @@ graph LR
 
 ## Decision Log
 
-> Append-only. One line per significant technical decision — enough for a future session to understand _why_ without re-litigating it.
+> Append-only. One line per significant technical decision, enough for a future session to understand _why_ without re-litigating it.
 
 | Date         | Decision                     | Why                                     |
 | ------------ | ---------------------------- | --------------------------------------- |

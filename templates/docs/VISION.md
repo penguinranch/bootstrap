@@ -1,6 +1,6 @@
 # Project Vision
 
-> **Living document** — maintained by the developer and AI agents together.
+> **Living document**: maintained by the developer and AI agents together.
 > Update it when goals change, priorities shift, or a roadmap item ships.
 > See `AGENTS.md` → "Living Documentation Workflow" for the maintenance triggers.
 
@@ -14,14 +14,14 @@
 
 ## Goals
 
-- [Goal 1 — the outcomes that define success]
+- [Goal 1: the outcomes that define success]
 - [Goal 2]
 
 ## Non-Goals
 
 > Explicitly out of scope. Agents: do not build, suggest, or "helpfully" add these.
 
-- [Non-goal 1 — e.g., multi-tenancy, mobile app, i18n]
+- [Non-goal 1: e.g., multi-tenancy, mobile app, i18n]
 - [Non-goal 2]
 
 ## Roadmap
@@ -36,7 +36,7 @@
 
 ### Later / Ideas
 
-- [Parking lot — worth remembering, not yet committed to]
+- [Parking lot: worth remembering, not yet committed to]
 
 ### Shipped
 

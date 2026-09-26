@@ -31,8 +31,8 @@ Include as much of the following information as possible:
 
 This project includes several security-by-default features:
 
-- **No secrets in code** — All sensitive values are managed via `.env` (gitignored)
-- **SSH commit signing** — Commits are cryptographically signed whenever an SSH agent is available
-- **Dependency updates** — Dependabot opens PRs to keep dependencies current (enable GitHub's Dependabot alerts, a repository setting, for vulnerability monitoring)
-- **SAST scanning** — Trivy scans the repository filesystem for CRITICAL/HIGH vulnerabilities on every PR into `main`
-- **Pre-commit hooks** — Automated checks run before every commit
+- `.env` (gitignored) holds every sensitive value. None goes in code.
+- Commits get SSH-signed once you give `make setup` a key and an SSH agent is reachable. If the agent wasn't reachable at setup time, unlock it and run `make doctor`.
+- Dependabot opens PRs to keep dependencies current (turn on GitHub's Dependabot alerts, a repo setting, for vulnerability monitoring).
+- Trivy scans the repo filesystem for CRITICAL/HIGH vulnerabilities on pushes and PRs to `main`.
+- Pre-commit hooks scan for secrets and run lint before every commit.
