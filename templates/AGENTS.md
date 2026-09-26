@@ -80,7 +80,7 @@ The `Makefile` is the single entry point for every command in this project. Nobo
 Any runnable command you add (dev server, test runner, migration, code generator, seed script, deploy step, one-off maintenance script) needs all three:
 
 1. **Wrap it in a Make target**, even if the target is a one-line passthrough (e.g., `migrate: ## Run database migrations` → `@npx prisma migrate dev`).
-2. **Add a `## description` comment** on the target line. The `help` target builds its output from these comments, so a target without one is invisible to `make help`. Stick to letters, `_` and `-` in target names. The help regex skips any name with a digit or a dot.
+2. **Add a `## description` comment** on the target line. The `help` target builds its output from these comments, so a target without one is invisible to `make help`.
 3. **Reference the `make` form in docs and instructions** (`README.md`, `CONTRIBUTING.md`, CI, and your own suggestions to the user). Never the underlying stack-specific command.
 
 If a command isn't worth a Make target, question whether it belongs in the project at all.
