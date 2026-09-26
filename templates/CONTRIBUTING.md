@@ -4,8 +4,8 @@ Thank you for considering contributing to this project! This guide will help you
 
 ## Development Setup
 
-1. **Open in a Devcontainer** — All development happens inside the container. Never install dependencies on your host machine.
-2. **Run `make setup`** — the interactive wizard configures Git identity and API keys, installs the AI CLI tools, and activates the git hooks (pre-commit linting and commit message validation).
+1. **Open in a Devcontainer:** All development happens inside the container. Never install dependencies on your host machine.
+2. **Run `make setup`:** The interactive wizard configures your Git identity, optional SSH signing key and API keys. It also installs the AI CLI tools and activates the git hooks (pre-commit secret scanning + linting, and commit message validation).
 
 ## Workflow
 
@@ -35,7 +35,7 @@ Use scoped branch naming:
 
 - Follow the coding standards in `AGENTS.md`
 - Run `make lint` before committing (the pre-commit hook does this automatically)
-- Write tests — `make test` should pass before submitting a PR
+- Write tests. `make test` should pass before submitting a PR
 
 ### 5. Commit with Conventional Commits
 
@@ -47,12 +47,14 @@ All commits must follow [Conventional Commits](https://www.conventionalcommits.o
 
 **Valid types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 
+Add `!` after the type or scope to mark a breaking change (for example `feat(api)!: drop the v1 endpoints`).
+
 The `commit-msg` hook enforces this automatically.
 
 ### 6. Submit a Pull Request
 
 - Fill out the PR template completely
-- Ensure CI passes
+- Make sure CI passes
 - Update `CHANGELOG.md` with a summary of what changed
 - Request review from the appropriate `CODEOWNERS`
 
@@ -65,6 +67,4 @@ The `commit-msg` hook enforces this automatically.
 | **Makefile**     | Universal task runner            |
 | **Git hooks**    | Automated quality gates          |
 
-## Need Help?
-
-Check the `AGENTS.md` file for detailed architectural philosophy, environmental constraints, and coding standards.
+See `AGENTS.md` for the detailed architectural philosophy, environment constraints, and coding standards.

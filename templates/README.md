@@ -2,7 +2,7 @@
 
 > **Bootstrapped with [Penguin Ranch Bootstrap](https://github.com/penguinranch/bootstrap).**
 
-Welcome to your new project! This repository has been scaffolded with a "Gold Standard" developer environment. Everything you need to get started is already here — just open it in a Devcontainer and go.
+Welcome to your new project! This repository has been scaffolded with a ready-to-go developer environment. Everything you need to get started is already here. Just open it in a Devcontainer and go.
 
 ---
 
@@ -18,7 +18,7 @@ Here's what was installed and why:
 │   └── devcontainer-lock.json #   Pins devcontainer feature versions
 │
 ├── .gemini/                  # ♊ Gemini CLI project settings
-│   └── settings.json         #    MCP servers (mirrors .mcp.json)
+│   └── settings.json         #    MCP (Model Context Protocol) servers (mirrors .mcp.json)
 │
 ├── .github/                  # 🤖 GitHub automation
 │   ├── ISSUE_TEMPLATE/       #    Standardized issue forms
@@ -29,7 +29,7 @@ Here's what was installed and why:
 │   ├── PULL_REQUEST_TEMPLATE.md  # Standardized PR checklist
 │   ├── dependabot.yml        #    Automated dependency version updates
 │   └── workflows/
-│       ├── ci.yml            #    CI pipeline (runs on PRs into main)
+│       ├── ci.yml            #    CI pipeline (runs on PRs and pushes to main)
 │       └── security.yml      #    Trivy security scanning
 │
 ├── .githooks/                # 🪝 Git hooks (installed via make setup)
@@ -44,7 +44,7 @@ Here's what was installed and why:
 │   ├── start-container.sh    #    [postStartCommand] Fast, idempotent checks
 │   ├── setup-env.sh          #    [Manual] Interactive setup for credentials
 │   ├── doctor.sh             #    [Manual/Auto] Environment health check & troubleshooting
-│   ├── setup-ai-tools.sh     #    [postCreateCommand] Global AI CLI installations
+│   ├── setup-ai-tools.sh     #    [postCreateCommand/Manual] Global AI CLI installations
 │   ├── ai-context.sh         #    [Manual] Bundle metadata for AI assistants
 │   ├── bootstrap-sync.sh     #    [Manual] Diff this project against upstream bootstrap standards
 │   └── utils.sh              #    Shared logging & env helpers (sourced by the other scripts, except ai-context.sh)
@@ -56,7 +56,7 @@ Here's what was installed and why:
 │
 ├── .bootstrap-version        # Which template commit this project was scaffolded from
 ├── .editorconfig             # Consistent formatting across all editors
-├── .env.example              # Template for required environment variables
+├── .env.example              # Template for environment variables (most optional)
 ├── .gitattributes            # Line-ending normalization (LF for scripts)
 ├── .mcp.json                 # MCP servers for AI agents (Notion, Context7, GitHub, Playwright, Chrome DevTools)
 ├── .gitignore                # Sensible defaults (node_modules, .env, etc.)
@@ -107,39 +107,44 @@ Once the container is ready, open a terminal and run:
 make setup
 ```
 
-This walks the interactive setup wizard (Git identity, optional Gemini/Anthropic API keys), installs the AI CLI tools, and activates the git hooks. For GitHub operations, run `gh auth login` inside the container for seamless HTTPS authentication.
+This walks the interactive setup wizard (Git identity, optional SSH signing key, optional Gemini/Anthropic API keys), installs the AI CLI tools, and activates the git hooks. For GitHub operations, run `gh auth login` inside the container to authenticate over HTTPS.
 
-> **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, you can manually run `./scripts/start-container.sh` to apply `.env` variables and verify hooks.
+> **Note:** If your devcontainer seems to hang after building, or if `git` complains about missing user name and email, run `make doctor` to apply your `.env` values and verify the git hooks.
 
 ### 4. Build Something Great
 
 Start developing! Use the universal `Makefile` targets:
 
-| Command           | Purpose                        |
-| ----------------- | ------------------------------ |
-| `make help`       | Show all available targets     |
-| `make setup`      | Install deps & configure hooks |
-| `make doctor`     | Check environment health       |
-| `make ai-context` | Bundle project context for AI  |
-| `make dev`        | Start the development server   |
-| `make test`       | Run the test suite             |
-| `make build`      | Create a production build      |
-| `make lint`       | Run code formatting & linting  |
-| `make clean`      | Remove build artifacts         |
+| Command               | Purpose                                                           |
+| --------------------- | ----------------------------------------------------------------- |
+| `make help`           | Show available make targets                                       |
+| `make setup`          | Interactive first-time setup wizard                               |
+| `make doctor`         | Check environment health and status                               |
+| `make dev`            | Start the development server                                      |
+| `make test`           | Run the test suite                                                |
+| `make build`          | Create a production build                                         |
+| `make lint`           | Run code formatting & linting                                     |
+| `make format`         | Format all files                                                  |
+| `make ai-context`     | Gather project context for AI                                     |
+| `make ai-tools`       | (Re)install the AI CLI tools                                      |
+| `make bootstrap-sync` | Diff this project against the latest upstream bootstrap standards |
+| `make clean`          | Remove build artifacts                                            |
+
+Run `make help` for the full list.
 
 ---
 
 ## 📚 Key Files to Know
 
-| File                  | What It Does                                                                                         |
-| --------------------- | ---------------------------------------------------------------------------------------------------- |
-| **`AGENTS.md`**       | Instructions for AI assistants — coding standards, workflow rules, and architectural philosophy.     |
-| **`Makefile`**        | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack. |
-| **`.env.example`**    | Lists all required environment variables. Copy to `.env` and fill in your values.                    |
-| **`docs/`**           | The three living documents — `VISION.md`, `ARCHITECTURE.md`, `MEMORY.md` — that agents keep current. |
-| **`CODEOWNERS`**      | Defines who must approve PRs for critical paths (CI, docs, Devcontainer).                            |
-| **`CONTRIBUTING.md`** | How to contribute: branch naming, conventional commits, living-docs workflow, and PR process.        |
-| **`SECURITY.md`**     | How to report vulnerabilities. Replace `[SECURITY_EMAIL]` with your contact.                         |
+| File                  | What It Does                                                                                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`AGENTS.md`**       | Instructions for AI assistants: coding standards, workflow rules, and architectural philosophy.                                                                                                           |
+| **`Makefile`**        | Maps your stack-specific commands to universal targets. Update this once you choose your tech stack.                                                                                                      |
+| **`.env.example`**    | Lists the environment variables the project can use (most are optional). Copy to `.env` and fill in your values.                                                                                          |
+| **`docs/`**           | The three living documents (`VISION.md`, `ARCHITECTURE.md`, `MEMORY.md`) that agents keep current.                                                                                                        |
+| **`CODEOWNERS`**      | Routes `docs/` changes to tech leads, and `.github/workflows/` and `.devcontainer/` changes to DevOps. Reviews only become required if branch protection has "Require review from Code Owners" turned on. |
+| **`CONTRIBUTING.md`** | How to contribute: branch naming, conventional commits, living-docs workflow, and PR process.                                                                                                             |
+| **`SECURITY.md`**     | How to report vulnerabilities. Replace `[SECURITY_EMAIL]` with your contact.                                                                                                                              |
 
 ---
 
