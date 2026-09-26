@@ -52,11 +52,27 @@ if [ "$NEW_COMMIT" = "$OLD_COMMIT" ]; then
 fi
 
 log_info "Latest upstream commit: $NEW_COMMIT"
+
+# Files this project still carries that upstream has since removed only show
+# up against the baseline payload, so the stamped commit is fetched as well.
+BASELINE_TAR_URL="${BASELINE_TAR_URL:-${UPSTREAM_REPO}/tarball/${OLD_COMMIT}}"
+baseline_payload=""
+mkdir -p "$temp_dir/baseline"
+if curl -fsSL "$BASELINE_TAR_URL" 2>/dev/null | tar -xz -C "$temp_dir/baseline" 2>/dev/null; then
+    baseline_dir=$(find "$temp_dir/baseline" -mindepth 1 -maxdepth 1 -type d | head -n 1)
+    if [ -n "$baseline_dir" ] && [ -d "$baseline_dir/templates" ]; then
+        baseline_payload="$baseline_dir/templates"
+    fi
+fi
+if [ -z "$baseline_payload" ]; then
+    log_warn "Could not fetch the baseline payload for $OLD_COMMIT. Files removed upstream won't be reported."
+fi
 echo ""
 
 payload="$extracted_dir/templates"
 changed=0
 added=0
+removed=0
 
 while IFS= read -r rel; do
     rel="${rel#./}"
@@ -72,15 +88,25 @@ while IFS= read -r rel; do
     fi
 done < <(cd "$payload" && find . -type f | sort)
 
+if [ -n "$baseline_payload" ]; then
+    while IFS= read -r rel; do
+        rel="${rel#./}"
+        if [ ! -e "$payload/$rel" ] && [ -e "$rel" ]; then
+            echo "🗑️  Removed upstream since $OLD_COMMIT (still in this project): $rel"
+            removed=$((removed + 1))
+        fi
+    done < <(cd "$baseline_payload" && find . -type f | sort)
+fi
+
 echo ""
 echo "──────────────────────────────────────"
-if [ "$changed" -eq 0 ] && [ "$added" -eq 0 ]; then
+log_info "Full upstream history: ${UPSTREAM_REPO}/compare/${OLD_COMMIT}...${NEW_COMMIT}"
+if [ "$changed" -eq 0 ] && [ "$added" -eq 0 ] && [ "$removed" -eq 0 ]; then
     log_success "No file-level differences against upstream $NEW_COMMIT."
     log_info "The stamp is behind, though. Update commit= in $STAMP to $NEW_COMMIT."
     exit 0
 fi
 
-log_info "$changed file(s) differ, $added new upstream file(s)."
-log_info "Full upstream history: ${UPSTREAM_REPO}/compare/${OLD_COMMIT}...${NEW_COMMIT}"
+log_info "$changed file(s) differ, $added new upstream file(s), $removed removed upstream."
 log_warn "Local diffs can be intentional adaptations: apply upstream changes with judgment, never wholesale."
 log_info "After syncing: update commit= and installed= in $STAMP to $NEW_COMMIT and record the sync in docs/ARCHITECTURE.md's Decision Log."

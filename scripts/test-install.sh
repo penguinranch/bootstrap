@@ -140,6 +140,24 @@ echo "$SYNC_OUTPUT" | grep -q "Already up to date" || fail "bootstrap-sync did n
 echo "✅ bootstrap-sync compares against the version stamp."
 
 echo ""
+echo "🧪 bootstrap-sync reports files removed upstream since the stamped commit"
+# Baseline payload = the current one plus a file that "upstream later removed".
+# The project still has that file, so the sync must flag it and print the
+# compare link even though nothing else differs.
+BASELINE_PREFIX="penguinranch-bootstrap-0ldc0de"
+mkdir -p "$WORK_DIR/baseline-stage/$BASELINE_PREFIX"
+cp -a "$REPO_ROOT/templates" "$WORK_DIR/baseline-stage/$BASELINE_PREFIX/"
+echo "gone upstream" > "$WORK_DIR/baseline-stage/$BASELINE_PREFIX/templates/docs/RETIRED.md"
+tar -czf "$WORK_DIR/baseline.tgz" -C "$WORK_DIR/baseline-stage" "$BASELINE_PREFIX"
+echo "gone upstream" > docs/RETIRED.md
+sed -i 's/^commit=.*/commit=0ldc0de/' .bootstrap-version
+SYNC_OUTPUT=$(BASELINE_TAR_URL="file://$WORK_DIR/baseline.tgz" make bootstrap-sync)
+echo "$SYNC_OUTPUT" | grep -q "Removed upstream since 0ldc0de (still in this project): docs/RETIRED.md" || fail "bootstrap-sync did not flag the file removed upstream"
+echo "$SYNC_OUTPUT" | grep -q "compare/0ldc0de\.\.\." || fail "bootstrap-sync did not print the compare link"
+rm docs/RETIRED.md
+echo "✅ bootstrap-sync flags upstream-removed files and links the compare view."
+
+echo ""
 echo "🧪 Scaffold lint gate fails on a broken script"
 # shellcheck disable=SC2016 # the unexpanded $UNCLOSED is the point
 printf '#!/bin/bash\nif [ "$UNCLOSED = 1 ]; then :; fi\n' > scripts/broken.sh

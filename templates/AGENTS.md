@@ -91,7 +91,7 @@ This project was scaffolded from [penguinranch/bootstrap](https://github.com/pen
 
 When the developer asks for a standards refresh (or you are doing broader repo maintenance and the stamp is old):
 
-1. Run `make bootstrap-sync`. It reads the `commit=` value from `.bootstrap-version`, downloads the latest upstream payload, and prints a per-file diff plus the upstream compare URL (`https://github.com/penguinranch/bootstrap/compare/<old-commit>...<new-commit>`) without writing anything. It only lists files that exist upstream, so files upstream deleted won't show up. When no files differ, it skips the compare URL and just tells you the stamp is behind.
+1. Run `make bootstrap-sync`. It reads the `commit=` value from `.bootstrap-version`, downloads the latest upstream payload, and prints a per-file diff plus the upstream compare URL (`https://github.com/penguinranch/bootstrap/compare/<old-commit>...<new-commit>`) without writing anything. It also fetches the payload of the stamped commit, so a file upstream has removed since then (and this project still has) gets flagged too.
 2. Propose the relevant updates to the developer. Templates are a starting point. Apply upstream changes with judgment, never by overwriting local adaptations wholesale. A local diff may be an intentional adaptation.
 3. After syncing, update `commit=` and `installed=` in `.bootstrap-version` to the upstream commit you synced to, and record the sync in the `docs/ARCHITECTURE.md` Decision Log.
 
