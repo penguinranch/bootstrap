@@ -119,6 +119,34 @@ check_pin arm64-checksum "$ROOT_DF" GITLEAKS_SHA256_ARM64 "$TMPL_DF" GITLEAKS_SH
 check_pin version "$ROOT_DF" GITLEAKS_VERSION "$E2E_WF" GITLEAKS_VERSION
 check_pin x64-checksum "$ROOT_DF" GITLEAKS_SHA256_X64 "$E2E_WF" GITLEAKS_SHA256
 
+# The two AGENTS.md files share two sections and drifted once already (2026-09).
+# Engineering Philosophy must match verbatim. The Orchestrator sections carry
+# repo-specific bodies, so only their bold rule labels are compared, in order.
+section() { awk -v h="$2" '$0 ~ "^## .*" h {p=1; next} /^## /{p=0} p' "$1"; }
+labels() { grep -oE '^ *([0-9]+\.|-) \*\*[^*]+\*\*' | sed -E 's/^[^*]*\*\*//; s/\*\*$//'; }
+
+phil_root=$(section AGENTS.md "Engineering Philosophy")
+phil_tmpl=$(section templates/AGENTS.md "Engineering Philosophy")
+if [ -z "$phil_root" ] || [ -z "$phil_tmpl" ]; then
+    echo "❌ Could not find the Engineering Philosophy section in one of the AGENTS.md files."
+    fail=1
+elif [ "$phil_root" != "$phil_tmpl" ]; then
+    echo "❌ The Engineering Philosophy section differs between AGENTS.md and templates/AGENTS.md:"
+    diff <(printf '%s\n' "$phil_root") <(printf '%s\n' "$phil_tmpl") || true
+    fail=1
+fi
+
+orch_root=$(section AGENTS.md "Orchestrator" | labels)
+orch_tmpl=$(section templates/AGENTS.md "Orchestrator" | labels)
+if [ -z "$orch_root" ] || [ -z "$orch_tmpl" ]; then
+    echo "❌ Could not find the Orchestrator rule labels in one of the AGENTS.md files."
+    fail=1
+elif [ "$orch_root" != "$orch_tmpl" ]; then
+    echo "❌ The Orchestrator rule labels differ between AGENTS.md and templates/AGENTS.md:"
+    diff <(printf '%s\n' "$orch_root") <(printf '%s\n' "$orch_tmpl") || true
+    fail=1
+fi
+
 if [ "$fail" -eq 0 ]; then
     echo "✅ Bootstrap repo and template payload are in sync."
 fi

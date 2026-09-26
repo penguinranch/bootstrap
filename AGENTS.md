@@ -47,13 +47,13 @@ It is critical to distinguish between the two development environments in this r
 
 Work as an **orchestrator**: keep your own context window reserved for design decisions, ambiguity, and cross-cutting changes to the template, and delegate well-defined tasks to subagents, ideally on a cheaper/faster model tier when you have high confidence a less capable model can complete the task. This cuts token cost, speeds up work through parallelism, and keeps the primary model effective by keeping its context small.
 
-- **Good delegation candidates in this repository:** running `make lint` / `make check-docs` and summarizing failures, executing the `.agents/workflows/test-install.md` workflow and reporting the outcome, auditing `templates/` against `BEST_PRACTICES.md` for drift, sweeping template files for line-ending or placeholder problems, and broad searches across the payload.
+- **Delegate what a smaller model can confidently do.** Good candidates in this repository: running `make lint` / `make check-docs` and summarizing failures, executing the `.agents/workflows/test-install.md` workflow and reporting the outcome, auditing `templates/` against `BEST_PRACTICES.md` for drift, sweeping template files for line-ending or placeholder problems, and broad searches across the payload.
 - **Scope each delegation tightly.** Subagents do not share your conversation context. Give them the exact task, the files or commands involved, the expected output format, and the done criteria. A vague brief wastes more tokens than delegation saves.
-- **Have subagents return conclusions, not transcripts:** pass/fail with the failure list, findings with `file:line` references, a summary of changes made. Never raw output dumps.
-- **Parallelize independent checks** (lint, docs sync, install test) as concurrent subagents rather than running them sequentially yourself.
+- **Have subagents return conclusions, not transcripts.** Pass/fail with the failure list, findings with `file:line` references, a summary of changes made. Never raw output dumps.
+- **Parallelize independent work.** Run independent checks (lint, docs sync, install test) as concurrent subagents rather than sequentially yourself.
 - **The orchestrator still owns "done".** A subagent's report is an input, not a verification. Spot-check before relying on it.
 
-The same pattern is prescribed for downstream projects in `templates/AGENTS.md`. Keep the two sections aligned when either evolves.
+The same pattern is prescribed for downstream projects in `templates/AGENTS.md`. Keep the two sections aligned when either evolves: `make check-docs` fails if the five bold rule labels stop matching (the bodies may differ, the root one names this repo's candidates).
 
 ## 📝 Contribution & Maintenance Rules
 
@@ -67,4 +67,5 @@ The same pattern is prescribed for downstream projects in `templates/AGENTS.md`.
    - the READMEs' kickoff prompts diverge
    - a VS Code extension list (devcontainer or `.vscode/extensions.json`) disagrees with its template counterpart
    - the gitleaks version or checksum pins disagree across the Dockerfiles and the e2e workflow
+   - the Engineering Philosophy bullets or the Orchestrator rule labels differ between `AGENTS.md` and `templates/AGENTS.md`
 7. **Universal Make Interface:** Every runnable command in this repository must be wrapped in a Make target with a `## description` comment so it appears in `make help`, even one-line passthroughs. Never document or suggest a raw stack-specific command when a `make` target exists (or could exist) for it.
