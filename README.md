@@ -3,9 +3,9 @@
 > **The "Gold Standard" repository template for launching new projects.**
 
 > [!CAUTION]
-> **AI AGENT INSTRUCTIONS:** If you have been directed to this repository to learn about or apply "best practices" to an existing project, start with **[BEST_PRACTICES.md](BEST_PRACTICES.md)** — a guided, tiered tour of the standards with direct links to every canonical file. The canonical files all live in the `/templates` directory, which contains the actual scaffolding that becomes a new downstream project. Do NOT examine the root-level files (such as `install.sh`, `Makefile`, etc.) to learn about project setup, as those files are strictly for managing the bootstrap repository itself.
+> **AI AGENT INSTRUCTIONS:** If you have been directed to this repository to learn about or apply "best practices" to an existing project, start with **[BEST_PRACTICES.md](BEST_PRACTICES.md)**. It's a tiered tour of the standards with links to every canonical file. The canonical files all live in the `/templates` directory, which contains the actual scaffolding that becomes a new downstream project. Do NOT examine the root-level files (such as `install.sh`, `Makefile`, etc.) to learn about project setup, as those files are strictly for managing the bootstrap repository itself.
 
-This repository is designed to instantly bootstrap a fully configured project environment characterized by zero-host dependencies, secure-by-default workflows, and structural guardrails that enforce elite engineering practices. It is explicitly designed to be heavily supported by IDE-based AI Agents.
+One command gets you a project with nothing to install on your host, secure defaults, and guardrails that keep habits honest. Built to work with IDE AI agents from day one.
 
 ---
 
@@ -16,32 +16,32 @@ When you bootstrap a project using this template, you are receiving an environme
 ### 1. Devcontainer Only (Zero-Host Dependency)
 
 **The Problem:** "It works on my machine!"
-**The Solution:** All work happens strictly inside a VS Code Devcontainer. Whether you are on macOS, Linux, or Windows (WSL), the moment you open this project, Docker spins up an identical, pre-configured Linux container. You never need to install Node, Python, or Go on your host computer again.
+**The Solution:** All work happens strictly inside a VS Code Devcontainer. Whether you are on macOS, Linux, or Windows (WSL), once you reopen the project in its container, Docker builds the same pre-configured Linux environment for everyone. You never need to install Node, Python, or Go on your host computer again.
 
 ### 2. Secure by Default
 
 **The Problem:** Accidentally committing API keys or unverified code.
-**The Solution:** The `.env` file is heavily `.gitignore`d, and the pre-commit hook scans every staged change for secrets with **gitleaks** before the commit is allowed. Additionally, VS Code forwards your host's SSH agent into the Devcontainer, and if you supply an SSH public key during `make setup`, Git is configured for **SSH Commit Signing** — it turns on once that agent is reachable (if it wasn't at setup time, unlock your key manager and run `make doctor` to enable it).
+**The Solution:** `.env` (and every `.env.*` except `.env.example`) is gitignored, and the pre-commit hook scans every staged change for secrets with **gitleaks** before the commit is allowed. VS Code also forwards your host's SSH agent into the Devcontainer, so Git is set up for **SSH commit signing**. Signing turns on once you give `make setup` a public key and the SSH agent is reachable. If the agent wasn't reachable at setup time, unlock your key manager (1Password, say) and run `make doctor`.
 
 ### 3. AI-Optimized Workflows
 
 **The Problem:** Generative AI tools (like GitHub Copilot or Gemini) get confused easily and burn through their context "tokens" doing repetitive tasks.
-**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. Furthermore, the **Gemini CLI** (`@google/gemini-cli`) and **Claude Code CLI** (`@anthropic-ai/claude-code`) are installed globally inside the container, and `make ai-context` is provided to instantly bundle project metadata for an AI assistant—saving precious IDE tokens. Their state—conversation history, logins, and MCP/trust approvals—lives on per-project named Docker volumes, so it survives a container rebuild instead of resetting every time.
+**The Solution:** This project includes an `AGENTS.md` file designed explicitly to be read by AI. It instructs the AI on our exact project constraints, architectural philosophy, and git branching strategies. The **Gemini CLI** (`@google/gemini-cli`) and **Claude Code CLI** (`@anthropic-ai/claude-code`) are installed globally inside the container. `make ai-context` bundles the README, AGENTS.md, CONTRIBUTING.md, the `docs/` files and a project tree into `context-for-ai.md` (gitignored), so a fresh AI session can start from one file. The CLIs' state (conversation history, logins, MCP (Model Context Protocol) server and trust approvals) lives on per-project Docker volumes, so it survives a container rebuild.
 
 ### 4. Structural Guardrails
 
-We have implemented physical files that prevent bad habits:
+A few checked-in files do the nagging for you:
 
-- **`.editorconfig`**: Forces every IDE (even Vim) to use the exact same tab sizes, line endings, and whitespace rules.
-- **`Makefile`**: A universal task runner. Whether the underlying project is `npm`, `go`, or `pytest`, developers only ever need to run `make test` or `make dev`. Includes `make doctor` for instant environment health checks.
-- **`CODEOWNERS`**: Automatically requires Tech Lead PR reviews for the living project docs (architecture decisions) and DevOps reviews for CI/CD changes.
-- **`dependabot.yml`**: Pre-configured to open PRs that keep dependencies (GitHub Actions, Docker images, devcontainer features) up to date. Pair it with GitHub's Dependabot alerts (a repository setting) for vulnerability scanning — the shipped Trivy workflow covers scanning on PRs.
+- **`.editorconfig`**: One indent and whitespace standard for every editor that reads it (VS Code gets the extension from the recommended list). Line endings are pinned separately in `.gitattributes`.
+- **`Makefile`**: A universal task runner. Whether the project runs on npm, Go or pytest under the hood, developers run `make test` or `make dev` (once they're wired to your stack during the kickoff). `make help` lists every target, and `make doctor` runs an environment health check.
+- **`CODEOWNERS`**: Routes `docs/` changes to tech leads, and `.github/workflows/` and `.devcontainer/` changes to DevOps. Swap the placeholder team slugs for real teams. Reviews only become required if branch protection has "Require review from Code Owners" turned on.
+- **`dependabot.yml`**: Pre-configured to open PRs that keep dependencies (GitHub Actions, Docker images, devcontainer features) up to date. For vulnerability alerts, turn on Dependabot alerts in the repo settings. The shipped Trivy workflow also scans the repo filesystem for CRITICAL/HIGH vulnerabilities on pushes and PRs to `main`.
 
 ---
 
 ## 🧭 Already Have a Project?
 
-The installer below is for brand-new, empty projects. If you have an existing codebase and just want to adopt the standards — or you're pointing an AI agent at this repo and telling it _"use the best practices set by this repo"_ — use **[BEST_PRACTICES.md](BEST_PRACTICES.md)** instead. It organizes everything here into three adoption tiers (drop-in guardrails → workflow automation → AI-native environment) so you can take exactly as much as you want, without the installer.
+Have an existing codebase? Or pointing an AI agent at this repo with _"use the best practices set by this repo"_? Use **[BEST_PRACTICES.md](BEST_PRACTICES.md)** instead. It organizes everything here into three adoption tiers (drop-in guardrails → workflow automation → AI-native environment) so you can take exactly as much as you want, without the installer.
 
 ---
 
@@ -72,12 +72,12 @@ curl -sSL https://raw.githubusercontent.com/penguinranch/bootstrap/main/install.
 
 ### Step 2: Open the Project in VS Code
 
-1. Open the folder in **VS Code**. When prompted to install the workspace's recommended extensions, accept — the scaffold ships a `.vscode/extensions.json` that includes the Claude Code extension.
-2. An alert will appear prompting you to reopen the project in a Dev Container — **hold off for now**. The container should be configured for your stack first (next step).
+1. Open the folder in **VS Code**. When prompted to install the workspace's recommended extensions, accept (the scaffold's `.vscode/extensions.json` includes the Claude Code extension).
+2. An alert will appear prompting you to reopen the project in a Dev Container. **Hold off for now**... the container needs configuring for your stack first (next step).
 
 ### Step 3: The AI Architecture Kickoff
 
-Decide on your tech stack — the language and framework you choose determine how the container is configured. Open the **Claude Code** panel in VS Code and prompt it with exactly this text:
+Decide on your tech stack first, since the language and framework decide how the container gets configured. Open the **Claude Code** panel in VS Code and prompt it with exactly this text:
 
 > _"I am starting a new project. Please completely read `AGENTS.md` for our workflow standards. Let's begin Phase 1: Discovery by discussing the goals and tech stack for this idea. Once we decide, please proceed with the following setup checklist:_
 > _1. Fill out `docs/VISION.md` (goals, non-goals, roadmap) and the Tech Stack section of `docs/ARCHITECTURE.md`._
@@ -101,21 +101,21 @@ Once VS Code reloads inside the container, open a new **Terminal** and run:
 make setup
 ```
 
-_This will prompt you for your Git credentials and (optionally) your Gemini and Anthropic API keys so the CLI tooling works, then install the git hooks._
+_This asks for your Git name and email, an optional SSH public key for commit signing, and optional Gemini and Anthropic API keys. Then it makes sure the AI CLIs are installed and turns on the git hooks._
 
 ---
 
 ## 🚑 Troubleshooting
 
 - **The IDE Window is hung / The AI CLIs didn't install:**
-  Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside the container and manually run `make ai-tools` to finish the installation.
+  Sometimes the automatic `postCreateCommand` hangs. Open a terminal inside your generated project's container and run `make ai-tools` to finish the installation.
 - **Git complains about missing user name and email:**
   If the Devcontainer hangs after building, the startup health check might not have run to configure your Git profile from `.env`. You can fix this by running `make doctor` (which re-applies `.env` settings) or by running `make setup` again.
 - **Windows / WSL line-ending errors (bash scripts crashing):**
-  Windows uses `CRLF` format for new lines, which crashes Linux bash scripts. We have a `.gitattributes` file to prevent this, but if you still see `\r` errors, ensure your global git config is set: `git config --global core.autocrlf false`.
+  Windows uses `CRLF` (Windows-style) line endings, which crash Linux bash scripts expecting `LF` (Unix-style). We have a `.gitattributes` file to prevent this, but if you still see `\r` errors, set your global git config: `git config --global core.autocrlf false`.
 
 ---
 
 ## 🛠 Developing the Bootstrap Template
 
-If you are looking to contribute to or modify the `bootstrap` repository itself, please consult the root **`AGENTS.md`** file for architectural constraints, goals, and modification rules.
+Working on the bootstrap repo itself? Open it in its own devcontainer (root `.devcontainer/`, not the template's), run `make help`, and read the root **`AGENTS.md`** for the rules. After touching `install.sh` or `templates/`, run `make test`, and run `make lint` before committing.
