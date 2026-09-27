@@ -2,7 +2,7 @@
 # Wrap ALL runnable commands (npm, pip, cargo, scripts, ...) in a target here,
 # even one-line passthroughs, and give each a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
-.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format ai-context ai-tools ai-extensions bootstrap-sync
+.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format browsers ai-context ai-tools ai-extensions bootstrap-sync
 
 # Container enforcement check. Skipped under CI, where ci.yml runs make on the runner.
 ifndef CI
@@ -104,6 +104,9 @@ format: ## Format all files
 	else \
 		echo "⚠️  No formatter installed: add prettier, or point this target at your stack's formatter."; \
 	fi
+
+browsers: ## Install the browser the pinned playwright MCP server needs
+	@bash ./scripts/setup-browsers.sh
 
 ai-context: ## Gather project context for AI
 	@bash ./scripts/ai-context.sh
