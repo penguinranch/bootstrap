@@ -2,7 +2,7 @@
   "version": "0.2",
   "language": "en",
   "ignorePaths": [".git/**", "node_modules/**", "package-lock.json"],
-  "ignoreRegExpList": ["AAAA[A-Za-z0-9+/=]+", "gh[a-z]_[A-Za-z0-9]+"],
+  "ignoreRegExpList": ["AAAA[A-Za-z0-9+/=]+", "\\bgh[a-z]_[A-Za-z0-9]{20,}\\b"],
   "words": [
     "anson",
     "aquasecurity",
@@ -23,15 +23,18 @@
     "nullary",
     "passthroughs",
     "penguinranch",
+    "pipefail",
     "pycache",
     "pythonpath",
     "sarif",
     "sdist",
+    "shellcheck",
     "signingkey",
     "subshell",
     "timonwong",
     "trixie",
     "unconfigured",
     "venv"
-  ]
+  ],
+  "useGitignore": true
 }

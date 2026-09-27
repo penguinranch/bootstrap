@@ -7,7 +7,7 @@
     "package-lock.json",
     ".devcontainer/devcontainer-lock.json"
   ],
-  "ignoreRegExpList": ["AAAA[A-Za-z0-9+/=]+", "gh[a-z]_[A-Za-z0-9]+"],
+  "ignoreRegExpList": ["AAAA[A-Za-z0-9+/=]+", "\\bgh[a-z]_[A-Za-z0-9]{20,}\\b"],
   "words": [
     "anson",
     "aquasecurity",
@@ -49,5 +49,6 @@
     "trixie",
     "unconfigured",
     "venv"
-  ]
+  ],
+  "useGitignore": true
 }

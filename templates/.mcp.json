@@ -20,7 +20,15 @@
     },
     "playwright": {
       "command": "npx",
-      "args": ["-y", "@playwright/mcp@0.0.79", "--headless", "--no-sandbox", "--isolated"]
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.79",
+        "--headless",
+        "--no-sandbox",
+        "--isolated",
+        "--browser",
+        "chromium"
+      ]
     },
     "chrome-devtools": {
       "command": "npx",

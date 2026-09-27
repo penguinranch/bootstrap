@@ -59,6 +59,10 @@ venv/
 !.vscode/extensions.json
 *.swp
 
+# Drafted PR bodies. Lynn writes one here and copies it to GitHub by hand, so it
+# is never committed, and its prose would fail the spell check.
+pr-body.md
+
 # Bootstrap sentinel
 .devcontainer/.bootstrapped
 
