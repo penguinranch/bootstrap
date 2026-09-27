@@ -150,7 +150,12 @@ cp -a "$REPO_ROOT/templates" "$WORK_DIR/baseline-stage/$BASELINE_PREFIX/"
 echo "gone upstream" > "$WORK_DIR/baseline-stage/$BASELINE_PREFIX/templates/docs/RETIRED.md"
 tar -czf "$WORK_DIR/baseline.tgz" -C "$WORK_DIR/baseline-stage" "$BASELINE_PREFIX"
 echo "gone upstream" > docs/RETIRED.md
-sed -i 's/^commit=.*/commit=0ldc0de/' .bootstrap-version
+# not 'sed -i': GNU takes no suffix argument and BSD requires one, so an
+# in-place edit that works in the devcontainer fails on a macOS host, which
+# is where 'make test' gets run before a commit
+stamp_rewrite="$(mktemp)"
+sed 's/^commit=.*/commit=0ldc0de/' .bootstrap-version > "$stamp_rewrite"
+mv "$stamp_rewrite" .bootstrap-version
 SYNC_OUTPUT=$(BASELINE_TAR_URL="file://$WORK_DIR/baseline.tgz" make bootstrap-sync)
 echo "$SYNC_OUTPUT" | grep -q "Removed upstream since 0ldc0de (still in this project): docs/RETIRED.md" || fail "bootstrap-sync did not flag the file removed upstream"
 echo "$SYNC_OUTPUT" | grep -q "compare/0ldc0de\.\.\." || fail "bootstrap-sync did not print the compare link"
