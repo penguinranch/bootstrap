@@ -132,6 +132,133 @@ grep -q "Linting shell scripts" "$WORK_DIR/lint.log" || fail "scaffold lint skip
 echo "✅ make help, make doctor-ci and make lint run in a fresh scaffold."
 
 echo ""
+echo "🧪 Local MCP servers install from the pinned manifest"
+test -f .mcp/package.json || fail ".mcp/package.json missing after install"
+test -f .mcp/package-lock.json || fail ".mcp/package-lock.json missing after install"
+
+# Before the install the configs name binaries that are not there yet, and
+# doctor is the only thing that tells a developer so.
+DOCTOR_BEFORE=$(make doctor 2>&1 || true)
+echo "$DOCTOR_BEFORE" | grep -q "run 'make ai-mcp'" || fail "doctor did not report the MCP servers as missing before install"
+
+make ai-mcp
+
+# Read the commands out of .mcp.json rather than repeating them, so this test
+# cannot pass while the shipped config points somewhere else.
+MCP_COMMANDS=$(node -e '
+const cfg = require("./.mcp.json");
+const out = [];
+for (const server of Object.values(cfg.mcpServers || {})) {
+    if (server && typeof server.command === "string" && server.command.startsWith(".mcp/")) {
+        out.push(server.command);
+    }
+}
+process.stdout.write(out.join("\n"));
+')
+[ -n "$MCP_COMMANDS" ] || fail ".mcp.json names no local MCP server commands"
+while IFS= read -r mcp_cmd; do
+    [ -n "$mcp_cmd" ] || continue
+    test -x "$mcp_cmd" || fail "$mcp_cmd is not executable after 'make ai-mcp'"
+done <<< "$MCP_COMMANDS"
+
+# The launched server must report the version the manifest pins. A stale
+# install or a shadowing global copy passes the executable check and fails here.
+# shellcheck disable=SC2016 # the ${...} below are JS template literals, not shell
+node -e '
+const { execFileSync } = require("child_process");
+const cfg = require("./.mcp.json");
+const pkg = require("./.mcp/package.json");
+const pins = Object.assign({}, pkg.dependencies, pkg.devDependencies);
+const expected = {
+    "playwright": pins["@playwright/mcp"],
+    "chrome-devtools": pins["chrome-devtools-mcp"],
+};
+for (const [name, want] of Object.entries(expected)) {
+    const server = (cfg.mcpServers || {})[name];
+    if (!server || !String(server.command || "").startsWith(".mcp/")) continue;
+    const reported = execFileSync(server.command, ["--version"], { encoding: "utf8" }).trim();
+    if (!want || !reported.includes(want)) {
+        console.error(`${name}: reported "${reported}" but .mcp/package.json pins ${want}`);
+        process.exit(1);
+    }
+}
+' || fail "a launched MCP server does not match the pin in .mcp/package.json"
+
+# A real MCP handshake, with the exact command and args the shipped config
+# carries, so a flag the server stops accepting fails the build here.
+cat > "$WORK_DIR/mcp-probe.cjs" <<'PROBE'
+const { spawn } = require("child_process");
+const name = process.argv[2];
+const cfg = require(process.cwd() + "/.mcp.json");
+const server = (cfg.mcpServers || {})[name];
+if (!server || !server.command) {
+    console.error(`no server named ${name} in .mcp.json`);
+    process.exit(1);
+}
+const child = spawn(server.command, server.args || [], { stdio: ["pipe", "pipe", "pipe"] });
+let stdout = "";
+let stderr = "";
+let settled = false;
+const finish = (code, message) => {
+    if (settled) return;
+    settled = true;
+    child.kill();
+    if (message) console.error(message);
+    process.exit(code);
+};
+child.stdout.on("data", (chunk) => {
+    stdout += chunk;
+    for (const line of stdout.split("\n")) {
+        try {
+            const msg = JSON.parse(line);
+            if (msg.id === 1 && msg.result && msg.result.serverInfo) {
+                console.log(`${name} answered initialize as ${msg.result.serverInfo.name}`);
+                finish(0);
+            }
+        } catch (err) {
+            /* partial line */
+        }
+    }
+});
+child.stderr.on("data", (chunk) => {
+    stderr += chunk;
+});
+child.on("error", (err) => finish(1, `${name} failed to spawn: ${err.message}`));
+setTimeout(() => finish(1, `${name} never answered initialize. stderr: ${stderr.slice(0, 400)}`), 30000);
+child.stdin.write(JSON.stringify({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "initialize",
+    params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "e2e", version: "0" } },
+}) + "\n");
+child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
+PROBE
+for mcp_server in playwright chrome-devtools; do
+    node "$WORK_DIR/mcp-probe.cjs" "$mcp_server" || fail "$mcp_server did not complete an MCP initialize with its shipped args"
+done
+
+# Both agent configs launch the same local servers, which AGENTS.md asks for in
+# prose and nothing else checks.
+# shellcheck disable=SC2016 # the ${...} below are JS template literals, not shell
+node -e '
+const claude = require("./.mcp.json").mcpServers || {};
+const gemini = require("./.gemini/settings.json").mcpServers || {};
+const local = (servers) => Object.entries(servers)
+    .filter(([, s]) => s && typeof s.command === "string")
+    .map(([name, s]) => `${name} ${s.command} ${(s.args || []).join(" ")}`)
+    .sort()
+    .join("\n");
+if (local(claude) !== local(gemini)) {
+    console.error("local server entries differ\n--- .mcp.json ---\n" + local(claude) + "\n--- .gemini/settings.json ---\n" + local(gemini));
+    process.exit(1);
+}
+' || fail ".mcp.json and .gemini/settings.json disagree on the local MCP servers"
+
+DOCTOR_AFTER=$(make doctor 2>&1 || true)
+echo "$DOCTOR_AFTER" | grep -q "Local MCP servers installed" || fail "doctor did not report the MCP servers as installed"
+echo "✅ MCP servers install from the manifest, match their pins, and answer initialize."
+
+echo ""
 echo "🧪 bootstrap-sync recognizes its own payload as current"
 # REPO_TAR_URL still points at the tarball this scaffold came from, so the
 # stamped commit and the "latest" commit must match

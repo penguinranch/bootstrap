@@ -35,15 +35,24 @@ jobs:
         run: echo "No package-lock.json found... stack not chosen yet, skipping install and test."
 
       - name: Use Node.js
-        if: hashFiles('package-lock.json') != ''
+        if: hashFiles('package-lock.json', '.mcp/package-lock.json') != ''
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '24.x'
           cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            .mcp/package-lock.json
 
       - name: Install dependencies
         if: hashFiles('package-lock.json') != ''
         run: npm ci --ignore-scripts
+
+      # Gated on the manifest, so a project that prunes the local MCP servers
+      # needs no edit here. It also proves a Dependabot bump still installs.
+      - name: Install MCP servers
+        if: hashFiles('.mcp/package-lock.json') != ''
+        run: make ai-mcp
 
       - name: Lint
         run: make lint

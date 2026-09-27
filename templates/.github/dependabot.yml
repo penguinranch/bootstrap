@@ -1,11 +1,30 @@
 version: 2
 updates:
-  # Uncomment once your project has a package.json — registering the npm
-  # ecosystem before then makes Dependabot error on every scan.
+  # For the project's own dependencies, at the repo root. Uncomment it once the
+  # project has a package.json: registering an ecosystem for a directory with no
+  # manifest makes Dependabot error on every scan.
   # - package-ecosystem: 'npm'
   #   directory: '/'
   #   schedule:
   #     interval: 'weekly'
+
+  # Separate from the entry above, and already active: the local MCP (Model
+  # Context Protocol) servers are pinned in .mcp/package.json, and .mcp.json
+  # launches them from .mcp/node_modules, so a merged bump needs no other edit.
+  # One grouped PR, and a Conventional Commits prefix because the commit-msg
+  # hook enforces that format.
+  - package-ecosystem: 'npm'
+    directory: '/.mcp'
+    schedule:
+      interval: 'weekly'
+    versioning-strategy: increase
+    groups:
+      mcp-servers:
+        patterns:
+          - '*'
+    commit-message:
+      prefix: 'chore'
+
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:

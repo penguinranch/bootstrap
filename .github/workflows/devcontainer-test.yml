@@ -51,3 +51,5 @@ jobs:
             make help
             make doctor-ci
             command -v gitleaks
+            test -x .mcp/node_modules/.bin/playwright-mcp
+            test -x .mcp/node_modules/.bin/chrome-devtools-mcp

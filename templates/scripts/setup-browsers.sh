@@ -25,16 +25,22 @@ if [ ! -f .mcp.json ]; then
     exit 0
 fi
 
+if [ ! -f .mcp/package.json ]; then
+    log_warn "No .mcp/package.json: nothing pins the playwright MCP server."
+    exit 0
+fi
+
+# The pin lives in the manifest, not in the .mcp.json launch line, because that
+# is the file Dependabot bumps.
 mcp_pin="$(node -e '
-const cfg = require("./.mcp.json");
-const server = (cfg.mcpServers || {}).playwright;
-const args = (server && server.args) || [];
-const pin = args.find((a) => a.startsWith("@playwright/mcp@"));
-process.stdout.write(pin || "");
+const pkg = require("./.mcp/package.json");
+const deps = Object.assign({}, pkg.dependencies, pkg.devDependencies);
+const version = deps["@playwright/mcp"];
+process.stdout.write(version ? "@playwright/mcp@" + version : "");
 ')"
 
 if [ -z "$mcp_pin" ]; then
-    log_warn "No pinned @playwright/mcp entry in .mcp.json: nothing to do."
+    log_warn "No @playwright/mcp pin in .mcp/package.json: nothing to do."
     exit 0
 fi
 

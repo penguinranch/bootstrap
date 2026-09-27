@@ -36,6 +36,10 @@ Here's what was installed and why:
 │   ├── pre-commit            #    Scans staged changes for secrets (gitleaks), then runs make lint
 │   └── commit-msg            #    Enforces Conventional Commits format
 │
+├── .mcp/                     # 🔌 Pinned local MCP servers (installed by make ai-mcp)
+│   ├── package.json          #    Exact version pins Dependabot watches
+│   └── package-lock.json     #    Committed lockfile (npm ci installs from it)
+│
 ├── .vscode/                  # 🧩 Editor defaults
 │   └── extensions.json       #    Recommended VS Code extensions
 │
@@ -45,6 +49,8 @@ Here's what was installed and why:
 │   ├── setup-env.sh          #    [Manual] Interactive setup for credentials
 │   ├── doctor.sh             #    [Manual/Auto] Environment health check & troubleshooting
 │   ├── setup-ai-tools.sh     #    [postCreateCommand/Manual] Global AI CLI installations
+│   ├── setup-mcp.sh          #    [postCreateCommand/Manual] Install the pinned local MCP servers
+│   ├── setup-browsers.sh     #    [Manual] Install the browser the playwright MCP server needs
 │   ├── ai-context.sh         #    [Manual] Bundle metadata for AI assistants
 │   ├── bootstrap-sync.sh     #    [Manual] Diff this project against upstream bootstrap standards
 │   └── utils.sh              #    Shared logging & env helpers (sourced by the other scripts, except ai-context.sh)
@@ -125,7 +131,9 @@ Start developing! Use the universal `Makefile` targets:
 | `make build`          | Create a production build                                         |
 | `make lint`           | Run code formatting & linting                                     |
 | `make format`         | Format all files                                                  |
+| `make browsers`       | Install the browser the pinned playwright MCP server needs        |
 | `make ai-context`     | Gather project context for AI                                     |
+| `make ai-mcp`         | Install the pinned MCP servers the agent configs launch           |
 | `make ai-tools`       | (Re)install the AI CLI tools                                      |
 | `make bootstrap-sync` | Diff this project against the latest upstream bootstrap standards |
 | `make clean`          | Remove build artifacts                                            |

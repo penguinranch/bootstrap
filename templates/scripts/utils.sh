@@ -184,6 +184,24 @@ is_container() {
     [ -f /.dockerenv ] || [ -n "${REMOTE_CONTAINERS:-}" ] || [ -n "${CODESPACES:-}" ]
 }
 
+# Every local MCP server .mcp.json launches from .mcp/, one command per line.
+# doctor and setup-mcp both need this, and node is the only JSON parser the
+# payload can count on.
+local_mcp_commands() {
+    [ -f .mcp.json ] || return 0
+    command -v node > /dev/null 2>&1 || return 0
+    node -e '
+const cfg = require("./.mcp.json");
+const out = [];
+for (const server of Object.values(cfg.mcpServers || {})) {
+    if (server && typeof server.command === "string" && server.command.startsWith(".mcp/")) {
+        out.push(server.command);
+    }
+}
+process.stdout.write(out.join("\n"));
+' 2>/dev/null || true
+}
+
 # Ensure the script is running in a devcontainer
 ensure_container() {
     if ! is_container; then

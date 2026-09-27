@@ -197,6 +197,36 @@ else
     log_success "No scaffold placeholders remaining."
 fi
 
+# --- MCP servers ---
+echo ""
+echo "🔌 MCP Servers"
+echo "──────────────────────────────────────"
+if [ ! -f .mcp.json ]; then
+    log_info "No .mcp.json: no project-scoped MCP servers to check."
+elif ! command -v node &> /dev/null; then
+    log_warn "node is not on PATH: cannot check the local MCP servers."
+    ISSUES=$((ISSUES + 1))
+else
+    MCP_COMMANDS="$(local_mcp_commands)"
+    if [ -z "$MCP_COMMANDS" ]; then
+        log_success "No local MCP servers to install."
+    else
+        MCP_ISSUE=0
+        while IFS= read -r mcp_cmd; do
+            [ -n "$mcp_cmd" ] || continue
+            if [ ! -x "$mcp_cmd" ]; then
+                log_warn "$mcp_cmd is missing: run 'make ai-mcp', then reconnect the servers in your agent session."
+                MCP_ISSUE=1
+            fi
+        done <<< "$MCP_COMMANDS"
+        if [ "$MCP_ISSUE" -eq 1 ]; then
+            ISSUES=$((ISSUES + 1))
+        else
+            log_success "Local MCP servers installed."
+        fi
+    fi
+fi
+
 # --- Core tools ---
 echo ""
 echo "🛠  Core Tools"

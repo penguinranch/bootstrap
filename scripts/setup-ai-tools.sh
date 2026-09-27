@@ -12,13 +12,13 @@ ensure_container
 # Export .env values so API keys are available for CLI tools
 safe_export_env .env
 
-# The AI CLIs deliberately track @latest, unlike the MCP servers in .mcp.json,
-# which carry pinned versions. Both ship several releases a week and nothing
-# here watches a pin (Dependabot does not read this file), so a pinned version
-# would just rot silently and hand out a stale CLI. The MCP servers are pinned
-# because they are launched by an agent on every session with the host Docker
-# socket in reach; these two are installed once, into the container, by a
-# developer running setup.
+# The AI CLIs deliberately track @latest, unlike the local MCP servers, which
+# carry exact pins in .mcp/package.json. Dependabot watches that manifest and
+# opens bump PRs for it, so those pins stay current. Nothing watches a pin for
+# these two CLIs: they ship several releases a week, so a pin here would rot
+# silently and hand out a stale CLI. The MCP servers are pinned because an agent
+# launches them on every session with the host Docker socket in reach. These two
+# are installed once, into the container, by a developer running setup.
 
 # Optional, third-party, and NOT installed by default: see
 # install_gemini_extensions below.

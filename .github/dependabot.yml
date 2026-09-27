@@ -28,10 +28,11 @@ updates:
     schedule:
       interval: 'weekly'
 
-  # Track the repo's own formatting toolchain (prettier in package.json). The
-  # template payload is language-agnostic and ships no package.json, so this
-  # covers the bootstrap repo only.
+  # Track the repo's own formatting toolchain (prettier in package.json) and
+  # the MCP server pins shipped in the payload's .mcp/ manifest.
   - package-ecosystem: 'npm'
-    directory: '/'
+    directories:
+      - '/'
+      - '/templates/.mcp'
     schedule:
       interval: 'weekly'

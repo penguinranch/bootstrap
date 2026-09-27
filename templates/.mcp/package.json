@@ -1,0 +1,10 @@
+{
+  "name": "agent-mcp-servers",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pins the local MCP servers .mcp.json and .gemini/settings.json launch. Dependabot watches this file so the pins get bump PRs. These are agent tooling, not the project's own dependencies.",
+  "devDependencies": {
+    "@playwright/mcp": "0.0.79",
+    "chrome-devtools-mcp": "1.7.0"
+  }
+}

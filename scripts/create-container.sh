@@ -28,4 +28,10 @@ fi
 #    run on create rather than only from 'make setup'.
 install_env_loader
 
+# 4. Install the pinned MCP servers. After the loader, so a registry failure
+#    here cannot leave the container without it.
+if [ -f ./scripts/setup-mcp.sh ]; then
+    bash ./scripts/setup-mcp.sh
+fi
+
 log_success "Container creation setup complete."
