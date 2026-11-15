@@ -237,6 +237,86 @@ for mcp_server in playwright chrome-devtools; do
     node "$WORK_DIR/mcp-probe.cjs" "$mcp_server" || fail "$mcp_server did not complete an MCP initialize with its shipped args"
 done
 
+# initialize launches no browser, so the handshake passes with the browser missing
+make browsers
+cat > "$WORK_DIR/mcp-browser-probe.cjs" <<'PROBE'
+const { spawn } = require("child_process");
+const http = require("http");
+const cfg = require(process.cwd() + "/.mcp.json");
+const server = (cfg.mcpServers || {}).playwright;
+if (!server || !server.command) {
+    console.error("no server named playwright in .mcp.json");
+    process.exit(1);
+}
+const marker = "bootstrap-browser-launch-ok";
+const page = http.createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(`<!doctype html><title>probe</title><h1>${marker}</h1>`);
+});
+page.listen(0, "127.0.0.1", () => {
+    const url = `http://127.0.0.1:${page.address().port}/`;
+    const child = spawn(server.command, server.args || [], { stdio: ["pipe", "pipe", "pipe"] });
+    let buffer = "";
+    let stderr = "";
+    let settled = false;
+    const finish = (code, message) => {
+        if (settled) return;
+        settled = true;
+        child.kill();
+        page.close();
+        if (message) console.error(message);
+        process.exit(code);
+    };
+    const send = (msg) => child.stdin.write(JSON.stringify(msg) + "\n");
+    const handle = (msg) => {
+        if (msg.id === 1 && msg.result) {
+            send({ jsonrpc: "2.0", method: "notifications/initialized" });
+            send({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "browser_navigate", arguments: { url } } });
+        } else if (msg.id === 2) {
+            if (!msg.result || msg.result.isError) {
+                finish(1, `playwright could not open the probe page: ${JSON.stringify(msg.result || msg.error || {}).slice(0, 800)}`);
+                return;
+            }
+            send({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "browser_evaluate", arguments: { function: "() => document.body.innerText" } } });
+        } else if (msg.id === 3) {
+            const text = JSON.stringify(msg.result || msg.error || {});
+            if (msg.result && !msg.result.isError && text.includes(marker)) {
+                console.log("playwright opened the probe page and returned its text");
+                finish(0);
+            } else {
+                finish(1, `playwright did not return the probe page text: ${text.slice(0, 800)}`);
+            }
+        }
+    };
+    child.stdout.on("data", (chunk) => {
+        buffer += chunk;
+        let newline;
+        while ((newline = buffer.indexOf("\n")) !== -1) {
+            const line = buffer.slice(0, newline);
+            buffer = buffer.slice(newline + 1);
+            try {
+                handle(JSON.parse(line));
+            } catch (err) {
+                continue;
+            }
+        }
+    });
+    child.stderr.on("data", (chunk) => {
+        stderr += chunk;
+    });
+    child.on("error", (err) => finish(1, `playwright failed to spawn: ${err.message}`));
+    child.on("exit", (code) => finish(1, `playwright exited with ${code} before answering. stderr: ${stderr.slice(0, 400)}`));
+    setTimeout(() => finish(1, `playwright never returned the probe page. stderr: ${stderr.slice(0, 400)}`), 90000);
+    send({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "initialize",
+        params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "e2e", version: "0" } },
+    });
+});
+PROBE
+node "$WORK_DIR/mcp-browser-probe.cjs" || fail "the playwright MCP server could not open a page in the browser 'make browsers' installed"
+
 # Both agent configs launch the same local servers, which AGENTS.md asks for in
 # prose and nothing else checks.
 # shellcheck disable=SC2016 # the ${...} below are JS template literals, not shell
@@ -256,7 +336,7 @@ if (local(claude) !== local(gemini)) {
 
 DOCTOR_AFTER=$(make doctor 2>&1 || true)
 echo "$DOCTOR_AFTER" | grep -q "Local MCP servers installed" || fail "doctor did not report the MCP servers as installed"
-echo "✅ MCP servers install from the manifest, match their pins, and answer initialize."
+echo "✅ MCP servers install from the manifest, match their pins, answer initialize, and open a page."
 
 echo ""
 echo "🧪 bootstrap-sync recognizes its own payload as current"
