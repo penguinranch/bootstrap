@@ -317,6 +317,133 @@ page.listen(0, "127.0.0.1", () => {
 PROBE
 node "$WORK_DIR/mcp-browser-probe.cjs" || fail "the playwright MCP server could not open a page in the browser 'make browsers' installed"
 
+# the handshake passes with no browser on --browser-url; this attaches to one
+cat > "$WORK_DIR/mcp-devtools-probe.cjs" <<'PROBE'
+const { spawn } = require("child_process");
+const fs = require("fs");
+const http = require("http");
+const os = require("os");
+const path = require("path");
+const cfg = require(process.cwd() + "/.mcp.json");
+const server = (cfg.mcpServers || {})["chrome-devtools"];
+if (!server || !server.command) {
+    console.error("no server named chrome-devtools in .mcp.json");
+    process.exit(1);
+}
+const browserUrlArg = (server.args || []).find((arg) => arg.startsWith("--browser-url="));
+if (!browserUrlArg) {
+    console.error("the chrome-devtools entry in .mcp.json has no --browser-url arg");
+    process.exit(1);
+}
+const browserUrl = new URL(browserUrlArg.slice("--browser-url=".length));
+const playwrightCore = require.resolve("playwright-core", {
+    paths: [path.join(process.cwd(), ".mcp/node_modules/@playwright/mcp")],
+});
+const chromePath = require(playwrightCore).chromium.executablePath();
+const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), "devtools-probe-"));
+const chrome = spawn(chromePath, [
+    "--headless=new",
+    "--no-sandbox",
+    "--no-first-run",
+    `--remote-debugging-port=${browserUrl.port}`,
+    `--user-data-dir=${profileDir}`,
+    "about:blank",
+], { stdio: "ignore" });
+
+const marker = "bootstrap-devtools-attach-ok";
+const page = http.createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(`<!doctype html><title>probe</title><h1>${marker}</h1>`);
+});
+let child;
+let settled = false;
+const finish = (code, message) => {
+    if (settled) return;
+    settled = true;
+    if (child) child.kill();
+    chrome.kill();
+    page.close();
+    fs.rmSync(profileDir, { recursive: true, force: true, maxRetries: 5 });
+    if (message) console.error(message);
+    process.exit(code);
+};
+chrome.on("error", (err) => finish(1, `chrome failed to spawn from ${chromePath}: ${err.message}`));
+setTimeout(() => finish(1, "chrome-devtools never returned the probe page text"), 90000);
+
+const waitForDebugger = (attempt) => {
+    http.get(new URL("/json/version", browserUrl), (res) => {
+        res.resume();
+        res.on("end", () => page.listen(0, "127.0.0.1", attach));
+    }).on("error", () => {
+        if (attempt >= 50) finish(1, `nothing answered on ${browserUrl} after launching ${chromePath}`);
+        else setTimeout(() => waitForDebugger(attempt + 1), 200);
+    });
+};
+
+const attach = () => {
+    const url = `http://127.0.0.1:${page.address().port}/`;
+    child = spawn(server.command, server.args || [], { stdio: ["pipe", "pipe", "pipe"] });
+    let buffer = "";
+    let stderr = "";
+    const send = (msg) => child.stdin.write(JSON.stringify(msg) + "\n");
+    const handle = (msg) => {
+        if (msg.id === 1 && msg.result) {
+            send({ jsonrpc: "2.0", method: "notifications/initialized" });
+            send({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "new_page", arguments: { url } } });
+        } else if (msg.id === 2) {
+            if (!msg.result || msg.result.isError) {
+                finish(1, `chrome-devtools could not open the probe page: ${JSON.stringify(msg.result || msg.error || {}).slice(0, 800)}`);
+                return;
+            }
+            const listing = (msg.result.content || []).map((part) => part.text || "").join("\n");
+            const selected = listing.match(/^(\d+): .*\[selected\]$/m);
+            if (!selected) {
+                finish(1, `chrome-devtools reported no selected page after new_page: ${listing.slice(0, 800)}`);
+                return;
+            }
+            const pageId = Number(selected[1]);
+            send({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "evaluate_script", arguments: { pageId, function: "() => document.body.innerText" } } });
+        } else if (msg.id === 3) {
+            const text = JSON.stringify(msg.result || msg.error || {});
+            if (msg.result && !msg.result.isError && text.includes(marker)) {
+                console.log("chrome-devtools attached to the debug browser and returned the probe page text");
+                finish(0);
+            } else {
+                finish(1, `chrome-devtools did not return the probe page text: ${text.slice(0, 800)}`);
+            }
+        }
+    };
+    child.stdout.on("data", (chunk) => {
+        buffer += chunk;
+        let newline;
+        while ((newline = buffer.indexOf("\n")) !== -1) {
+            const line = buffer.slice(0, newline);
+            buffer = buffer.slice(newline + 1);
+            let msg;
+            try {
+                msg = JSON.parse(line);
+            } catch (err) {
+                continue;
+            }
+            handle(msg);
+        }
+    });
+    child.stderr.on("data", (chunk) => {
+        stderr += chunk;
+    });
+    child.on("error", (err) => finish(1, `chrome-devtools failed to spawn: ${err.message}`));
+    child.on("exit", (code) => finish(1, `chrome-devtools exited with ${code} before answering. stderr: ${stderr.slice(0, 400)}`));
+    send({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "initialize",
+        params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "e2e", version: "0" } },
+    });
+};
+waitForDebugger(0);
+PROBE
+node "$WORK_DIR/mcp-devtools-probe.cjs" || fail "the chrome-devtools MCP server could not drive a browser on its shipped --browser-url"
+
 # Both agent configs launch the same local servers, which AGENTS.md asks for in
 # prose and nothing else checks.
 # shellcheck disable=SC2016 # the ${...} below are JS template literals, not shell
