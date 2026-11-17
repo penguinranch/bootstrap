@@ -26,6 +26,7 @@ IDENTICAL_PAIRS=(
     .prettierrc
     .shellcheckrc
     .markdownlint-cli2.jsonc
+    .github/workflows/security.yml
 )
 
 for rel in "${IDENTICAL_PAIRS[@]}"; do

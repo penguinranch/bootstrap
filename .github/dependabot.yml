@@ -10,6 +10,11 @@ updates:
       - '/templates/.github/workflows'
     schedule:
       interval: 'weekly'
+    # one PR across both directories: check-template-sync fails a half-bumped security.yml
+    groups:
+      actions:
+        patterns: ['*']
+        group-by: dependency-name
 
   # Maintain Docker base images in the root devcontainer and the template
   # payload's devcontainer
@@ -19,6 +24,10 @@ updates:
       - '/templates/.devcontainer'
     schedule:
       interval: 'weekly'
+    groups:
+      docker-images:
+        patterns: ['*']
+        group-by: dependency-name
 
   # Maintain devcontainer features for this repo and the template payload
   - package-ecosystem: 'devcontainers'
@@ -27,6 +36,10 @@ updates:
       - '/templates'
     schedule:
       interval: 'weekly'
+    groups:
+      devcontainer-features:
+        patterns: ['*']
+        group-by: dependency-name
 
   # Track the repo's own formatting toolchain (prettier in package.json) and
   # the MCP server pins shipped in the payload's .mcp/ manifest.
