@@ -33,7 +33,15 @@ jobs:
             set -euo pipefail
             make doctor-ci
             make lint
+            make test-toolchain
             command -v gitleaks
+            pinned_node=$(grep -o '"version": "[0-9]*"' .devcontainer/devcontainer.json | grep -o '[0-9]*')
+            node_major=$(node -p 'process.versions.node.split(".")[0]')
+            [ "$node_major" = "$pinned_node" ] || { echo "node $node_major, but the feature pins $pinned_node"; exit 1; }
+            gh --version
+            git --version
+            getent passwd "$(id -un)" | grep -q '/zsh$' || { echo "zsh is not the default shell"; exit 1; }
+            docker info
 
   build-template:
     runs-on: ubuntu-latest
@@ -50,6 +58,11 @@ jobs:
             set -euo pipefail
             make help
             make doctor-ci
+            node_major=$(node -p 'process.versions.node.split(".")[0]')
+            [ "$node_major" = "$(cat .nvmrc)" ] || { echo "node $node_major, but .nvmrc pins $(cat .nvmrc)"; exit 1; }
+            gh --version
+            git --version
+            getent passwd "$(id -un)" | grep -q '/zsh$' || { echo "zsh is not the default shell"; exit 1; }
             command -v gitleaks
             test -x .mcp/node_modules/.bin/playwright-mcp
             test -x .mcp/node_modules/.bin/chrome-devtools-mcp
