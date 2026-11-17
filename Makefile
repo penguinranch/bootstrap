@@ -1,7 +1,7 @@
 # Universal task runner: the single entry point for every project command.
 # Wrap ALL runnable commands in a target with a '## description' comment so it
 # appears in 'make help'. Developers only ever need to remember 'make help'.
-.PHONY: help setup doctor doctor-strict doctor-ci dev test build lint clean format check-docs ensure-toolchain ai-extensions
+.PHONY: help setup doctor doctor-strict doctor-ci dev test test-toolchain build lint clean format check-docs ensure-toolchain ai-extensions
 
 # Container enforcement check: the same guard the payload's Makefile carries.
 # Skipped under CI, where the workflows deliberately run make on the runner.
@@ -65,6 +65,9 @@ dev: ## Start the development server
 
 test: ## Run the install e2e against the working tree's payload
 	@bash ./scripts/test-install.sh
+
+test-toolchain: ensure-toolchain ## Prove prettier, cspell, and markdownlint read our config and still report errors
+	@bash ./scripts/test-lint-toolchain.sh
 
 build: ## Create a production build
 	@echo "Build target not implemented yet: update after choosing your tech stack"
