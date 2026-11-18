@@ -21,29 +21,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      # The e2e launches the pinned MCP servers, whose engines ranges are
-      # narrower than whatever Node the runner image happens to ship.
-      - name: Use the Node version the payload pins
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+      # setup-browsers.sh refuses to run outside a container, so a bare runner fails 'make browsers'
+      - name: Run the install e2e in the root devcontainer
+        uses: devcontainers/ci@513af61f4de4f75d37e4438f184ba4358f0fc1ca # v0.3
         with:
-          node-version-file: 'templates/.nvmrc'
-
-      - name: Install gitleaks
-        run: |
-          # Same pinned version the devcontainers install; without gitleaks on
-          # the runner the hook skips the scan and that guardrail goes untested.
-          GITLEAKS_VERSION=8.30.1
-          GITLEAKS_SHA256=551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
-          curl -fsSL -o gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
-          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
-          sudo tar -xzf gitleaks.tar.gz -C /usr/local/bin gitleaks
-          rm gitleaks.tar.gz
-
-      - name: Run the install e2e
-        run: |
-          # scripts/test-install.sh is the single source of truth for the
-          # install assertions — 'make test' runs the same script locally.
-          # Overriding REPO_TAR_URL to this commit's tarball exercises the
-          # real download path instead of a locally packed payload.
-          export REPO_TAR_URL="https://github.com/${{ github.repository }}/tarball/${{ github.sha }}"
-          make test
+          subFolder: .
+          push: never
+          env: |
+            REPO_TAR_URL=https://github.com/${{ github.repository }}/tarball/${{ github.sha }}
+          runCmd: make test

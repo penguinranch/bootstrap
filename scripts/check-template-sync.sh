@@ -80,7 +80,7 @@ elif [ "$prompt_root" != "$prompt_tmpl" ]; then
 fi
 
 # The gitleaks version AND its checksums must match across both devcontainer
-# Dockerfiles and the e2e workflow. Checking only the version let a stale
+# Dockerfiles. Checking only the version let a stale
 # checksum through: the Docker build then fails at 'sha256sum -c' in a
 # downstream project instead of failing here, where it can be fixed.
 # '|| true' keeps a missing pin from killing the script under set -e:
@@ -109,16 +109,10 @@ check_pin() {
 
 ROOT_DF=.devcontainer/Dockerfile
 TMPL_DF=templates/.devcontainer/Dockerfile
-E2E_WF=.github/workflows/e2e-install.yml
 
 check_pin version "$ROOT_DF" GITLEAKS_VERSION "$TMPL_DF" GITLEAKS_VERSION
 check_pin x64-checksum "$ROOT_DF" GITLEAKS_SHA256_X64 "$TMPL_DF" GITLEAKS_SHA256_X64
 check_pin arm64-checksum "$ROOT_DF" GITLEAKS_SHA256_ARM64 "$TMPL_DF" GITLEAKS_SHA256_ARM64
-
-# The e2e workflow installs its own gitleaks to test the pre-commit hook; it
-# runs on an x64 runner, so it must match the x64 pin the devcontainers ship.
-check_pin version "$ROOT_DF" GITLEAKS_VERSION "$E2E_WF" GITLEAKS_VERSION
-check_pin x64-checksum "$ROOT_DF" GITLEAKS_SHA256_X64 "$E2E_WF" GITLEAKS_SHA256
 
 # The two AGENTS.md files share two sections and drifted once already (2026-09).
 # Engineering Philosophy must match verbatim. The Orchestrator sections carry

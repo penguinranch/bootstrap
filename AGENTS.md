@@ -66,7 +66,7 @@ The same pattern is prescribed for downstream projects in `templates/AGENTS.md`.
    - a file in its identical-pairs manifest (the shared scripts, git hooks, editor/lint dotfiles, and the security workflow) drifts from its template copy
    - the READMEs' kickoff prompts diverge
    - a VS Code extension list (devcontainer or `.vscode/extensions.json`) disagrees with its template counterpart
-   - the gitleaks version or checksum pins disagree across the Dockerfiles and the e2e workflow
+   - the gitleaks version or checksum pins disagree across the two Dockerfiles
    - the Engineering Philosophy bullets or the Orchestrator rule labels differ between `AGENTS.md` and `templates/AGENTS.md`
 7. **Universal Make Interface:** Every runnable command in this repository must be wrapped in a Make target with a `## description` comment so it appears in `make help`, even one-line passthroughs. Never document or suggest a raw stack-specific command when a `make` target exists (or could exist) for it.
 8. **Every Dependency Has a Usage Test:** Dependabot patch and minor bumps merge on their own once CI passes (`.github/workflows/dependabot-auto-merge.yml`), so CI is the only reviewer they get. A test that only proves a tool installs is not enough: it must exercise the way we use it. When you add a dependency, or start using a new feature of one, add a test in the matching place:
