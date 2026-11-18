@@ -36,10 +36,10 @@ updates:
       - '/templates'
     schedule:
       interval: 'weekly'
+    # no group-by: each bump regenerates the whole lock file, so per-feature PRs collide
     groups:
       devcontainer-features:
         patterns: ['*']
-        group-by: dependency-name
 
   # Track the repo's own formatting toolchain (prettier in package.json) and
   # the MCP server pins shipped in the payload's .mcp/ manifest.
